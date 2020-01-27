@@ -20,23 +20,10 @@ export default function HomeScreen() {
         contentContainerStyle={styles.contentContainer}>
         
         <View>
-          {/* <Text>sdfsdfsdfsdf</Text> */}
-          <Post></Post>
+          <Post created_at="6 hr" text="this is the first post ever" user_name="youssef raouf"></Post>
+          <Post created_at="6 hr" text="this is the first post ever" user_name="youssef raouf"></Post>
         </View>
       </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
-      </View>
     </View>
   );
 }
@@ -83,7 +70,7 @@ function handleHelpPress() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor:'#1F1F1F'
   },
   developmentModeText: {
     marginBottom: 20,

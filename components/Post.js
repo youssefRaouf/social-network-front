@@ -1,29 +1,52 @@
 import React from 'react';
-import { Text,View ,Image} from 'react-native';
-
+import { Text,View ,Image,TouchableOpacity} from 'react-native';
+import {AntDesign, EvilIcons, Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 export function Post(props) {
   return (
-      <View style={{marginLeft:20,marginRight:20}}>
-       <View style={{height:50,flexDirection:'row'}}>
+      <View style={{backgroundColor:'#1F1F1F'}}>
+       <View style={{marginLeft:10,height:50,flexDirection:'row',}}>
         <View>
             <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
             style={{height:50,width:50,borderRadius:25}}/>
         </View>
         <View style={{marginLeft:10,flexDirection:'column'}}>
-        <Text style={{fontSize:18}}>youssef raouf</Text>
-        <Text>6 hr</Text>    
-        </View>   
-       </View>
-       <Text style={{marginTop:5,fontSize:15}}>this is my first post ever </Text>
-       <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
-            style={{height:300}}/>
-       <View style={{flexDirection:'row',height:40}}>
-        <View>
-            <Text>Like</Text>
+          <Text style={{fontSize:18,color:'white'}}>{props.user_name}</Text>
+          <Text style={{color:'#555555'}}>{props.created_at}</Text>    
         </View>
-        <View></View>
-        <View></View>
+       <TouchableOpacity style={{alignItems:'flex-end',flexGrow:1,marginRight:10,marginTop:0}}>        
+        <Entypo style={{fontSize:25,color:'#555555'}} name="dots-three-vertical"/>
+        </TouchableOpacity>
        </View>
+        <Text style={{marginLeft:10,marginTop:5,fontSize:15,color:'white'}}>{props.text}</Text>
+        <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
+            style={{height:400}}/>
+        <View style={{flexDirection:'row',justifyContent:'space-between',height:20,marginTop:5}}>
+        <Text style={{color:'white'}}>19 likes</Text>
+        <Text style={{color:'white'}}>19 comments</Text>
+        </View>
+       <View style={{marginTop:5,flexDirection:'row',height:40,justifyContent:'space-around'}}>
+        <View>
+            <TouchableOpacity style={{flexDirection:'row' ,alignItems:'center'}}>
+              <AntDesign style={{fontSize:18,color:'white'}} name="like2"/>
+              <Text style={{fontSize:18,color:'white',marginLeft:3}}>Like</Text>
+              </TouchableOpacity>
+        </View>
+        <View >
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}>
+            <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/>
+              <Text style={{fontSize:18,color:'white',marginLeft:3}}>Comment</Text>
+              </TouchableOpacity>
+        </View>
+        <View>
+        <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}>
+        <Ionicons style={{fontSize:18,color:'white'}} name="md-share-alt"/>
+          <Text style={{fontSize:18,color:'white',marginLeft:3}}>Share</Text>
+          </TouchableOpacity>
+        </View>
+       </View>
+       <View style={{height:20,backgroundColor:'#161616',marginBottom:10}}>
+
+        </View>
     </View>
   );
 }
