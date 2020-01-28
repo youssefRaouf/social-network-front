@@ -3,7 +3,7 @@ import { Text,View ,Image,TouchableOpacity} from 'react-native';
 import {AntDesign, EvilIcons, Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 export function Post(props) {
   return (
-      <View style={{backgroundColor:'#1F1F1F'}}>
+      <View style={{backgroundColor:'#1F1F1F',paddingTop:5}}>
        <View style={{marginLeft:10,height:50,flexDirection:'row',}}>
         <View>
             <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
