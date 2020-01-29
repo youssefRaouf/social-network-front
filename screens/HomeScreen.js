@@ -20,8 +20,8 @@ export default function HomeScreen() {
         contentContainerStyle={styles.contentContainer}>
         
         <View>
-          <Post post={created_at="6 hr" ,text="this is the first post evejjhjhjr" ,user=[name="youssef raouf",fsf="ffesf"]}></Post>
-          <Post post={created_at="6dwd hr" ,text="this is the first post ever" ,user=[name="youssef raouf"]}></Post>
+        <Post created_at="6 hr" text="this is the first post ever" userName="youssef raouf"></Post>
+        <Post created_at="6 hr" text="this is the first post ever" userName="youssef raouf"></Post>
         </View>
       </ScrollView>
     </View>
