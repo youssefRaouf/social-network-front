@@ -1,12 +1,14 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LottieView from "lottie-react-native";
 
 export default class Love extends React.Component {
   componentDidMount() {
+    if(this.props.stop===true){
+
+    }else{
     this.animation.play();
-    // this.animation.rese
-    // this.animation.play
+    }    // this.animation.play
     // Or set a specific startFrame and endFrame with:
     // this.animation.play(30, 120);
   }
@@ -20,15 +22,18 @@ export default class Love extends React.Component {
 
   render() {
     return (
-      <View style={styles.animationContainer}>
+      <TouchableOpacity style={[styles.animationContainer, this.props.style]} onPress={this.props.onPress}>
         <LottieView
           ref={animation => {
             this.animation = animation;
           }}
           style={{
             width: 30,
-            height: 30,
+            height: this.props.height,
             backgroundColor: '#1F1F1F',
+            // marginLeft:10,
+            marginRight:20,
+            
           }}
           source={require('../assets/emojis/love.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
@@ -37,7 +42,7 @@ export default class Love extends React.Component {
         {/* <View style={styles.buttonContainer}>
           <Button title="Restart Animation" onPress={this.resetAnimation} />
         </View> */}
-      </View>
+      </TouchableOpacity>
     );
   }
 }

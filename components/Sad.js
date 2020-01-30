@@ -2,17 +2,16 @@ import React from 'react';
 import { Button, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LottieView from "lottie-react-native";
 
-export default class Laugh extends React.Component {
+export default class Sad extends React.Component {
 
   constructor(props) {
     super(props);
   }
-
   componentDidMount() {
     if(this.props.stop===true){
 
     }else{
-      this.animation.play();
+    this.animation.play();
     }
     // this.animation.rese
     // this.animation.play
@@ -31,10 +30,15 @@ export default class Laugh extends React.Component {
             width: 30,
             height: this.props.height,
             backgroundColor: '#1F1F1F',
-            marginRight:20,
+            marginRight:20
           }}
-          source={require('../assets/emojis/2093-laugh.json')}
+          source={require('../assets/emojis/10110-sad.json')}
+          // OR find more Lottie files @ https://lottiefiles.com/featured
+          // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />
+        {/* <View style={styles.buttonContainer}>
+          <Button title="Restart Animation" onPress={this.resetAnimation} />
+        </View> */}
       </TouchableOpacity>
     );
   }

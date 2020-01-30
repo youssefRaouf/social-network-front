@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity} from 'react-native';
-import {AntDesign, EvilIcons, Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
+import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 import Wow from './Wow'
 import Laugh from './Laugh'
 import Love from './Love'
+import Angry from './Angry';
+import Sad from './Sad';
+import EmojiPlaceholder from './EmojiPlaceholder';
 export  class  Post extends Component {
   constructor(props) {
     super(props);
-    this.state = { show:false };
+    this.state = { show:false,emojiText:"Like",emojiColor:'white',emoji:null };
   }
-   content=null;
   emoji =() =>{
     this.setState({
       show:true
@@ -20,8 +22,33 @@ export  class  Post extends Component {
       this.setState({
         show:false
       });
-    },3000)
+    },4000)
     
+  }
+  makeEmoji=(text,color,type)=>{
+    this.setState({
+      show:false,
+      emojiText:text,
+      emojiColor:color,
+      emoji:type
+    });
+  }
+  
+  makeLike=(text,color)=>{
+    this.setState({
+      show:false,
+      emojiText:text,
+    });
+    if (this.state.emojiColor!=='white') {
+      this.setState({
+        emojiColor:'white',
+        emoji:null
+      });
+    }else{
+      this.setState({
+        emojiColor:color
+      });
+    }
   }
   render(){
   return (
@@ -49,26 +76,18 @@ export  class  Post extends Component {
         <Text style={{color:'white'}}>19 comments</Text>
         </View>
         { this.state.show?
-        <View style={{backgroundColor:'#1F1F1F',flexDirection:'row',position:'absolute',bottom:70,justifyContent:'space-between',borderRadius:10,borderWidth:2,borderColor:'grey',left:10}}>
-    <TouchableOpacity style={{width:40}}><Laugh/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Laugh/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Wow/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Wow/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Love/></TouchableOpacity>
-        </View>
+          <EmojiPlaceholder makeEmoji={this.makeEmoji}/>
         :null
   }
-        {/* { this.state.show?<Laugh/>:null} */}
-        {/* { this.state.show?<Angry/>:null} */}
-       <View style={{marginTop:5,flexDirection:'row',height:40,justifyContent:'space-around'}}>
+       <View style={{marginTop:0,flexDirection:'row',height:40,justifyContent:'space-around',alignItems:'center'}}>
         <View>
             <TouchableOpacity style={{flexDirection:'row' ,alignItems:'center'}}
             onLongPress={()=>this.emoji()}
             onPressOut={()=>this.emojiOut()}        
-            onPress={() => alert('hello')}
+            onPress={() => this.makeLike("Like",'blue')}
             >
-              <AntDesign style={{fontSize:18,color:'white'}} name="like2"/>
-              <Text style={{fontSize:18,color:'white',marginLeft:3}}>Like</Text>
+            {this.state.emoji!==null? <this.state.emoji stop={true} height={24}/>:<AntDesign style={{fontSize:18,color:this.state.emojiColor}} name="like2"/>}
+              <Text style={{fontSize:18,color:this.state.emojiColor,marginLeft:3}}>{this.state.emojiText}</Text>
               </TouchableOpacity>
         </View>
         <View >
@@ -85,8 +104,6 @@ export  class  Post extends Component {
         </View>
        </View>
        <View style={{height:18,backgroundColor:'#161616',marginBottom:10}}>
-         {/* <Like></Like> */}
-         {/* <Laugh/> */}
         </View>
     </View>
   );
