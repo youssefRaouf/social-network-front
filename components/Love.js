@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import LottieView from "lottie-react-native";
 
-export default class Angry extends React.Component {
+export default class Love extends React.Component {
   componentDidMount() {
     this.animation.play();
     // this.animation.rese
@@ -30,7 +30,7 @@ export default class Angry extends React.Component {
             height: 30,
             backgroundColor: '#1F1F1F',
           }}
-          source={require('../assets/emojis/2086-wow.json')}
+          source={require('../assets/emojis/love.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />

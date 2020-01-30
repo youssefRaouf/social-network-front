@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity} from 'react-native';
 import {AntDesign, EvilIcons, Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
-import Angry from './Angry'
+import Wow from './Wow'
 import Laugh from './Laugh'
+import Love from './Love'
 export  class  Post extends Component {
   constructor(props) {
     super(props);
@@ -51,8 +52,9 @@ export  class  Post extends Component {
         <View style={{backgroundColor:'#1F1F1F',flexDirection:'row',position:'absolute',bottom:70,justifyContent:'space-between',borderRadius:10,borderWidth:2,borderColor:'grey',left:10}}>
     <TouchableOpacity style={{width:40}}><Laugh/></TouchableOpacity>
     <TouchableOpacity style={{width:40}}><Laugh/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Angry/></TouchableOpacity>
-    <TouchableOpacity style={{width:40}}><Angry/></TouchableOpacity>
+    <TouchableOpacity style={{width:40}}><Wow/></TouchableOpacity>
+    <TouchableOpacity style={{width:40}}><Wow/></TouchableOpacity>
+    <TouchableOpacity style={{width:40}}><Love/></TouchableOpacity>
         </View>
         :null
   }
