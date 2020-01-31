@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Platform,
@@ -7,25 +7,56 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList
 } from 'react-native';
 import {Post} from '../components/Post';
+import {connect} from 'react-redux';
+import * as actions from '../Actions';
 
-export default function HomeScreen() {
-  return (
+class  HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.getPosts();
+  }
+
+  getPosts(offset=0) {
+    console.log("3mo el offset",offset)
+    const {fetchPosts} = this.props;
+    fetchPosts(offset);
+  }
+  renderItem(item){
+    item=item.item;
+    return <Post item={item}></Post>
+  }
+    render(){
+      console.log(this.props.posts.length)
+    return (
     <View style={styles.container}>
-      <ScrollView
+      {/* <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        
-        <View>
-        <Post created_at="6 hr" text="this is the first post ever" userName="youssef raouf"></Post>
-        <Post created_at="6 hr" text="this is the first post ever" userName="youssef raouf"></Post>
-        </View>
-      </ScrollView>
+        contentContainerStyle={styles.contentContainer}> */}
+        <FlatList
+        // ListHeaderComponent={this.renderItem(event)}
+        data={this.props.posts}
+        renderItem={this.renderItem.bind(this)}
+        // keyExtractor={(item) =>item.item.id}
+        onEndReached={() => {
+          // if (!isFetching && alerts.length > 0) {
+            const offset = this.props.posts.length;
+           this.getPosts(offset);
+          // }
+        }}
+        windowSize={2}
+        // style={styles.list}
+      />
+      {/* </ScrollView> */}
     </View>
   );
 }
-
+}
 HomeScreen.navigationOptions = {
   header: null,
 };
@@ -33,88 +64,26 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop:40,
     backgroundColor:'#1F1F1F'
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
 });
+
+
+const mapStateToProps = ({posts}, props) => {
+  const {activePost, isLoading} = posts;
+  return {
+    posts: posts.list||[],
+    post: activePost,
+    isLoading,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeScreen);

@@ -4,6 +4,11 @@ import * as Font from 'expo-font';
 import React, { useState } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import rootSaga from './sagas';
+import {createStore, applyMiddleware} from 'redux';
+import {Provider} from 'react-redux';
+import reducers from './reducers';
+import createSagaMiddleware from 'redux-saga';
 
 import AppNavigator from './navigation/AppNavigator';
 
@@ -13,21 +18,30 @@ import AppNavigator from './navigation/AppNavigator';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-
+  const sagaMiddleware = createSagaMiddleware();
+  this.store = createStore(reducers, applyMiddleware(sagaMiddleware));
+  sagaMiddleware.run(rootSaga);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
+      <Provider store={this.store}>
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
+      </Provider>
+
     );
   } else {
     return (
+      <Provider store={this.store}>
+
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>
+      </Provider>
+      
     );
   }
 }

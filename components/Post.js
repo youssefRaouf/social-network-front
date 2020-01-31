@@ -1,16 +1,36 @@
 import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
-// import Wow from './Wow'
-// import Laugh from './emojis/Laugh'
-// import Love from './Love'
-// import Angry from './Angry';
-// import Sad from './Sad';
+import Wow from './emojis/Wow'
+import Laugh from './emojis/Laugh'
+import Love from './emojis/Love'
+import Angry from './emojis/Angry';
+import Sad from './emojis/Sad';
 import EmojiPlaceholder from './EmojiPlaceholder';
 export  class  Post extends Component {
   constructor(props) {
     super(props);
-    this.state = { show:false,emojiText:"Like",emojiColor:'white',emoji:null };
+    let arr=[null,Love,Laugh,Wow,Sad,Angry]
+    let arrText=["Like","Love","Laugh","Wow","Sad","Angry"]
+    this.state = { show:false,emojiText:"Like",emojiColor:'white',emoji:null,likes:0 };
+    if(this.props.item.myEmojis[0]){
+      const type =this.props.item.myEmojis[0].type;
+      this.state.emoji=arr[type-1];
+      this.state.emojiText=arrText[type-1];
+      if(type===1){
+        this.state.emojiColor='blue'
+      }else if(type==2||6){
+        this.state.emojiColor='red'
+      }
+      else{
+        this.state.emojiColor='#FCDD68'
+      }
+    }
+    for(let i=0;i<6;i++){
+      if(this.props.item.emojis[i]){
+        this.state.likes=this.state.likes+this.props.item.emojis[i];
+      }
+    }
   }
   emoji =() =>{
     this.setState({
@@ -59,7 +79,7 @@ export  class  Post extends Component {
             style={{height:50,width:50,borderRadius:25}}/>
         </View>
         <View style={{marginLeft:10,flexDirection:'column'}}>
-          <Text style={{fontSize:18,color:'white'}}>{this.props.userName}</Text>
+          <Text style={{fontSize:18,color:'white'}}>{this.props.item.user.name}</Text>
           <Text style={{color:'#555555'}}>{this.props.created_at}</Text>    
         </View>
         <View style={{flexDirection:'row-reverse',flex:1}}>
@@ -68,12 +88,12 @@ export  class  Post extends Component {
         </TouchableOpacity>
         </View>
        </View>
-        <Text style={{marginLeft:10,marginTop:5,fontSize:15,color:'white'}}>{this.props.text}</Text>
+        <Text style={{marginLeft:10,marginTop:5,fontSize:15,color:'white'}}>{this.props.item.text}</Text>
         <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
             style={{height:400}}/>
         <View style={{flexDirection:'row',justifyContent:'space-between',height:20,marginTop:5,marginLeft:10,marginRight:10}}>
-        <Text style={{color:'white'}}>19 likes</Text>
-        <Text style={{color:'white'}}>19 comments</Text>
+  <Text style={{color:'white'}}>{this.state.likes+" likes"}</Text>
+        <Text style={{color:'white'}}>{this.props.item.comments+" comments"}</Text>
         </View>
         { this.state.show?
           <EmojiPlaceholder makeEmoji={this.makeEmoji}/>

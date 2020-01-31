@@ -1,26 +1,31 @@
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'https://church-youth-service.herokuapp.com/api/';
-export const baseImageUrl =
-  'https://church-youth-service.herokuapp.com/upload/';
-
-function doRequest(url, options = {}, data = {}) {
-  let headers = {};
-  if (options) {
-    headers = {
-      ...headers,
-      ...options.headers,
-    };
+export const baseUrl = 'http://192.168.1.6:4000/';
+  function doRequest(url, options = {}, data = {}) {
+    // console.log("sdfsad")
+    let headers = {};
+    if (options) {
+      headers = {
+        ...headers,
+        ...options.headers,
+      };
+    }
+    const queryString = Object.keys(data)
+      .map(key => key + '=' + data[key])
+      .join('&');
+      // console.log(queryString)
+    return fetch(`${baseUrl}${url}?${queryString}`);
   }
-  const queryString = Object.keys(data)
-    .map(key => key + '=' + data[key])
-    .join('&');
-  return fetch(`${baseUrl}${url}?api_key=${apiKey}&${queryString}`, {
-    ...options,
-    headers: headers,
-  });
-}
-// api requests
+
+  const getPosts = (offset) => {
+    const limit =15;
+    const eventsRequest = () => {
+        return doRequest('posts', {method: 'GET'}, {offset,limit});
+    };
+    return eventsRequest()
+      .then(response => response.json())
+  };
+
 
 const getEvents = (page, category_id, user_id) => {
   const count = 10;
@@ -47,13 +52,13 @@ const getEventById = id => {
     .then(res => res.post);
 };
 
-const getAlerts = page => {
-  const alerts = require('../data/Alerts-search.json');
-  if (alerts) {
-    return alerts.alerts;
-  }
-  return [];
-};
+// const getAlerts = page => {
+//   const alerts = require('../data/Alerts-search.json');
+//   if (alerts) {
+//     return alerts.alerts;
+//   }
+//   return [];
+// };
 const getCategories = page => {
   const eventsRequest = () => {
     return doRequest('get_category_index', {method: 'GET'});
@@ -62,10 +67,10 @@ const getCategories = page => {
     .then(response => response.json())
     .then(res => res.categories);
 };
-const getReviews = () => {
-  const reviews = require('../data/Reviews.json');
+// const getReviews = () => {
+//   const reviews = require('../data/Reviews.json');
 
-  return reviews.reviews;
-};
+//   return reviews.reviews;
+// };
 
-export {getEvents, getReviews, getAlerts, getCategories, getEventById};
+export {getEvents,getCategories, getEventById,getPosts};
