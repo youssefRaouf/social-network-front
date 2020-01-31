@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 import Wow from './Wow'
-import Laugh from './Laugh'
+import Laugh from './emojis/Laugh'
 import Love from './Love'
 import Angry from './Angry';
 import Sad from './Sad';
@@ -86,7 +86,7 @@ export  class  Post extends Component {
             onPressOut={()=>this.emojiOut()}        
             onPress={() => this.makeLike("Like",'blue')}
             >
-            {this.state.emoji!==null? <this.state.emoji stop={true} height={24}/>:<AntDesign style={{fontSize:18,color:this.state.emojiColor}} name="like2"/>}
+            {this.state.emoji!==null? <this.state.emoji stop={true} style={{marginRight: 18,height:30}}/>:<AntDesign style={{fontSize:18,color:this.state.emojiColor}} name="like2"/>}
               <Text style={{fontSize:18,color:this.state.emojiColor,marginLeft:3}}>{this.state.emojiText}</Text>
               </TouchableOpacity>
         </View>

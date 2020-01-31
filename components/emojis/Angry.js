@@ -2,21 +2,19 @@ import React from 'react';
 import { Button, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LottieView from "lottie-react-native";
 
-export default class wow extends React.Component {
+export default class Angry extends React.Component {
   componentDidMount() {
     if(this.props.stop===true){
 
     }else{
-    this.animation.play();
-    }  // this.animation.rese
+      this.animation.play();
+    }   // this.animation.rese
     // this.animation.play
     // Or set a specific startFrame and endFrame with:
     // this.animation.play(30, 120);
   }
 
   resetAnimation = () => {
-    // this.animation.reset
-
     this.animation.reset();
     this.animation.play();
   };
@@ -32,12 +30,8 @@ export default class wow extends React.Component {
             width: 30,
             height: this.props.height,
             backgroundColor: '#1F1F1F',
-            marginRight:20,
-            
           }}
-          source={require('../assets/emojis/2086-wow.json')}
-          // OR find more Lottie files @ https://lottiefiles.com/featured
-          // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
+          source={require('../assets/emojis/angry2.json')}
         />
         {/* <View style={styles.buttonContainer}>
           <Button title="Restart Animation" onPress={this.resetAnimation} />

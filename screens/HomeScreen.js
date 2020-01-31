@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import {Post} from '../components/Post';
-import { MonoText } from '../components/StyledText';
 
 export default function HomeScreen() {
   return (

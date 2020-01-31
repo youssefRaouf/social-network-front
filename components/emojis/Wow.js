@@ -2,13 +2,14 @@ import React from 'react';
 import { Button, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LottieView from "lottie-react-native";
 
-export default class Love extends React.Component {
+export default class wow extends React.Component {
   componentDidMount() {
     if(this.props.stop===true){
 
     }else{
     this.animation.play();
-    }    // this.animation.play
+    }  // this.animation.rese
+    // this.animation.play
     // Or set a specific startFrame and endFrame with:
     // this.animation.play(30, 120);
   }
@@ -31,11 +32,8 @@ export default class Love extends React.Component {
             width: 30,
             height: this.props.height,
             backgroundColor: '#1F1F1F',
-            // marginLeft:10,
-            marginRight:20,
-            
           }}
-          source={require('../assets/emojis/love.json')}
+          source={require('../assets/emojis/2086-wow.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />

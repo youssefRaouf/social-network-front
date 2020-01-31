@@ -29,9 +29,8 @@ export default class Laugh extends React.Component {
           }}
           style={{
             width: 30,
-            height: this.props.height,
+            height: this.props.style.height,
             backgroundColor: '#1F1F1F',
-            marginRight:20,
           }}
           source={require('../assets/emojis/2093-laugh.json')}
         />
@@ -48,8 +47,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-  },
-  buttonContainer: {
-    paddingTop: 20,
   },
 });
