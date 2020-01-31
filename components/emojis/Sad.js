@@ -31,7 +31,7 @@ export default class Sad extends React.Component {
             height: this.props.height,
             backgroundColor: '#1F1F1F',
           }}
-          source={require('../assets/emojis/10110-sad.json')}
+          source={require('../../assets/emojis/10110-sad.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />

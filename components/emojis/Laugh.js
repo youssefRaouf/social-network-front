@@ -32,7 +32,7 @@ export default class Laugh extends React.Component {
             height: this.props.style.height,
             backgroundColor: '#1F1F1F',
           }}
-          source={require('../assets/emojis/2093-laugh.json')}
+          source={require('../../assets/emojis/2093-laugh.json')}
         />
       </TouchableOpacity>
     );

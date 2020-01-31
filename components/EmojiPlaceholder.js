@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import Laugh from './emojis/Laugh';
-import Sad from './Sad';
-import Wow from './Wow';
-import Angry from './Angry';
-import Love from './Love';
+import Sad from './emojis/Sad';
+import Wow from './emojis/Wow';
+import Angry from './emojis/Angry'  ;
+import Love from './emojis/Love';
 
 export default class EmojiPlaceholder extends React.Component {
 

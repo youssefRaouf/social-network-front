@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
-import Wow from './Wow'
-import Laugh from './emojis/Laugh'
-import Love from './Love'
-import Angry from './Angry';
-import Sad from './Sad';
+// import Wow from './Wow'
+// import Laugh from './emojis/Laugh'
+// import Love from './Love'
+// import Angry from './Angry';
+// import Sad from './Sad';
 import EmojiPlaceholder from './EmojiPlaceholder';
 export  class  Post extends Component {
   constructor(props) {

@@ -31,7 +31,7 @@ export default class Angry extends React.Component {
             height: this.props.height,
             backgroundColor: '#1F1F1F',
           }}
-          source={require('../assets/emojis/angry2.json')}
+          source={require('../../assets/emojis/angry2.json')}
         />
         {/* <View style={styles.buttonContainer}>
           <Button title="Restart Animation" onPress={this.resetAnimation} />

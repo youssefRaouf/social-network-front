@@ -33,7 +33,7 @@ export default class wow extends React.Component {
             height: this.props.height,
             backgroundColor: '#1F1F1F',
           }}
-          source={require('../assets/emojis/2086-wow.json')}
+          source={require('../../assets/emojis/2086-wow.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured
           // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
         />
