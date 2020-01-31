@@ -35,11 +35,7 @@ class  HomeScreen extends Component {
       console.log(this.props.posts.length)
     return (
     <View style={styles.container}>
-      {/* <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}> */}
         <FlatList
-        // ListHeaderComponent={this.renderItem(event)}
         data={this.props.posts}
         renderItem={this.renderItem.bind(this)}
         // keyExtractor={(item) =>item.item.id}
@@ -50,9 +46,7 @@ class  HomeScreen extends Component {
           // }
         }}
         windowSize={2}
-        // style={styles.list}
       />
-      {/* </ScrollView> */}
     </View>
   );
 }
