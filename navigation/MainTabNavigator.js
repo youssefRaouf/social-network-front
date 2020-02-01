@@ -2,7 +2,8 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-
+import {createAppContainer} from 'react-navigation';
+import CreatePostScreen from '../screens/CreatePostScreen'
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -12,6 +13,7 @@ const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
+
 
 const HomeStack = createStackNavigator(
   {
@@ -76,4 +78,38 @@ const tabNavigator = createBottomTabNavigator({
 
 tabNavigator.path = '';
 
-export default tabNavigator;
+
+
+const TabsNav = () => {
+  return createBottomTabNavigator({
+    HomeStack,
+    LinksStack,
+    SettingsStack,
+  });
+};
+
+
+export  const Router = createAppContainer(
+  createStackNavigator(
+    {
+      Home: {
+        screen: tabNavigator,
+      },
+      Links: {
+        screen: LinksScreen,
+      },
+      Settings: {
+        screen: SettingsScreen,
+      },
+      CreatePost: {
+        screen: CreatePostScreen,
+      },
+    },
+    { 
+      headerMode: 'none',
+      initialRouteName: 'CreatePost',
+    },
+  ),
+);
+
+// export default tabNavigator;

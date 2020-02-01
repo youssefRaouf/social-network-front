@@ -92,13 +92,13 @@ export  class  Post extends Component {
         <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
             style={{height:400}}/>
         <View style={{flexDirection:'row',justifyContent:'space-between',height:20,marginTop:5,marginLeft:10,marginRight:10}}>
-  <Text style={{color:'white'}}>{this.state.likes+" likes"}</Text>
+       <Text style={{color:'white'}}>{this.state.likes+" likes"}</Text>
         <Text style={{color:'white'}}>{this.props.item.comments+" comments"}</Text>
         </View>
         { this.state.show?
           <EmojiPlaceholder makeEmoji={this.makeEmoji}/>
         :null
-  }
+        }
        <View style={{marginTop:0,flexDirection:'row',height:40,justifyContent:'space-around',alignItems:'center'}}>
         <View>
             <TouchableOpacity style={{flexDirection:'row' ,alignItems:'center'}}
@@ -111,7 +111,8 @@ export  class  Post extends Component {
               </TouchableOpacity>
         </View>
         <View >
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}>
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={() => this.props.navigation.navigate('Links')}
+ >
             <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/>
               <Text style={{fontSize:18,color:'white',marginLeft:3}}>Comment</Text>
               </TouchableOpacity>

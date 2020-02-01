@@ -1,7 +1,7 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import * as types from '../utils/Consts';
 // import Event from '../models/Event';
-import {getPosts} from '../services/Api';
+import {getPosts,createPost} from '../services/Api';
 
 function* requestEvents({offset}) {
   try {
@@ -19,7 +19,23 @@ function* requestEvents({offset}) {
     });
   }
 }
+function* createPosts({text,user_id}) {
+  try {
+    let data = yield call(createPost,text,user_id);
+    // data = data.map(event => new Event(event));
+    yield put({
+      type: types.CREATE_POST_SUCCESS, 
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: types.CREATE_POST_SUCCESS,
+      error,
+    });
+  }
+}
 
 export default function* eventsSagas() {
-  yield takeLatest(types.FETCH_POSTS, requestEvents);
+  yield takeLatest(types.FETCH_POSTS, requestEvents,createPosts);
 }

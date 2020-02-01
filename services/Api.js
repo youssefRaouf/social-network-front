@@ -26,51 +26,17 @@ export const baseUrl = 'http://192.168.1.6:4000/';
       .then(response => response.json())
   };
 
-
-const getEvents = (page, category_id, user_id) => {
-  const count = 10;
-  const eventsRequest = () => {
-    if (category_id) {
-      return doRequest('get_category_posts', {method: 'GET'}, {count, page});
-    } else if (user_id) {
-      return doRequest('get_recent_posts', {method: 'GET'}, {count, page});
-    } else {
-      return doRequest('get_recent_posts', {method: 'GET'}, {count, page});
-    }
-  };
-  return eventsRequest()
-    .then(response => response.json())
-    .then(res => res.posts);
-};
-
-const getEventById = id => {
-  const eventsRequest = () => {
-    return doRequest('get_post_detail', {method: 'GET'}, {id: id});
-  };
-  return eventsRequest()
-    .then(response => response.json())
-    .then(res => res.post);
-};
-
-// const getAlerts = page => {
-//   const alerts = require('../data/Alerts-search.json');
-//   if (alerts) {
-//     return alerts.alerts;
-//   }
-//   return [];
-// };
-const getCategories = page => {
-  const eventsRequest = () => {
-    return doRequest('get_category_index', {method: 'GET'});
-  };
-  return eventsRequest()
-    .then(response => response.json())
-    .then(res => res.categories);
-};
-// const getReviews = () => {
-//   const reviews = require('../data/Reviews.json');
-
-//   return reviews.reviews;
-// };
-
-export {getEvents,getCategories, getEventById,getPosts};
+  function  createPost (text,user_id){
+ return fetch(baseUrl+'posts', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text: text,
+      user_id: user_id,
+    }),
+  }).then(response=>response.json());
+}
+export {createPost,getPosts};

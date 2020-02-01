@@ -9,8 +9,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import reducers from './reducers';
 import createSagaMiddleware from 'redux-saga';
-
-import AppNavigator from './navigation/AppNavigator';
+import {Router} from './navigation/MainTabNavigator'
 
 // import StorybookUI from './storybook';
 
@@ -23,25 +22,29 @@ export default function App(props) {
   sagaMiddleware.run(rootSaga);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
+      // <Router>
       <Provider store={this.store}>
+
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
       </Provider>
-
+      // </Router>
     );
   } else {
     return (
+      // <Router>
       <Provider store={this.store}>
 
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
+        {/* <AppNavigator /> */}
+        <Router/>
       </View>
       </Provider>
-      
+      // </Router>
     );
   }
 }
