@@ -12,6 +12,7 @@ import {
 import {Post} from '../components/Post';
 import {connect} from 'react-redux';
 import * as actions from '../Actions';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 class  HomeScreen extends Component {
   constructor(props) {
@@ -21,32 +22,33 @@ class  HomeScreen extends Component {
   componentDidMount() {
     this.getPosts();
   }
-
   getPosts(offset=0) {
-    console.log("3mo el offset",offset)
     const {fetchPosts} = this.props;
     fetchPosts(offset);
   }
   renderItem(item){
     item=item.item;
-    return <Post item={item}></Post>
+    return <Post item={item} navigation={this.props.navigation}></Post>
   }
     render(){
-      console.log(this.props.posts.length)
+      let data= this.props.posts
     return (
     <View style={styles.container}>
         <FlatList
-        data={this.props.posts}
+        data={data}
         renderItem={this.renderItem.bind(this)}
-        // keyExtractor={(item) =>item.item.id}
+        keyExtractor={item =>item.id.toString()}
         onEndReached={() => {
-          // if (!isFetching && alerts.length > 0) {
             const offset = this.props.posts.length;
            this.getPosts(offset);
-          // }
         }}
-        windowSize={2}
+        // windowSize={2}
       />
+      <TouchableOpacity style={{position:'absolute',bottom:20,right:10,backgroundColor:'#555555',borderRadius:30,height:60,width:60,justifyContent:'center',alignItems:'center'}}
+      onPress={()=>this.props.navigation.navigate("CreatePost")}
+      >
+      <AntDesign style={{fontSize:35,color:'red'}} name="plus"/>
+      </TouchableOpacity>
     </View>
   );
 }

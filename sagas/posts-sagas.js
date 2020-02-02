@@ -30,12 +30,14 @@ function* createPosts({text,user_id}) {
   } catch (error) {
     console.log(error);
     yield put({
-      type: types.CREATE_POST_SUCCESS,
+      type: types.CREATE_POST_FAIL,
       error,
     });
   }
 }
 
 export default function* eventsSagas() {
-  yield takeLatest(types.FETCH_POSTS, requestEvents,createPosts);
+  yield takeLatest(types.FETCH_POSTS, requestEvents);
+  yield takeLatest(types.CREATE_POST, createPosts);
+
 }

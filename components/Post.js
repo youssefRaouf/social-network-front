@@ -7,6 +7,7 @@ import Love from './emojis/Love'
 import Angry from './emojis/Angry';
 import Sad from './emojis/Sad';
 import EmojiPlaceholder from './EmojiPlaceholder';
+import User  from './User'
 export  class  Post extends Component {
   constructor(props) {
     super(props);
@@ -72,23 +73,9 @@ export  class  Post extends Component {
   }
   render(){
   return (
-      <View style={{backgroundColor:'#1F1F1F',paddingTop:5}}>
-       <View style={{marginLeft:10,height:50,flexDirection:'row',flex:1}}>
-        <View>
-            <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
-            style={{height:50,width:50,borderRadius:25}}/>
-        </View>
-        <View style={{marginLeft:10,flexDirection:'column'}}>
-          <Text style={{fontSize:18,color:'white'}}>{this.props.item.user.name}</Text>
-          <Text style={{color:'#555555'}}>{this.props.created_at}</Text>    
-        </View>
-        <View style={{flexDirection:'row-reverse',flex:1}}>
-       <TouchableOpacity style={{alignItems:'flex-end',marginRight:10,marginTop:0}}>        
-        <Entypo style={{fontSize:25,color:'#555555'}} name="dots-three-vertical"/>
-        </TouchableOpacity>
-        </View>
-       </View>
-        <Text style={{marginLeft:10,marginTop:5,fontSize:15,color:'white'}}>{this.props.item.text}</Text>
+      <View style={{backgroundColor:'#1F1F1F',paddingTop:7}}>
+       <User item={this.props.item}/>
+        <Text style={{marginLeft:10,marginTop:0,fontSize:15,color:'white',marginBottom:1}}>{this.props.item.text}</Text>
         <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
             style={{height:400}}/>
         <View style={{flexDirection:'row',justifyContent:'space-between',height:20,marginTop:5,marginLeft:10,marginRight:10}}>
@@ -111,7 +98,7 @@ export  class  Post extends Component {
               </TouchableOpacity>
         </View>
         <View >
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={() => this.props.navigation.navigate('Links')}
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={() => this.props.navigation.navigate('CreatePost')}
  >
             <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/>
               <Text style={{fontSize:18,color:'white',marginLeft:3}}>Comment</Text>

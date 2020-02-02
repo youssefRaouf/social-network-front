@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { Text,View ,Image,TouchableOpacity,TextInput} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
-import {createPost} from '../services/Api'
-export default  class  CreatePostScreen extends Component {
+import {connect} from 'react-redux';
+import * as actions from '../Actions';
+  class  CreatePostScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { text:'' };
+  }
+  createPost(text,user_id) {
+    const {createPosts} = this.props;
+    createPosts(text);
+    this.props.navigation.navigate("Home")
   }
   render(){
   return (
@@ -19,7 +25,9 @@ export default  class  CreatePostScreen extends Component {
         <View style={{flexDirection:'row-reverse',flex:1,alignItems:'center'}}>
        <TouchableOpacity style={{alignItems:'flex-end',marginRight:10,marginTop:0}}
        disabled={this.state.text?false:true}
-       onPress={()=>createPost("second post from expo",1)}
+       onPress={()=>this.createPost(this.state.text,1)
+      // this.props.navigation.navigate("Home")
+      }
        >        
              <Text style={{fontSize:20,color:this.state.text?'white':'grey'}}>Post</Text>
         </TouchableOpacity>
@@ -52,6 +60,24 @@ export default  class  CreatePostScreen extends Component {
   );
 }
 }
+const mapStateToProps = ({posts}, props) => {
+  const {activePost, isLoading} = posts;
+  return {
+    posts: posts.list||[],
+    post: activePost,
+    isLoading,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  createPosts: (text,user_id) => dispatch(actions.createPosts(text,user_id)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CreatePostScreen);
+
 // CreatePostScreen.navigationOptions = {
 //   header: null,
 // };

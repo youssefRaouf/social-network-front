@@ -107,7 +107,7 @@ export  const Router = createAppContainer(
     },
     { 
       headerMode: 'none',
-      initialRouteName: 'CreatePost',
+      initialRouteName: 'Home',
     },
   ),
 );
