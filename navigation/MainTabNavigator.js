@@ -7,6 +7,7 @@ import CreatePostScreen from '../screens/CreatePostScreen'
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import CommentScreen from '../screens/CommentScreen'
 import TabBarIcon from '../components/TabBarIcon';
 
 const config = Platform.select({
@@ -103,6 +104,9 @@ export  const Router = createAppContainer(
       },
       CreatePost: {
         screen: CreatePostScreen,
+      },
+      Comment: {
+        screen: CommentScreen,
       },
     },
     { 

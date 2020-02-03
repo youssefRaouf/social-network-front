@@ -8,7 +8,7 @@ import * as actions from '../Actions';
     super(props);
     this.state = { text:'' };
   }
-  createPost(text,user_id) {
+  createPost(text) {
     const {createPosts} = this.props;
     createPosts(text);
     this.props.navigation.navigate("Home")
@@ -18,14 +18,14 @@ import * as actions from '../Actions';
     <View style={{backgroundColor:'#1F1F1F',height:300000}}>
     
     <View style={{flexDirection:'row',marginTop:40,borderBottomWidth:2,paddingBottom:5,borderColor:'#555555'}}>
-      <TouchableOpacity> 
+      <TouchableOpacity onPress={()=>this.props.navigation.goBack()}> 
       <Ionicons style={{marginLeft:30,fontSize:25,color:'white'}} name="md-arrow-round-back"/>
       </TouchableOpacity>
         <Text style={{color:'white' ,fontSize:20 , marginLeft:20}}>Create Post</Text>
         <View style={{flexDirection:'row-reverse',flex:1,alignItems:'center'}}>
        <TouchableOpacity style={{alignItems:'flex-end',marginRight:10,marginTop:0}}
        disabled={this.state.text?false:true}
-       onPress={()=>this.createPost(this.state.text,1)
+       onPress={()=>this.createPost(this.state.text)
       // this.props.navigation.navigate("Home")
       }
        >        

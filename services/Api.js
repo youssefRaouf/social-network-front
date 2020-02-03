@@ -3,6 +3,7 @@ const apiKey =
 export const baseUrl = 'http://192.168.1.6:4000/';
   function doRequest(url, options = {}, data = {}) {
     // console.log("sdfsad")
+    console.log(url)
     let headers = {};
     if (options) {
       headers = {
@@ -39,4 +40,13 @@ export const baseUrl = 'http://192.168.1.6:4000/';
     }),
   }).then(response=>response.json());
 }
-export {createPost,getPosts};
+const getCommentsByPostId = (offset,post_id) => {
+  const limit =15;
+  const eventsRequest = () => {
+      return doRequest(`${'posts/'}${post_id}${'/comments'}`, {method: 'GET'}, {offset,limit});
+  };
+  return eventsRequest()
+    .then(response => response.json())
+};
+
+export {createPost,getPosts,getCommentsByPostId};
