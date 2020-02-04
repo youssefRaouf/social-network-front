@@ -98,7 +98,7 @@ export  class  Post extends Component {
               </TouchableOpacity>
         </View>
         <View >
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={() => this.props.navigation.navigate('Comment',{postID:this.props.item.id})}
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={() => this.props.navigation.navigate('Comment',{postId:this.props.item.id})}
  >
             <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/>
               <Text style={{fontSize:18,color:'white',marginLeft:3}}>Comment</Text>

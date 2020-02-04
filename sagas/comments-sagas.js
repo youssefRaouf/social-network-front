@@ -7,7 +7,7 @@ function* requestComments({offset,post_id}) {
   try {
     let data = yield call(getCommentsByPostId,offset,post_id);
     // data = data.map(event => new Event(event));
-    console.log("el data",data)
+    // console.log("el data",data)
     yield put({
       type: types.FETCH_COMMENTS_SUCCESS, 
       data,

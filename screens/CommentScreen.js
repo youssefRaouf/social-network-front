@@ -7,23 +7,23 @@ import * as actions from '../Actions';
   class  CommentScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { text:'' };
+    this.state = { text:'', };
   }
   componentDidMount() {
     this.getComments();
   }
+ 
   getComments(offset=0) {
     const {fetchComments} = this.props;
-    console.log(this.props.postID)
-    fetchComments(offset,this.props.postId);
+    fetchComments(offset,this.props.navigation.getParam('postId'));
   }
   renderItem(item){
     item=item.item;
     return <Comment item={item} style={{marginTop:30}}></Comment>
   }
   render(){
-    let data= this.props.comments;
-    console.log(data,"youssef");
+     let data= this.props.comments;
+    // console.log(data,"youssef");
   return (
     <View style={{backgroundColor:'#1F1F1F',height:300000}}>
       <View style={{marginBottom:40}}></View>
@@ -46,7 +46,6 @@ const mapStateToProps = ({comments}, props) => {
   const {activePost, isLoading} = comments;
   return {
     comments: comments.list,
-    post: activePost,
     isLoading,
   };
 };

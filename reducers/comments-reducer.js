@@ -6,12 +6,17 @@ let COMMENTS_INITIAL_STATE = {
   offset: 1,
   hasMore: true,
   activeEvent: {},
+  postId:0
 };
 
 function comments(state = COMMENTS_INITIAL_STATE, action) {
   switch (action.type) {
+    
     case types.FETCH_COMMENTS:
-      console.log("fetch")
+      if(state.postId!==action.post_id){
+        // console.log("el id",action.post_id)
+      state=COMMENTS_INITIAL_STATE;
+      }
       return {
         ...state,
         isLoading: action.refresh ? true : action.offset != 1 ? false : true,
@@ -19,9 +24,10 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
         list: action.refresh ? [] : state.list,
         offset: action.offset,
         hasMore: action.refresh ? true : state.hasMore,
+        postId:action.post_id
       };
     case types.FETCH_COMMENTS_SUCCESS:
-      console.log("ng7",action.data)
+      // console.log("ng7",action.data)
       const list = action.data;
       const prevIds = state.list.map(item => item.id);
      

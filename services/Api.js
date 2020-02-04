@@ -3,7 +3,7 @@ const apiKey =
 export const baseUrl = 'http://192.168.1.6:4000/';
   function doRequest(url, options = {}, data = {}) {
     // console.log("sdfsad")
-    console.log(url)
+    // console.log(url)
     let headers = {};
     if (options) {
       headers = {
