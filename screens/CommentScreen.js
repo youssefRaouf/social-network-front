@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text,View ,Image,TouchableOpacity,TextInput,FlatList} from 'react-native';
+import { Text,View ,Image,TouchableOpacity,TextInput,FlatList,Dimensions,KeyboardAvoidingView} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import Comment from '../components/Comment';
@@ -21,12 +21,20 @@ import * as actions from '../Actions';
     item=item.item;
     return <Comment item={item} style={{marginTop:30}}></Comment>
   }
+  updateEmail = e => {
+    e.preventDefault();
+    this.setState({ email: e.target.value });
+  };
   render(){
+    // console.log("Sd")
      let data= this.props.comments;
-    // console.log(data,"youssef");
+     const screenHeight = Math.round(Dimensions.get('window').height);
+     const screeenWidth = Math.round(Dimensions.get('window').width);
   return (
-    <View style={{backgroundColor:'#1F1F1F',height:300000}}>
+    <KeyboardAvoidingView style={{backgroundColor:'black',height:screenHeight,flex:1}} behavior="height" enabled>
       <View style={{marginBottom:40}}></View>
+      <View style={{alignItems:'center'}}><Text style={{color:'white',fontSize:16}}>Comments</Text></View>
+
     <FlatList
         data={data}
         renderItem={this.renderItem.bind(this)}
@@ -35,9 +43,22 @@ import * as actions from '../Actions';
             const offset = this.props.comments.length;
            this.getComments(offset);
         }}
+        
         // windowSize={2}
       />
-    </View>
+     <View style={{justifyContent:'center',alignItems:'center',width:screeenWidth,height:100,backgroundColor: 'rgb(26, 33, 42)',borderTopColor:'black'}}>
+          <View style={{backgroundColor: 'rgb(28, 42, 58)',width:screeenWidth-20,borderRadius:20,height:60,justifyContent:'center',position:'relative',}}>
+        <TextInput
+            
+          style={{color:'white',fontSize:20,marginLeft:5 }}
+          multiline = {true}
+          placeholder="Write a comment..."
+          onChangeText={text => this.setState({ text })}
+          value={this.state.text}
+        />
+          </View>
+        </View>
+    </KeyboardAvoidingView>
   );
 }
 }

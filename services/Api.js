@@ -2,7 +2,6 @@ const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
 export const baseUrl = 'http://192.168.1.6:4000/';
   function doRequest(url, options = {}, data = {}) {
-    // console.log("sdfsad")
     // console.log(url)
     let headers = {};
     if (options) {
@@ -14,7 +13,6 @@ export const baseUrl = 'http://192.168.1.6:4000/';
     const queryString = Object.keys(data)
       .map(key => key + '=' + data[key])
       .join('&');
-      // console.log(queryString)
     return fetch(`${baseUrl}${url}?${queryString}`);
   }
 
