@@ -23,6 +23,7 @@ class  HomeScreen extends Component {
     this.getPosts();
   }
   getPosts(offset=0) {
+    console.log("ss")
     const {fetchPosts} = this.props;
     fetchPosts(offset);
   }

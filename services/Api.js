@@ -1,6 +1,6 @@
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'http://192.168.1.6:4000/';
+export const baseUrl = 'http://192.168.1.4:4000/';
   function doRequest(url, options = {}, data = {}) {
     // console.log(url)
     let headers = {};
@@ -47,4 +47,19 @@ const getCommentsByPostId = (offset,post_id) => {
     .then(response => response.json())
 };
 
-export {createPost,getPosts,getCommentsByPostId};
+function  createComment (text,post_id,parent_id){
+  return fetch(baseUrl+'comments', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       text: text,
+       post_id: post_id,
+       parent_id:parent_id
+     }),
+   }).then(response=>response.json()).then(response=>console.log(response));
+ }
+
+export {createPost,getPosts,getCommentsByPostId,createComment};

@@ -34,9 +34,9 @@ export default class Comment extends React.Component {
         </View>
         </View>
         <TouchableOpacity  iconLeft transparent style={{marginLeft:55,marginTop:10}}    >
-        <Image source={require('../assets/images/comment.jpeg')}
-        />
-        {/* <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/> */}
+        {/* <Image source={require('../assets/images/comment.jpeg')}
+        /> */}
+        <FontAwesome style={{fontSize:18,color:'white'}} name="comment-o"/>
             </TouchableOpacity>
        </View>
         

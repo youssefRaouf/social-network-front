@@ -47,24 +47,24 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
         isLoading: false,
         isFetching: false,
       };
-      // case types.CREATE_POST:
-      //   return {
-      //     ...state,
-      //     isLoading: true,
-      //     isFetching: true,
-      //   };
-      // case types.CREATE_POST_SUCCESS:
-      //   return {
-      //     ...state,
-      //     isLoading: false,
-      //     isFetching: false,
-      //   };
-      // case types.CREATE_POST_FAIL:
-      //   return {
-      //     ...state,
-      //     isLoading: false,
-      //     isFetching: false,
-      //   };
+      case types.CREATE_COMMENT:
+        return {
+          ...state,
+          isLoading: true,
+          isFetching: true,
+        };
+      case types.CREATE_COMMENT_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+        };
+      case types.CREATE_COMMENT_FAIL:
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+        };
       default:
         return state;
 

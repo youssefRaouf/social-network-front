@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Text,View ,Image,TouchableOpacity,TextInput,FlatList,Dimensions,KeyboardAvoidingView} from 'react-native';
+import { Text,View ,Image,TouchableOpacity,TextInput,FlatList,Dimensions,KeyboardAvoidingView,InputAccessoryView,Button, Keyboard} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import Comment from '../components/Comment';
 import * as actions from '../Actions';
+import { AccessoryView } from '../components/AccessoryView';
+import {createComment} from '../services/Api'
   class  CommentScreen extends Component {
   constructor(props) {
     super(props);
@@ -21,10 +23,14 @@ import * as actions from '../Actions';
     item=item.item;
     return <Comment item={item} style={{marginTop:30}}></Comment>
   }
-  updateEmail = e => {
-    e.preventDefault();
-    this.setState({ email: e.target.value });
-  };
+  onCommentSubmit(){
+      const {createComments} = this.props;
+      createComments(this.state.text,this.props.navigation.getParam('postId'));
+      this.setState({
+        text:''
+      })
+      Keyboard.dismiss();
+  }
   render(){
     // console.log("Sd")
      let data= this.props.comments;
@@ -49,16 +55,22 @@ import * as actions from '../Actions';
      <View style={{justifyContent:'center',alignItems:'center',width:screeenWidth,height:100,backgroundColor: 'rgb(26, 33, 42)',borderTopColor:'black'}}>
           <View style={{backgroundColor: 'rgb(28, 42, 58)',width:screeenWidth-20,borderRadius:20,height:60,justifyContent:'center',position:'relative',}}>
         <TextInput
-            
-          style={{color:'white',fontSize:20,marginLeft:5 }}
+            inputAccessoryViewID={'youssef'}
+          style={{color:'white',fontSize:18,marginLeft:5 }}
           multiline = {true}
-          placeholder="Write a comment..."
+          placeholder=" Write a comment..."
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
         />
           </View>
         </View>
+        <AccessoryView
+            onSubmit={this.onCommentSubmit.bind(this)}
+            textInserted={this.state.text}
+            id={'youssef'}
+          />
     </KeyboardAvoidingView>
+   
   );
 }
 }
@@ -71,9 +83,13 @@ const mapStateToProps = ({comments}, props) => {
   };
 };
 
+
 const mapDispatchToProps = dispatch => ({
+  createComments: (text,post_id,parent_id) => dispatch(actions.createComments(text,post_id,parent_id)),
   fetchComments: (offset,post_id) => dispatch(actions.fetchComments(offset,post_id)),
+
 });
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
