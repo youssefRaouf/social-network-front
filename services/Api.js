@@ -1,6 +1,8 @@
+import io from "socket.io-client";
+
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'http://192.168.1.4:4000/';
+export const baseUrl = 'http://192.168.1.7:4000/';
   function doRequest(url, options = {}, data = {}) {
     // console.log(url)
     let headers = {};
@@ -61,5 +63,7 @@ function  createComment (text,post_id,parent_id){
      }),
    }).then(response=>response.json()).then(response=>console.log(response));
  }
+  this.socket = io("http://192.168.1.7:4000");
+const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment};
+export {createPost,getPosts,getCommentsByPostId,createComment,socket};

@@ -10,6 +10,7 @@ import {Provider} from 'react-redux';
 import reducers from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import {Router} from './navigation/MainTabNavigator'
+import io from "socket.io-client";
 
 // import StorybookUI from './storybook';
 
@@ -47,6 +48,7 @@ export default function App(props) {
       // </Router>
     );
   }
+  // export {socket};
 }
 
 async function loadResourcesAsync() {

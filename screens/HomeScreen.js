@@ -13,13 +13,21 @@ import {Post} from '../components/Post';
 import {connect} from 'react-redux';
 import * as actions from '../Actions';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-
+import {socket} from '../services/Api'
 class  HomeScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: [],
+         };
   }
 
   componentDidMount() {
+//     socket.on("createPost", data => {
+//       this.setState({ data: [...this.state.data,data]   
+//  });
+//  console.log(data)
+// })
     this.getPosts();
   }
   getPosts(offset=0) {
@@ -32,11 +40,22 @@ class  HomeScreen extends Component {
     return <Post item={item} navigation={this.props.navigation}></Post>
   }
     render(){
-      let data= this.props.posts
+      socket.on("createPost", data => {
+        this.setState({ data: [...this.state.data,data]   
+   });
+   console.log(data)
+  })
+  //     socket.on("createPost", data => {
+  //       this.setState({ data: [...this.state.data,data]   
+  //  });
+  //  console.log("bam")
+  // })
+      this.state.data=this.props.posts;
+      // this.setState({data:this.props.posts}) 
     return (
     <View style={styles.container}>
         <FlatList
-        data={data}
+        data={this.state.data}
         renderItem={this.renderItem.bind(this)}
         keyExtractor={item =>item.id.toString()}
         onEndReached={() => {

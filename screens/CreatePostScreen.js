@@ -3,6 +3,8 @@ import { Text,View ,Image,TouchableOpacity,TextInput} from 'react-native';
 import {AntDesign,Ionicons,Entypo, FontAwesome} from '@expo/vector-icons';
 import {connect} from 'react-redux';
 import * as actions from '../Actions';
+import io from "socket.io-client";
+import {socket} from '../services/Api'
   class  CreatePostScreen extends Component {
   constructor(props) {
     super(props);
@@ -11,6 +13,8 @@ import * as actions from '../Actions';
   createPost(text) {
     const {createPosts} = this.props;
     createPosts(text);
+    // this.socket = io("http://192.168.1.7:4000");
+    socket.emit('createPost');
     this.props.navigation.navigate("Home")
   }
   render(){
