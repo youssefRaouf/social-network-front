@@ -15,8 +15,9 @@ export default class User extends React.Component {
             style={{height:50,width:50,borderRadius:25}}/>
         </View>
         <View style={{marginLeft:7,flexDirection:'column'}}>
+          
           <Text style={{fontSize:16,color:'white'}}>{this.props.item.user.name}</Text>
-          <Text style={{color:'#555555'}}>6h</Text>    
+          <Text style={{color:'#555555'}}>6h</Text>   
         </View>
         <View style={{flexDirection:'row-reverse',flex:1}}>
        <TouchableOpacity style={{alignItems:'flex-end',marginRight:10,marginTop:0}}>        

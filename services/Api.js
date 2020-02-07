@@ -2,7 +2,7 @@ import io from "socket.io-client";
 
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'http://192.168.1.7:4000/';
+export const baseUrl = 'http://192.168.1.3:4000/';
   function doRequest(url, options = {}, data = {}) {
     // console.log(url)
     let headers = {};
@@ -63,7 +63,21 @@ function  createComment (text,post_id,parent_id){
      }),
    }).then(response=>response.json()).then(response=>console.log(response));
  }
+ function  createEmoji (type,post_id){
+   console.log(post_id)
+  return fetch(baseUrl+'emojis', {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       type: type,
+       post_id: post_id,
+     }),
+   }).then(response=>response.json()).then(response=>console.log(response));
+ }
   this.socket = io("http://192.168.1.7:4000");
 const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment,socket};
+export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji};

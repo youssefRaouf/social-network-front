@@ -57,6 +57,17 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           isLoading: false,
           isFetching: false,
         };
+      case types.POSTS_RECEIVED:
+          const post = action.post;
+          const prevPostsIds = state.list.map(item => item.id);
+          if(prevPostsIds.includes(post.id)){
+            return state;
+          }
+          const newList = [post, ...state.list].sort((a,b)=>b.id-a.id); 
+          return {
+            ...state,
+            list: newList
+          };
       default:
         return state;
 

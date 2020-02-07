@@ -39,5 +39,4 @@ function* createPosts({text,user_id}) {
 export default function* eventsSagas() {
   yield takeLatest(types.FETCH_POSTS, requestEvents);
   yield takeLatest(types.CREATE_POST, createPosts);
-
 }

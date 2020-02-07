@@ -9,69 +9,69 @@ import {
   View,
   FlatList
 } from 'react-native';
-import {Post} from '../components/Post';
-import {connect} from 'react-redux';
+import Post from '../components/Post';
+import { connect } from 'react-redux';
 import * as actions from '../Actions';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import {socket} from '../services/Api'
-class  HomeScreen extends Component {
+import { socket } from '../services/Api'
+import io from "socket.io-client";
+
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-         };
+    };
   }
 
   componentDidMount() {
-//     socket.on("createPost", data => {
-//       this.setState({ data: [...this.state.data,data]   
-//  });
-//  console.log(data)
-// })
+    const chat = io.connect('http://192.168.1.3:4500/chat')
+    const { postsReceived } = this.props;
+    chat.on('new_post',(data)=>{
+      console.log(data)
+      postsReceived(data);
+    })
     this.getPosts();
   }
-  getPosts(offset=0) {
+  getPosts(offset = 0) {
     console.log("ss")
-    const {fetchPosts} = this.props;
+    const { fetchPosts } = this.props;
     fetchPosts(offset);
   }
-  renderItem(item){
-    item=item.item;
+  renderItem(item) {
+    item = item.item;
     return <Post item={item} navigation={this.props.navigation}></Post>
   }
-    render(){
-      socket.on("createPost", data => {
-        this.setState({ data: [...this.state.data,data]   
-   });
-   console.log(data)
-  })
-  //     socket.on("createPost", data => {
-  //       this.setState({ data: [...this.state.data,data]   
-  //  });
-  //  console.log("bam")
-  // })
-      this.state.data=this.props.posts;
-      // this.setState({data:this.props.posts}) 
+  render() {
+
+
+    //     socket.on("createPost", data => {
+    //       this.setState({ data: [...this.state.data,data]   
+    //  });
+    //  console.log("bam")
+    // })
+    this.state.data = this.props.posts;
+    // console.log("el data",this.state.data) 
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
         <FlatList
-        data={this.state.data}
-        renderItem={this.renderItem.bind(this)}
-        keyExtractor={item =>item.id.toString()}
-        onEndReached={() => {
+          data={this.state.data}
+          renderItem={this.renderItem.bind(this)}
+          keyExtractor={item => item.id.toString()}
+          onEndReached={() => {
             const offset = this.props.posts.length;
-           this.getPosts(offset);
-        }}
+            this.getPosts(offset);
+          }}
         // windowSize={2}
-      />
-      <TouchableOpacity style={{position:'absolute',bottom:20,right:10,backgroundColor:'#555555',borderRadius:30,height:60,width:60,justifyContent:'center',alignItems:'center'}}
-      onPress={()=>this.props.navigation.navigate("CreatePost")}
-      >
-      <AntDesign style={{fontSize:35,color:'red'}} name="plus"/>
-      </TouchableOpacity>
-    </View>
-  );
-}
+        />
+        <TouchableOpacity style={{ position: 'absolute', bottom: 20, right: 10, backgroundColor: '#555555', borderRadius: 30, height: 60, width: 60, justifyContent: 'center', alignItems: 'center' }}
+          onPress={() => this.props.navigation.navigate("CreatePost")}
+        >
+          <AntDesign style={{ fontSize: 35, color: 'red' }} name="plus" />
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 HomeScreen.navigationOptions = {
   header: null,
@@ -80,16 +80,16 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:40,
-    backgroundColor:'#1F1F1F'
+    paddingTop: 40,
+    backgroundColor: '#1F1F1F'
   },
 });
 
 
-const mapStateToProps = ({posts}, props) => {
-  const {activePost, isLoading} = posts;
+const mapStateToProps = ({ posts }, props) => {
+  const { activePost, isLoading } = posts;
   return {
-    posts: posts.list||[],
+    posts: posts.list || [],
     post: activePost,
     isLoading,
   };
@@ -97,6 +97,7 @@ const mapStateToProps = ({posts}, props) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
+  postsReceived: post => dispatch(actions.postsReceived(post)),
 });
 
 export default connect(

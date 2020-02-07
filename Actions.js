@@ -9,8 +9,14 @@ export function fetchComments(offset,post_id) {
 export function createPosts(text,user_id) {
   return {type: types.CREATE_POST,text,user_id};
 }
+export function postsReceived(post) {
+  return {type: types.POSTS_RECEIVED, post};
+}
 export function createComments(text,post_id,parent_id) {
   return {type: types.CREATE_COMMENT,text,post_id,parent_id};
+}
+export function createEmojis(type,post_id) {
+  return {type: types.CREATE_EMOJI,type,post_id};
 }
 export function fetchCategories(page = 1, refresh) {
   return {type: types.FETCH_CATEGORIES, page, refresh};
