@@ -16,26 +16,32 @@ class Post extends Component {
     let arr = [null, Love, Laugh, Wow, Sad, Angry]
     let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
     this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null, likes: 0 };
-    if(this.props.item.myEmojis!=null){
-    if (this.props.item.myEmojis[0]) {
-      const type = this.props.item.myEmojis[0].type;
-      this.state.emoji = arr[type - 1];
-      this.state.emojiText = arrText[type - 1];
-      if (type === 1) {
-        this.state.emojiColor = 'blue'
-      } else if (type == 2 || 6) {
-        this.state.emojiColor = 'red'
+    if (this.props.item.myEmojis != null) {
+      if (this.props.item.myEmojis[0]) {
+        const type = this.props.item.myEmojis[0].type;
+        this.state.emoji = arr[type - 1];
+        this.state.emojiText = arrText[type - 1];
+        if (type === 1) {
+          this.state.emojiColor = 'blue'
+        } else if (type == 2 || 6) {
+          this.state.emojiColor = 'red'
+        }
+        else {
+          this.state.emojiColor = '#FCDD68'
+        }
       }
-      else {
-        this.state.emojiColor = '#FCDD68'
-      }
-    }
-    for (let i = 0; i < 6; i++) {
-      if (this.props.item.emojis[i]) {
-        this.state.likes = this.state.likes + this.props.item.emojis[i];
+      for (let i = 0; i < 6; i++) {
+        if (this.props.item.emojis[i]) {
+          this.state.likes = this.state.likes + this.props.item.emojis[i];
+        }
       }
     }
   }
+
+  componentDidMount(){
+    this.props.postSocket.on(`comments_count_${this.props.item.id}`,(commentsCount)=>{      
+      this.props.postCommentsCountChange(this.props.item.id, commentsCount);
+    })
   }
   emoji = () => {
     this.setState({
@@ -137,7 +143,7 @@ const mapStateToProps = ({ emojis }, props) => {
 
 const mapDispatchToProps = dispatch => ({
   createEmojis: (type, post_id) => dispatch(actions.createEmojis(type, post_id)),
-
+  postCommentsCountChange: (post_id, commentsCount) => dispatch(actions.postCommentsCountChange(post_id, commentsCount)),
 });
 
 export default connect(

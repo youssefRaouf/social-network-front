@@ -61,7 +61,7 @@ function  createComment (text,post_id,parent_id){
        post_id: post_id,
        parent_id:parent_id
      }),
-   }).then(response=>response.json()).then(response=>console.log(response));
+   }).then(response=>response.json())
  }
  function  createEmoji (type,post_id){
    console.log(post_id)

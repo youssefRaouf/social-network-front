@@ -15,7 +15,7 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
     case types.FETCH_COMMENTS:
       if(state.postId!==action.post_id){
         // console.log("el id",action.post_id)
-      state=COMMENTS_INITIAL_STATE;
+        state=COMMENTS_INITIAL_STATE;
       }
       return {
         ...state,
@@ -65,6 +65,21 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
           isLoading: false,
           isFetching: false,
         };
+
+        case types.COMMENTS_RECEIVED:
+          const comment = action.comment;
+          if(comment.post_id != state.postId){
+            return state;
+          }
+          const prevCommentsIds = state.list.map(item => item.id);
+          if(prevCommentsIds.includes(comment.id)){
+            return state;
+          }
+          const newList = [comment, ...state.list].sort((a,b)=>a.id-b.id); 
+          return {
+            ...state,
+            list: newList
+          };
       default:
         return state;
 

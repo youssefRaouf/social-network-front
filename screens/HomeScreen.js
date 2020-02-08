@@ -25,12 +25,14 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    const chat = io.connect('http://192.168.1.3:4500/chat')
+    const posts = io.connect('http://192.168.1.3:4500/posts')
     const { postsReceived } = this.props;
-    chat.on('new_post',(data)=>{
+    posts.on('new_post',(data)=>{
       console.log(data)
       postsReceived(data);
     })
+    this.postsRectionsSocket = io.connect('http://192.168.1.3:4500/posts/reactions')
+
     this.getPosts();
   }
   getPosts(offset = 0) {
@@ -40,7 +42,7 @@ class HomeScreen extends Component {
   }
   renderItem(item) {
     item = item.item;
-    return <Post item={item} navigation={this.props.navigation}></Post>
+    return <Post postSocket={this.postsRectionsSocket} item={item} navigation={this.props.navigation}></Post>
   }
   render() {
 

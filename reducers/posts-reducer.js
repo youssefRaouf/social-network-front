@@ -68,6 +68,20 @@ function posts(state = POSTS_INITIAL_STATE, action) {
             ...state,
             list: newList
           };
+      case types.COMMENTS_COUNT_CHANGE:
+        const newList1 = [...(state.list.map(post => {
+          if(post.id === action.post_id){
+            return {
+              ...post,
+              comments: action.commentsCount
+            }
+          }
+          return post;
+        }))];
+        return{
+          ...state,
+          list: newList1
+        }    
       default:
         return state;
 
