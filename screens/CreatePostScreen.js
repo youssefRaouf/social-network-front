@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, Image, TouchableOpacity, TextInput } from 'react-native'
 import { AntDesign, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';

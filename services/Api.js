@@ -64,7 +64,7 @@ function  createComment (text,post_id,parent_id){
    }).then(response=>response.json())
  }
  function  createEmoji (type,post_id){
-   console.log(post_id)
+   console.log("yoyou",post_id)
   return fetch(baseUrl+'emojis', {
      method: 'POST',
      headers: {
@@ -75,9 +75,37 @@ function  createComment (text,post_id,parent_id){
        type: type,
        post_id: post_id,
      }),
-   }).then(response=>response.json()).then(response=>console.log(response));
+   }).then(response=>response.json())
  }
+
+ function  updateEmoji (type,post_id){
+  console.log(type,post_id)
+ return fetch(baseUrl+'emojis', {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      type: type,
+      post_id: post_id,
+    }),
+  }).then(response=>response.json()).then(response=> console.log(response))
+}
+function  deleteEmoji (post_id){
+  // console.log("yoyou",post_id)
+ return fetch(baseUrl+'emojis', {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      post_id: post_id,
+    }),
+  }).then(response=>response.json())
+}
   this.socket = io("http://192.168.1.7:4000");
 const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji};
+export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji,updateEmoji,deleteEmoji};

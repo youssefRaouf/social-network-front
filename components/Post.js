@@ -15,7 +15,7 @@ class Post extends Component {
     super(props);
     let arr = [null, Love, Laugh, Wow, Sad, Angry]
     let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
-    this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null, likes: 0 };
+    this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null,};
     if (this.props.item.myEmojis != null) {
       if (this.props.item.myEmojis[0]) {
         const type = this.props.item.myEmojis[0].type;
@@ -23,24 +23,26 @@ class Post extends Component {
         this.state.emojiText = arrText[type - 1];
         if (type === 1) {
           this.state.emojiColor = 'blue'
-        } else if (type == 2 || 6) {
+        } else if (type === 2 || type=== 6) {
           this.state.emojiColor = 'red'
         }
         else {
           this.state.emojiColor = '#FCDD68'
         }
       }
-      for (let i = 0; i < 6; i++) {
-        if (this.props.item.emojis[i]) {
-          this.state.likes = this.state.likes + this.props.item.emojis[i];
-        }
-      }
     }
+    let emojis= this.props.item.emojis
+
+      
   }
 
   componentDidMount(){
     this.props.postSocket.on(`comments_count_${this.props.item.id}`,(commentsCount)=>{      
       this.props.postCommentsCountChange(this.props.item.id, commentsCount);
+    })
+    this.props.postSocket.on(`emojis_count_${this.props.item.id}`,(emojisCount)=>{
+      // console.log("connection hna")      
+      this.props.postEmojisCountChange(this.props.item.id, emojisCount);
     })
   }
   emoji = () => {
@@ -57,17 +59,21 @@ class Post extends Component {
 
   }
   makeEmoji = (text, color, type) => {
+    const { createEmojis,updateEmojis } = this.props;
+    let arrText = [Love, Laugh, Wow, Sad, Angry]
+    if(this.state.emojiColor==='white'){
+    createEmojis( arrText.indexOf(type) + 2, this.props.item.id);
+    }
+    else {
+
+      updateEmojis(arrText.indexOf(type) + 2, this.props.item.id);
+    }
     this.setState({
       show: false,
       emojiText: text,
       emojiColor: color,
       emoji: type
     });
-    let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
-    const { createEmojis } = this.props;
-    console.log(arrText.lastIndexOf(type + "") + 2);
-    // console.log(this.props.item.id)
-    createEmojis(arrText.lastIndexOf(type + "") + 2, this.props.item.id);
   }
 
   makeLike = (text, color) => {
@@ -76,26 +82,42 @@ class Post extends Component {
       emojiText: text,
     });
     if (this.state.emojiColor !== 'white') {
+      this.props.deleteEmojis(this.props.item.id)
       this.setState({
         emojiColor: 'white',
         emoji: null
       });
     } else {
+    this.props.createEmojis(1, this.props.item.id);
       this.setState({
         emojiColor: color
       });
+    }
+  }
+  renderEmojis=()=>{
+    let emojis = this.props.item.emojis
+    for(let i=0;i<emojis.length;i++){
+      return <Text style={{color:'white'}}>dsds</Text>
     }
   }
   render() {
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
         <User item={this.props.item} />
-        <Text style={{ marginLeft: 10, marginTop: 0, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
+        <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
         <Image source={{ uri: 'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg' }}
           style={{ height: 400 }} />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
-          <Text style={{ color: 'white' }}>{this.state.likes + " likes"}</Text>
+         
+         { 
+           this.renderEmojis()
+          // <Text style={{ color: 'white' }}>{this.props.item.emojisCount + " likes"}</Text>
+         
+        }
+         
+          <TouchableOpacity  onPress={() => this.props.navigation.navigate('Comment', { postId: this.props.item.id })}>
           <Text style={{ color: 'white' }}>{this.props.item.comments + " comments"}</Text>
+          </TouchableOpacity>
         </View>
         {this.state.show ?
           <EmojiPlaceholder makeEmoji={this.makeEmoji} />
@@ -108,7 +130,7 @@ class Post extends Component {
               onPressOut={() => this.emojiOut()}
               onPress={() => this.makeLike("Like", 'blue')}
             >
-              {this.state.emoji !== null ? <this.state.emoji stop={true} style={{ marginRight: 18, height: 30 }} /> : <AntDesign style={{ fontSize: 18, color: this.state.emojiColor }} name="like2" />}
+              {this.state.emoji === null ? <AntDesign style={{ fontSize: 18, color: this.state.emojiColor }} name="like2" />:<this.state.emoji stop={true} style={{ marginRight: 18, height: 30 }} />}
               <Text style={{ fontSize: 18, color: this.state.emojiColor, marginLeft: 3 }}>{this.state.emojiText}</Text>
             </TouchableOpacity>
           </View>
@@ -143,7 +165,13 @@ const mapStateToProps = ({ emojis }, props) => {
 
 const mapDispatchToProps = dispatch => ({
   createEmojis: (type, post_id) => dispatch(actions.createEmojis(type, post_id)),
+  updateEmojis: (type, post_id) => dispatch(actions.updateEmojis(type, post_id)),
+  deleteEmojis: (post_id) => dispatch(actions.deleteEmojis(post_id)),
+
+
   postCommentsCountChange: (post_id, commentsCount) => dispatch(actions.postCommentsCountChange(post_id, commentsCount)),
+  postEmojisCountChange: (post_id, emojisCount) => dispatch(actions.postEmojisCountChange(post_id, emojisCount)),
+
 });
 
 export default connect(

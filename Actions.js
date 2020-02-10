@@ -20,11 +20,23 @@ export function postCommentsCountChange(post_id, commentsCount) {
   return {type: types.COMMENTS_COUNT_CHANGE, post_id, commentsCount};
 }
 
+export function postEmojisCountChange(post_id, emojisCount) {
+  return {type: types.EMOJIS_COUNT_CHANGE, post_id, emojisCount};
+}
+
 export function createComments(text,post_id,parent_id) {
   return {type: types.CREATE_COMMENT,text,post_id,parent_id};
 }
-export function createEmojis(type,post_id) {
-  return {type: types.CREATE_EMOJI,type,post_id};
+export function createEmojis(index,post_id) {
+  // console.log("gwa el action")
+  return {type: types.CREATE_EMOJI,index,post_id};
+}
+export function updateEmojis(index,post_id) {
+  return {type: types.UPDATE_EMOJI,index,post_id};
+}
+export function deleteEmojis(post_id) {
+  console.log("gwa el action")
+  return {type: types.DELETE_EMOJI,post_id};
 }
 export function fetchCategories(page = 1, refresh) {
   return {type: types.FETCH_CATEGORIES, page, refresh};

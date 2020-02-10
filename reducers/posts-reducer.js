@@ -78,10 +78,26 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           }
           return post;
         }))];
+        // console.log(newList1)
         return{
           ...state,
           list: newList1
         }    
+        case types.EMOJIS_COUNT_CHANGE:
+          const newList2 = [...(state.list.map(post => {
+            if(post.id === action.post_id){
+              return {
+                ...post,
+                emojisCount: action.emojisCount
+              }
+            }
+            return post;
+          }))];
+          // console.log(newList1)
+          return{
+            ...state,
+            list: newList2
+          }    
       default:
         return state;
 

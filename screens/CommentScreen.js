@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, TextInput, FlatList, Dimensions, KeyboardAvoidingView, InputAccessoryView, Button, Keyboard } from 'react-native';
+import { Text, View, Image, TouchableOpacity, ScrollView,TextInput, FlatList, Dimensions, KeyboardAvoidingView, InputAccessoryView, Button, Keyboard } from 'react-native';
 import { AntDesign, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import Comment from '../components/Comment';
@@ -53,13 +53,14 @@ class CommentScreen extends Component {
       <KeyboardAvoidingView style={{ backgroundColor: 'black', height: screenHeight, flex: 1 }} behavior="height" enabled>
         <View style={{ marginBottom: 40 }}></View>
         <View style={{ alignItems: 'center' }}><Text style={{ color: 'white', fontSize: 16 }}>Comments</Text></View>
-
+   
         <FlatList
-          data={data}
+        data={data}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={item => item.id.toString()}
           onEndReached={() => {
             const offset = this.props.comments.length;
+            console.log(offset)
             this.getComments(offset);
           }}
 
