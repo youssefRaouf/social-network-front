@@ -6,8 +6,8 @@ export function fetchPosts(offset) {
 export function fetchComments(offset,post_id) {
   return {type: types.FETCH_COMMENTS,offset,post_id};
 }
-export function createPosts(text,user_id) {
-  return {type: types.CREATE_POST,text,user_id};
+export function createPosts(text,url) {
+  return {type: types.CREATE_POST,text,url};
 }
 export function postsReceived(post) {
   return {type: types.POSTS_RECEIVED, post};
@@ -20,8 +20,8 @@ export function postCommentsCountChange(post_id, commentsCount) {
   return {type: types.COMMENTS_COUNT_CHANGE, post_id, commentsCount};
 }
 
-export function postEmojisCountChange(post_id, emojisCount) {
-  return {type: types.EMOJIS_COUNT_CHANGE, post_id, emojisCount};
+export function postEmojisCountChange(post_id, post) {
+  return {type: types.EMOJIS_COUNT_CHANGE, post_id, post};
 }
 
 export function createComments(text,post_id,parent_id) {

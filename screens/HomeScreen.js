@@ -7,7 +7,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  FlatList
+  FlatList,
+  Button,
+  Alert
 } from 'react-native';
 import Post from '../components/Post';
 import { connect } from 'react-redux';
@@ -44,6 +46,7 @@ class HomeScreen extends Component {
     item = item.item;
     return <Post postSocket={this.postsRectionsSocket} item={item} navigation={this.props.navigation}></Post>
   }
+  
   render() {
 
 

@@ -2,23 +2,22 @@ import React from 'react';
 import { Button, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LottieView from "lottie-react-native";
 
-export default class Laugh extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
+export default class Loading extends React.Component {
   componentDidMount() {
     if(this.props.stop===true){
 
     }else{
       this.animation.play();
-    }
-    // this.animation.rese
+    }   // this.animation.rese
     // this.animation.play
     // Or set a specific startFrame and endFrame with:
     // this.animation.play(30, 120);
   }
+
+  resetAnimation = () => {
+    this.animation.reset();
+    this.animation.play();
+  };
 
   render() {
     return (
@@ -28,14 +27,15 @@ export default class Laugh extends React.Component {
             this.animation = animation;
           }}
           style={{
-            width: 30,
+            width: 300,
             height: this.props.height,
             backgroundColor: '#1F1F1F',
-            // backfaceVisibility:'visible'
-            
           }}
-          source={require('../../assets/emojis/2093-laugh.json')}
+          source={require('../assets/loading.json')}
         />
+        {/* <View style={styles.buttonContainer}>
+          <Button title="Restart Animation" onPress={this.resetAnimation} />
+        </View> */}
       </TouchableOpacity>
     );
   }
@@ -49,5 +49,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+  },
+  buttonContainer: {
+    paddingTop: 20,
   },
 });

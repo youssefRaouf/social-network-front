@@ -19,9 +19,9 @@ function* requestEvents({offset}) {
     });
   }
 }
-function* createPosts({text,user_id}) {
+function* createPosts({text,url}) {
   try {
-    let data = yield call(createPost,text,user_id);
+    let data = yield call(createPost,text,url);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.CREATE_POST_SUCCESS, 

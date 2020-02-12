@@ -84,11 +84,13 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           list: newList1
         }    
         case types.EMOJIS_COUNT_CHANGE:
+          // console.log("hna et8yr aho")
           const newList2 = [...(state.list.map(post => {
             if(post.id === action.post_id){
+              post=action.post
               return {
                 ...post,
-                emojisCount: action.emojisCount
+                // emojisCount: action.emojisCount
               }
             }
             return post;

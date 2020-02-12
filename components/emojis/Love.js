@@ -30,8 +30,10 @@ export default class Love extends React.Component {
           }}
           style={{
             width: 40,
+            paddingLeft:this.props.paddingLeft,
             height: this.props.height,
-            backgroundColor: '#1F1F1F',
+            // backgroundColor: '#1F1F1F',
+            backfaceVisibility:'hidden'
           }}
           source={require('../../assets/emojis/love.json')}
           // OR find more Lottie files @ https://lottiefiles.com/featured

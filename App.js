@@ -10,13 +10,25 @@ import {Provider} from 'react-redux';
 import reducers from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import {Router} from './navigation/MainTabNavigator'
-import io from "socket.io-client";
+import * as firebase from 'firebase';
 
 // import StorybookUI from './storybook';
 
 // export default StorybookUI;
 
 export default function App(props) {
+  
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCFVT-tOrR43XpCY0zKy7qRVHqJ93Au_2c",
+  authDomain: "",
+  databaseURL: "",
+  storageBucket: "gs://social-network-de3a1.appspot.com"
+};
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+
+}
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const sagaMiddleware = createSagaMiddleware();
   this.store = createStore(reducers, applyMiddleware(sagaMiddleware));

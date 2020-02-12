@@ -27,7 +27,7 @@ export const baseUrl = 'http://192.168.1.3:4000/';
       .then(response => response.json())
   };
 
-  function  createPost (text,user_id){
+  function  createPost (text,url){
  return fetch(baseUrl+'posts', {
     method: 'POST',
     headers: {
@@ -36,7 +36,7 @@ export const baseUrl = 'http://192.168.1.3:4000/';
     },
     body: JSON.stringify({
       text: text,
-      user_id: user_id,
+      url: url,
     }),
   }).then(response=>response.json());
 }
