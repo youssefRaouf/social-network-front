@@ -2,7 +2,7 @@ import io from "socket.io-client";
 
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'http://192.168.1.3:4000/';
+export const baseUrl = 'https://social-network123.herokuapp.com/';
   function doRequest(url, options = {}, data = {}) {
     // console.log(url)
     let headers = {};
