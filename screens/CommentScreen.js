@@ -15,7 +15,7 @@ class CommentScreen extends Component {
   componentDidMount() {
     const postId = this.props.navigation.getParam('postId');
     this.getComments();
-    this.comments = io.connect('http://192.168.1.3:4500/posts/comments')
+    this.comments = io.connect('https://social-network123.herokuapp.com/posts/comments')
     const { commentsReceived } = this.props;
     this.comments.on('new_comment' + postId, (data) => {
       console.log("youssef raouf", data)

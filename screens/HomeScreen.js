@@ -27,13 +27,13 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    const posts = io.connect('http://192.168.1.3:4500/posts')
+    const posts = io.connect('https://social-network123.herokuapp.com/posts')
     const { postsReceived } = this.props;
     posts.on('new_post',(data)=>{
       console.log(data)
       postsReceived(data);
     })
-    this.postsRectionsSocket = io.connect('http://192.168.1.3:4500/posts/reactions')
+    this.postsRectionsSocket = io.connect('https://social-network123.herokuapp.com/posts/reactions')
 
     this.getPosts();
   }
