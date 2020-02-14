@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, TextInput, Button, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native'
+import { Text, View, Image, TouchableOpacity, TextInput, Button, SafeAreaView, KeyboardAvoidingView, Dimensions } from 'react-native'
 import { AntDesign, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
@@ -8,6 +8,8 @@ import * as firebase from 'firebase';
 import Loading from '../components/Loading'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { Video } from 'expo-av';
+import ActionSheet from 'react-native-actionsheet'
+
 class CreatePostScreen extends Component {
   constructor(props) {
     super(props);
@@ -75,6 +77,32 @@ class CreatePostScreen extends Component {
         ;
     }
   }
+
+  chooseImageFromLibrary = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync();
+    if (!result.cancelled) {
+      this.setState({
+        showButton: false,
+        showLoading: true,
+        Loading: false
+      })
+      this.uploadImage(result.uri).
+        then((res) => {
+          this.setState({
+            url: res,
+            showLoading: false,
+            loading: true
+          })
+          console.log(res)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+        ;
+    }
+  }
+
   uploadImage = async (uri) => {
     let file = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 400, height: 400 } }], { compress: 0.48 })
     const response = await fetch(file);
@@ -97,9 +125,14 @@ class CreatePostScreen extends Component {
       shouldPlay: !this.state.shouldPlay
     })
   }
+
+  showActionSheet = () => {
+    this.ActionSheet.show()
+  }
+
   render() {
     return (
-      <ScrollView style={{ backgroundColor: '#1F1F1F', flex: 1 }}>
+      <SafeAreaView style={{ flexDirection: 'column', flex: 1, backgroundColor: '#1F1F1F' }}>
         {/* <KeyboardAvoidingView behavior="height" enabled> */}
           <View style={{ flexDirection: 'row', marginTop: 40, borderBottomWidth: 2, paddingBottom: 5, borderColor: '#555555' }}>
             <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
@@ -156,21 +189,35 @@ class CreatePostScreen extends Component {
                 /> */}
             </View>
           </View>
-          {/* {this.state.showButton ? <TouchableOpacity onPress={this.onChooseImagePress} ><Text>Photo</Text></TouchableOpacity> : <Image source={{ uri: this.state.url }}
-                style={{ height: 400, width: 400, resizeMode: 'contain' }}
-              />} */}
-          <View style={{ flexDirection: 'column', }}>
-            <TouchableOpacity onPress={this.onChooseImagePress} style={{ alignItems:'center',flexDirection:'row',marginTop: Math.round(Dimensions.get('window').height - 300), height: 30, borderTopWidth: 2, borderBottomWidth: 2 }} >
-              <FontAwesome name="photo" style={{marginLeft:10,marginRight:15,fontSize:25,color:'grey'}} />
-              <Text style={{ color: 'white' }}>Upload Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.onChooseVideoPress} style={{ alignItems:'center',flexDirection:'row',borderBottomWidth: 2, height: 30 }} >
-            <Entypo name="video" style={{marginLeft:10,marginRight:15,fontSize:30,color:'grey'}} />
-              <Text style={{ color: 'white' }}>Upload Video</Text>
-            </TouchableOpacity>
-          </View>
-        {/* </KeyboardAvoidingView> */}
-      </ScrollView>
+
+          <KeyboardAvoidingView
+            behavior='padding'
+            keyboardVerticalOffset={-10}
+            enabled
+          >
+              <View style={{ flexDirection: 'row', backgroundColor: 'white', height: 40}}>
+                <TouchableOpacity onPress={this.showActionSheet.bind(this)} style={{ alignItems: 'center', flexDirection: 'row', height: 30, width: 58 }} >
+                  <FontAwesome name="photo" style={{marginLeft: 10, marginRight: 15, fontSize: 25, color: 'grey'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.onChooseVideoPress.bind(this)} style={{ alignItems:'center',flexDirection:'row', height: 30 }} >
+                  <Entypo name="video" style={{marginLeft:10,marginRight:15,fontSize:30,color:'grey'}} />
+                </TouchableOpacity>
+                <ActionSheet
+                  ref={o => this.ActionSheet = o}
+                  title={'Choose an image'}
+                  options={['Choose from camera', 'Choose from library', 'cancel']}
+                  cancelButtonIndex={2}
+                  onPress={(index) => { 
+                    if (index === 0) {
+                      this.onChooseImagePress()
+                    } else if(index === 1) {
+                      this.chooseImageFromLibrary()
+                    }
+                  }}
+                />
+            </View>
+          </KeyboardAvoidingView>
+          </SafeAreaView>
     );
   }
 }
