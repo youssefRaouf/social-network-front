@@ -104,10 +104,10 @@ class CreatePostScreen extends Component {
   }
 
   uploadImage = async (uri) => {
-    let file = await ImageManipulator.manipulateAsync(uri, [{ resize: { width: 400, height: 400 } }], { compress: 0.48 })
-    const response = await fetch(file);
+    let file = await ImageManipulator.manipulateAsync(uri, [{ resize: {height:400,resizeMode:'contain'} }], { compress: 0.48 })
+    const response = await fetch(file.uri);
     const blob = await response.blob();
-    var ref = firebase.storage().ref().child("images/test3");
+    var ref = firebase.storage().ref().child("images/"+new Date().getTime());
     await ref.put(blob)
     const url = ref.getDownloadURL()
     return url
@@ -115,7 +115,7 @@ class CreatePostScreen extends Component {
   uploadVideo = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    var ref = firebase.storage().ref().child("images/test3");
+    var ref = firebase.storage().ref().child("videos/"+new Date().getTime());
     await ref.put(blob)
     const url = ref.getDownloadURL()
     return url
@@ -134,90 +134,82 @@ class CreatePostScreen extends Component {
     return (
       <SafeAreaView style={{ flexDirection: 'column', flex: 1, backgroundColor: '#1F1F1F' }}>
         {/* <KeyboardAvoidingView behavior="height" enabled> */}
-          <View style={{ flexDirection: 'row', marginTop: 40, borderBottomWidth: 2, paddingBottom: 5, borderColor: '#555555' }}>
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-              <Ionicons style={{ marginLeft: 30, fontSize: 25, color: 'white' }} name="md-arrow-round-back" />
+        <View style={{ flexDirection: 'row', marginTop: 40, borderBottomWidth: 2, paddingBottom: 5, borderColor: '#555555' }}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <Ionicons style={{ marginLeft: 30, fontSize: 25, color: 'white' }} name="md-arrow-round-back" />
+          </TouchableOpacity>
+          <Text style={{ color: 'white', fontSize: 20, marginLeft: 20 }}>Create Post</Text>
+          <View style={{ flexDirection: 'row-reverse', flex: 1, alignItems: 'center' }}>
+            <TouchableOpacity style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}
+              disabled={this.state.text ? false : true}
+              onPress={() => this.createPost(this.state.text)
+                // this.props.navigation.navigate("Home")
+              }
+            >
+              <Text style={{ fontSize: 20, color: this.state.text ? 'white' : 'grey' }}>Post</Text>
             </TouchableOpacity>
-            <Text style={{ color: 'white', fontSize: 20, marginLeft: 20 }}>Create Post</Text>
-            <View style={{ flexDirection: 'row-reverse', flex: 1, alignItems: 'center' }}>
-              <TouchableOpacity style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}
-                disabled={this.state.text ? false : true}
-                onPress={() => this.createPost(this.state.text)
-                  // this.props.navigation.navigate("Home")
+          </View>
+        </View>
+        <View style={{ marginLeft: 10, height: 50, flexDirection: 'row', marginTop: 10 }}>
+          <View>
+            <Image source={{ uri: 'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg' }}
+              style={{ height: 50, width: 50, borderRadius: 25 }} />
+          </View>
+          <View style={{ marginLeft: 10, flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18, color: 'white' }}>Youssef Raouf</Text>
+          </View>
+          <View style={{ flexDirection: 'row-reverse', flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}>
+              <Entypo style={{ fontSize: 25, color: '#555555' }} name="dots-three-vertical" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={{ flex: 1, marginTop: 10, marginLeft: 10, marginRight: 10 }}>
+          <TextInput
+            // inputAccessoryViewID={'raoufwadie'}
+            style={{ color: 'white', fontSize: 20 }}
+            multiline={true}
+            placeholder="What's on your mind, Youssef?"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+          />
+
+
+          <View style={{ alignItems: 'center' }}>
+            {this.state.loading ? <Image source={{ uri: this.state.url }}
+              style={{ height: 400,width:400, resizeMode: 'contain' }}
+            /> : null}
+          </View>
+        </View>
+
+        <KeyboardAvoidingView
+          behavior='padding'
+          keyboardVerticalOffset={-10}
+          enabled
+        >
+          <View style={{ flexDirection: 'row', backgroundColor: 'white', height: 40 }}>
+            <TouchableOpacity onPress={this.showActionSheet.bind(this)} style={{ alignItems: 'center', flexDirection: 'row', height: 30, width: 58 }} >
+              <FontAwesome name="photo" style={{ marginLeft: 10, marginRight: 15, fontSize: 25, color: 'grey' }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onChooseVideoPress.bind(this)} style={{ alignItems: 'center', flexDirection: 'row', height: 30 }} >
+              <Entypo name="video" style={{ marginLeft: 10, marginRight: 15, fontSize: 30, color: 'grey' }} />
+            </TouchableOpacity>
+            <ActionSheet
+              ref={o => this.ActionSheet = o}
+              title={'Choose an image'}
+              options={['Choose from camera', 'Choose from library', 'cancel']}
+              cancelButtonIndex={2}
+              onPress={(index) => {
+                if (index === 0) {
+                  this.onChooseImagePress()
+                } else if (index === 1) {
+                  this.chooseImageFromLibrary()
                 }
-              >
-                <Text style={{ fontSize: 20, color: this.state.text ? 'white' : 'grey' }}>Post</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{ marginLeft: 10, height: 50, flexDirection: 'row', marginTop: 10 }}>
-            <View>
-              <Image source={{ uri: 'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg' }}
-                style={{ height: 50, width: 50, borderRadius: 25 }} />
-            </View>
-            <View style={{ marginLeft: 10, flexDirection: 'column' }}>
-              <Text style={{ fontSize: 18, color: 'white' }}>Youssef Raouf</Text>
-            </View>
-            <View style={{ flexDirection: 'row-reverse', flex: 1 }}>
-              <TouchableOpacity style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}>
-                <Entypo style={{ fontSize: 25, color: '#555555' }} name="dots-three-vertical" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{ flex: 1, marginTop: 10, marginLeft: 10, marginRight: 10 }}>
-            <TextInput
-              // inputAccessoryViewID={'raoufwadie'}
-              style={{ color: 'white', fontSize: 20 }}
-              multiline={true}
-              placeholder="What's on your mind, Youssef?"
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
+              }}
             />
-
-            <View style={{ alignItems: 'center' }}>
-
-              {/* <Video
-                  source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/social-network-de3a1.appspot.com/o/images%2Ftest3?alt=media&token=0d106b29-903d-411b-8f14-b8b22df5e424' }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  resizeMode="cover"
-                  shouldPlay
-                  isLooping={true}
-                  useNativeControls={true}
-                  style={{ width: 300, height: 300 }}
-                /> */}
-            </View>
           </View>
-
-          <KeyboardAvoidingView
-            behavior='padding'
-            keyboardVerticalOffset={-10}
-            enabled
-          >
-              <View style={{ flexDirection: 'row', backgroundColor: 'white', height: 40}}>
-                <TouchableOpacity onPress={this.showActionSheet.bind(this)} style={{ alignItems: 'center', flexDirection: 'row', height: 30, width: 58 }} >
-                  <FontAwesome name="photo" style={{marginLeft: 10, marginRight: 15, fontSize: 25, color: 'grey'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.onChooseVideoPress.bind(this)} style={{ alignItems:'center',flexDirection:'row', height: 30 }} >
-                  <Entypo name="video" style={{marginLeft:10,marginRight:15,fontSize:30,color:'grey'}} />
-                </TouchableOpacity>
-                <ActionSheet
-                  ref={o => this.ActionSheet = o}
-                  title={'Choose an image'}
-                  options={['Choose from camera', 'Choose from library', 'cancel']}
-                  cancelButtonIndex={2}
-                  onPress={(index) => { 
-                    if (index === 0) {
-                      this.onChooseImagePress()
-                    } else if(index === 1) {
-                      this.chooseImageFromLibrary()
-                    }
-                  }}
-                />
-            </View>
-          </KeyboardAvoidingView>
-          </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     );
   }
 }

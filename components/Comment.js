@@ -29,7 +29,7 @@ export default class Comment extends React.Component {
         <View style={{flexDirection:'column',marginLeft:10}}>
       <View style={{flexDirection:'row'}}> 
     <Text style={{ fontSize: 16,color: 'white',fontWeight: 'bold',}}>{this.props.item.user.name}</Text>
-    <Text style={{color:'grey',marginLeft:20,fontSize:13}}>{(this.props.item.created_at)}</Text>
+    <Text style={{color:'grey',marginLeft:20,fontSize:13}}>{timeStamp(this.props.item.created_at)}</Text>
       </View>
     <Text style={{color:'grey',fontSize:16}}>{this.props.item.text}</Text>
         </View>

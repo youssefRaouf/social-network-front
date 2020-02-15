@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {createAppContainer} from 'react-navigation';
 import CreatePostScreen from '../screens/CreatePostScreen'
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import CommentScreen from '../screens/CommentScreen'
 import TabBarIcon from '../components/TabBarIcon';
@@ -39,21 +39,22 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
+const ProfileStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    Profile: ProfileScreen,
   },
-  config
+  config,
+  
 );
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+ProfileStack.navigationOptions = {
+  tabBarLabel: 'Profile',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
   ),
-};
+  };
 
-LinksStack.path = '';
+ProfileStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
@@ -73,21 +74,24 @@ SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  LinksStack,
+  ProfileStack,
   SettingsStack,
-});
+},
+ { tabBarOptions:{
+   activeBackgroundColor:'#555555',
+   inactiveBackgroundColor:'#555555',
+   activeTintColor:'white',
+   inactiveTintColor:'black'
+ },
+ defaultNavigationOptions:{
+ }
+ });
 
 tabNavigator.path = '';
 
 
 
-const TabsNav = () => {
-  return createBottomTabNavigator({
-    HomeStack,
-    LinksStack,
-    SettingsStack,
-  });
-};
+
 
 
 export  const Router = createAppContainer(
@@ -96,8 +100,8 @@ export  const Router = createAppContainer(
       Home: {
         screen: tabNavigator,
       },
-      Links: {
-        screen: LinksScreen,
+      Profile: {
+        screen: ProfileScreen,
       },
       Settings: {
         screen: SettingsScreen,

@@ -72,7 +72,7 @@ class HomeScreen extends Component {
         <TouchableOpacity style={{ position: 'absolute', bottom: 20, right: 10, backgroundColor: '#555555', borderRadius: 30, height: 60, width: 60, justifyContent: 'center', alignItems: 'center' }}
           onPress={() => this.props.navigation.navigate("CreatePost")}
         >
-          <AntDesign style={{ fontSize: 35, color: 'red' }} name="plus" />
+          <AntDesign style={{ fontSize: 35, color: 'white' }} name="plus" />
         </TouchableOpacity>
       </View>
     );
