@@ -10,7 +10,7 @@ import EmojiPlaceholder from './EmojiPlaceholder';
 import User from './User'
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
-
+import { WebView } from 'react-native-webview';
 const {width} = Dimensions.get('window');
 
 class Post extends Component {
@@ -123,6 +123,10 @@ class Post extends Component {
             this.setState({height: newHeight, width})
           }}
           /> : null}
+          <WebView
+            source={{html: `<iframe src=\"http://www.dailymotion.com/embed/video/x26m1j4\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen=true allow=\"autoplay\""></iframe>`}}
+            style={{ width, height: 0.6*width, backgroundColor: 'black'}}
+          />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
           <View style={{ flexDirection: 'row' }}>
             {emojis[1] != null ?

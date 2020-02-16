@@ -9,6 +9,7 @@ import Loading from '../components/Loading'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { Video } from 'expo-av';
 import ActionSheet from 'react-native-actionsheet'
+import {uploadUrl} from '../services/VideoApi';
 
 class CreatePostScreen extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class CreatePostScreen extends Component {
     this.props.navigation.navigate("Home")
   }
   onChooseVideoPress = async () => {
+
     ImagePicker.MediaTypeOptions.Videos;
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'Videos'
@@ -37,7 +39,11 @@ class CreatePostScreen extends Component {
       console.log(result)
       console.log("youssef", this.state.showButton)
       this.uploadVideo(result.uri).
-        then((res) => {
+        then(async (res) => {
+          console.log("rrr", res);
+
+          const rep = await uploadUrl(res);
+          console.log(rep)
           this.setState({
             url: res,
             showLoading: false,
