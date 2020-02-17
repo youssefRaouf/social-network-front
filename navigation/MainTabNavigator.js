@@ -9,6 +9,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import CommentScreen from '../screens/CommentScreen'
 import TabBarIcon from '../components/TabBarIcon';
+import LoginScreen from '../screens/LoginScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -112,10 +113,13 @@ export  const Router = createAppContainer(
       Comment: {
         screen: CommentScreen,
       },
+      Login:{
+        screen: LoginScreen
+      }
     },
     { 
       headerMode: 'none',
-      initialRouteName: 'Home',
+      initialRouteName: 'Login',
     },
   ),
 );

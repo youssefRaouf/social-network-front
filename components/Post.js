@@ -40,6 +40,7 @@ class Post extends Component {
   }
 
   componentDidMount() {
+    if(this.props.postSocket!==null){
     this.props.postSocket.on(`comments_count_${this.props.item.id}`, (commentsCount) => {
       this.props.postCommentsCountChange(this.props.item.id, commentsCount);
     })
@@ -47,6 +48,7 @@ class Post extends Component {
       // console.log("connection hna")      
       this.props.postEmojisCountChange(this.props.item.id, post);
     })
+  }
     let emojis = this.props.item.emojis
     for (let i = 0; i < emojis.length; i++) {
       if (emojis[i] !== null) {
@@ -123,10 +125,10 @@ class Post extends Component {
             this.setState({height: newHeight, width})
           }}
           /> : null}
-          <WebView
+          {/* <WebView
             source={{html: `<iframe src=\"http://www.dailymotion.com/embed/video/x26m1j4\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen=true allow=\"autoplay\""></iframe>`}}
             style={{ width, height: 0.6*width, backgroundColor: 'black'}}
-          />
+          /> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
           <View style={{ flexDirection: 'row' }}>
             {emojis[1] != null ?
