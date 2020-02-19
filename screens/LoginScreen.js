@@ -1,149 +1,62 @@
 import React, { Component } from 'react';
-    import { View, ScrollView, TextInput, Button, StyleSheet, WebView,Text } from 'react-native';
-    import { Linking } from 'expo';
-    import * as firebase from 'firebase';
+import { View,Image, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import { Linking } from 'expo';
+import * as firebase from 'firebase';
+import * as Facebook from 'expo-facebook';
+import { checkUser } from '../services/Api';
 
-    const captchaUrl = 'https://my-domain.web.app/captcha-page.html';
-
-    
-
-    export default class LoginScreen extends Component {
-        constructor(props) {
-            super(props)
-            this.state = {
-                user: undefined,
-                phone: '',
-                confirmationResult: undefined,
-                code: '',
-                isWebView: false
-            }
-            firebase.auth().onAuthStateChanged(user => {
-                this.setState({ user })
-            })
-        }
-
-    onPhoneChange = (phone) => {
-        this.setState({ phone })
-    }
-    _onNavigationStateChange(webViewState) {
-        console.log(webViewState.url)
-        this.onPhoneComplete(webViewState.url)
-    }
-    onPhoneComplete = async () => {
-        let token = null
-        console.log("oks");
-        //WebBrowser.dismissBrowser()
-        const tokenEncoded = Linking.parse(captchaUrl).queryParams['token']
-        if (tokenEncoded)
-            token = decodeURIComponent(tokenEncoded)
-
-        this.verifyCaptchaSendSms(token);
-
-
-    }
-    verifyCaptchaSendSms = async (token) => {
-       console.log("youssef")
-       console.log(token)
-       token = 12534634646
-        if (token) {
-            const { phone } = this.state
-            //fake firebase.auth.ApplicationVerifier
-            const captchaVerifier = {
-                type: 'recaptcha',
-                verify: () => Promise.resolve(token)
-            }
-            try {
-                const confirmationResult = await firebase.auth().signInWithPhoneNumber(phone, captchaVerifier)
-                console.log("confirmationResult" + JSON.stringify(confirmationResult));
-                this.setState({ confirmationResult, isWebView: false })
-            } catch (e) {
-                console.warn(e)
-            }
-
-        }
+export default class LoginScreen extends Component {
+    constructor(props) {
+        super(props)
+     this.state={userInfo:null};
     }
 
-    onSignIn = async (code) => {
-        const { confirmationResult } = this.state
+    async  logIn() {
         try {
-            const result = await confirmationResult.confirm(code);
-            this.setState({ result });
-
-        } catch (e) {
-            console.warn(e)
-
+            await Facebook.initializeAsync('626219424879904');
+            const {
+                type,
+                token,
+                expires,
+                permissions,
+                declinedPermissions,
+            } = await Facebook.logInWithReadPermissionsAsync({
+                permissions: ['public_profile','email'],
+            });
+            console.log("youssef",type)
+            if (type === 'success') {
+                // Get the user's name using Facebook's Graph API
+                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email`);
+                const userInfo = await response.json();
+              const user= await checkUser(userInfo.email);
+            //   console.log(user)
+              if(user===null){
+                  this.props.navigation.navigate('Phone',{user:userInfo})
+              }else{
+                  this.props.navigation.navigate('Home')
+              }
+                // this.setState({ userInfo });
+                // console.log(userInfo)
+            } else {
+                // type === 'cancel'
+            }
+        } catch ({ message }) {
+            alert(`Facebook Login Error: ${message}`);
         }
-    }
-    onSignOut = async () => {
-        try {
-            await firebase.auth().signOut()
-        } catch (e) {
-            console.warn(e)
-        }
-    }
-    reset = () => {
-        this.setState({
-            phone: '',
-            phoneCompleted: false,
-            confirmationResult: undefined,
-            code: ''
-        })
     }
 
     render() {
-    if (this.state.user)
-        return (
-            <ScrollView style={{padding: 20, marginTop: 20}}>
-                <Text>You signed in</Text>
-                <Button
-                    onPress={this.onSignOut}
-                    title="Sign out"
-                />
-            </ScrollView>
-        )
-        else if (this.state.isWebView)
-            return (
-                <WebView
-                    ref="webview"
-                    source={{ uri: captchaUrl }}
-                    onNavigationStateChange={this._onNavigationStateChange.bind(this)}
-                    javaScriptEnabled={true}
-                    domStorageEnabled={true}
-                    injectedJavaScript={this.state.cookie}
-                    startInLoadingState={false}
-                />
 
-            )
-        else if (!this.state.confirmationResult)
-            return (
-                <ScrollView style={{ padding: 20, marginTop: 20 }}>
-                    <TextInput
-                        value={this.state.phone}
-                        onChangeText={this.onPhoneChange}
-                        keyboardType="phone-pad"
-                        placeholder="Your phone"
-                    />
-                    <Button
-                        onPress={this.onPhoneComplete}
-                        title="Next"
-                    />
-                </ScrollView>
-            )
-        else
-            return (
-                <ScrollView style={{padding: 20, marginTop: 20}}>
-                    <TextInput
-                        value={this.state.code}
-                        onChangeText={this.onCodeChange}
-                        keyboardType="numeric"
-                        placeholder="Code from SMS"
-                    />
-                    <Button
-                        onPress={this.onSignIn}
-                        title="Sign in"
-                    />
-                </ScrollView>
-            )
+        return (
+            <View style={{ marginTop: 40 ,flex:1}}>
+                <TouchableOpacity style={{backgroundColor:'blue',width:200}} onPress={() => this.logIn()} >
+                    <Text style={{ color: 'white', fontSize: 18 }}>login with Facebook</Text>
+                </TouchableOpacity>
+               {/* {this.state.userInfo!==null?<Image style={{height:200,width:200}} source={{ uri: this.state.userInfo.picture.data.url }}
+                   
+                />:null} */}
+            </View>
+        );
     }
 }
 const styles = StyleSheet.create({

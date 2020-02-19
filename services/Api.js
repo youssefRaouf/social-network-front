@@ -2,7 +2,8 @@ import io from "socket.io-client";
 
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'https://social-network123.herokuapp.com/';
+export const baseUrl = 'http://192.168.1.3:4000/';
+// export const baseUrl = 'https://social-network123.herokuapp.com/';
   function doRequest(url, options = {}, data = {}) {
     // console.log(url)
     let headers = {};
@@ -105,7 +106,36 @@ function  deleteEmoji (post_id){
     }),
   }).then(response=>response.json())
 }
+function  checkUser (email){
+  console.log(email)
+ return fetch(baseUrl+'checkUsers', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email:email,
+    }),
+  }).then(response=>response.json())
+}
+function  createUser (phone,user){
+  console.log(user.email)
+ return fetch(baseUrl+'Users', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      // token
+    },
+    body: JSON.stringify({
+      name:user.name,
+      email:user.email,
+      phone:phone
+    }),
+  }).then(response=>response.json())
+}
   this.socket = io("http://192.168.1.7:4000");
 const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji,updateEmoji,deleteEmoji};
+export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser};
