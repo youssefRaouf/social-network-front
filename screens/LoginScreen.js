@@ -44,6 +44,18 @@ export default class LoginScreen extends Component {
             alert(`Facebook Login Error: ${message}`);
         }
     }
+    componentDidMount(){
+     const token=  this._retrieveData();
+
+    }
+     _retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('token');
+          return value;
+        } catch (error) {
+          // Error retrieving data
+        }
+      };
 
     render() {
 

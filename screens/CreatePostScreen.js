@@ -9,16 +9,16 @@ import Loading from '../components/Loading'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { Video } from 'expo-av';
 import ActionSheet from 'react-native-actionsheet'
-import {uploadUrl} from '../services/VideoApi';
+import { uploadUrl } from '../services/VideoApi';
 
 class CreatePostScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: '', url: '', loading: false, showButton: true, showLoading: false, shouldPlay: true };
+    this.state = { text: '', url: '', loading: false, loadingVideo: false, showLoading: false, showLoadingVideo: false, videoName: '' };
   }
   createPost(text) {
     const { createPosts } = this.props;
-    createPosts(text, this.state.url);
+    createPosts(text, this.state.url,this.state.videoName);
     // this.socket = io("http://192.168.1.7:4000");
     // this.socket.emit('createPost',text);
     console.log(text)
@@ -33,21 +33,16 @@ class CreatePostScreen extends Component {
     if (!result.cancelled) {
       this.setState({
         showButton: false,
-        showLoading: true,
+        showLoadingVideo: true,
         Loading: false
       })
       console.log(result)
       console.log("youssef", this.state.showButton)
       this.uploadVideo(result.uri).
-        then(async (res) => {
-          console.log("rrr", res);
-
-          const rep = await uploadUrl(res);
-          console.log(rep)
+        then((res) => {
           this.setState({
-            url: res,
-            showLoading: false,
-            loading: true
+            showLoadingVideo: false,
+            loadingVideo: true
           })
           console.log(res)
         })
@@ -110,10 +105,10 @@ class CreatePostScreen extends Component {
   }
 
   uploadImage = async (uri) => {
-    let file = await ImageManipulator.manipulateAsync(uri, [{ resize: {height:400,resizeMode:'contain'} }], { compress: 0.48 })
+    let file = await ImageManipulator.manipulateAsync(uri, [{ resize: { height: 400, resizeMode: 'contain' } }], { compress: 0.48 })
     const response = await fetch(file.uri);
     const blob = await response.blob();
-    var ref = firebase.storage().ref().child("images/"+new Date().getTime());
+    var ref = firebase.storage().ref().child("images/" + new Date().getTime());
     await ref.put(blob)
     const url = ref.getDownloadURL()
     return url
@@ -121,7 +116,8 @@ class CreatePostScreen extends Component {
   uploadVideo = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    var ref = firebase.storage().ref().child("videos/"+new Date().getTime());
+    this.setState({ videoName: new Date().getTime() })
+    var ref = firebase.storage().ref().child("videos/" + this.state.videoName);
     await ref.put(blob)
     const url = ref.getDownloadURL()
     return url
@@ -183,8 +179,25 @@ class CreatePostScreen extends Component {
 
           <View style={{ alignItems: 'center' }}>
             {this.state.loading ? <Image source={{ uri: this.state.url }}
-              style={{ height: 400,width:400, resizeMode: 'contain' }}
-            /> : null}
+              style={{ height: 400, width: 400, resizeMode: 'contain' }}
+            /> : this.state.showLoading ?
+                <View style={{ position: 'relative' }}>
+                  <Loading />
+                </View> : null}
+            {this.state.loadingVideo ? <Video
+              source={{ uri: 'https://videostream777.herokuapp.com/video?path=' + this.state.videoName }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode='contain'
+              isLooping={true}
+              useNativeControls={true}
+              style={{ width: 300, height: 300 }}
+            /> : this.state.showLoadingVideo ?
+                <View style={{ position: 'relative' }}>
+                  <Loading />
+                </View>
+                : null}
           </View>
         </View>
 
@@ -229,7 +242,7 @@ const mapStateToProps = ({ posts }, props) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  createPosts: (text, url) => dispatch(actions.createPosts(text, url)),
+  createPosts: (text, url,videoName) => dispatch(actions.createPosts(text, url,videoName)),
 });
 
 export default connect(

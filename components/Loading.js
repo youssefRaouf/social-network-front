@@ -21,7 +21,7 @@ export default class Loading extends React.Component {
 
   render() {
     return (
-      <TouchableOpacity style={[styles.animationContainer, this.props.style]} onPress={this.props.onPress}>
+      <TouchableOpacity style={[styles.animationContainer, this.props.style]}>
         <LottieView
           ref={animation => {
             this.animation = animation;

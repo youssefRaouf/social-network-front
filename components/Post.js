@@ -11,7 +11,8 @@ import User from './User'
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
 import { WebView } from 'react-native-webview';
-const {width} = Dimensions.get('window');
+import { Video } from 'expo-av';
+const { width } = Dimensions.get('window');
 
 class Post extends Component {
   constructor(props) {
@@ -40,15 +41,15 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    if(this.props.postSocket!==null){
-    this.props.postSocket.on(`comments_count_${this.props.item.id}`, (commentsCount) => {
-      this.props.postCommentsCountChange(this.props.item.id, commentsCount);
-    })
-    this.props.postSocket.on(`emojis_count_${this.props.item.id}`, (post) => {
-      // console.log("connection hna")      
-      this.props.postEmojisCountChange(this.props.item.id, post);
-    })
-  }
+    if (this.props.postSocket !== null) {
+      this.props.postSocket.on(`comments_count_${this.props.item.id}`, (commentsCount) => {
+        this.props.postCommentsCountChange(this.props.item.id, commentsCount);
+      })
+      this.props.postSocket.on(`emojis_count_${this.props.item.id}`, (post) => {
+        // console.log("connection hna")      
+        this.props.postEmojisCountChange(this.props.item.id, post);
+      })
+    }
     let emojis = this.props.item.emojis
     for (let i = 0; i < emojis.length; i++) {
       if (emojis[i] !== null) {
@@ -118,14 +119,27 @@ class Post extends Component {
         <User item={this.props.item} />
         <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
         {this.props.item.url ? <Image source={{ uri: this.props.item.url }}
-          style={{ height: this.state.height, resizeMode: 'contain', }} 
-          onLoad={(e)=>{
-            const ratio = e.nativeEvent.source.width/400
-            const newHeight = width/ratio
-            this.setState({height: newHeight, width})
+          style={{ height: this.state.height, resizeMode: 'contain', }}
+          onLoad={(e) => {
+            const ratio = e.nativeEvent.source.width / 400
+            const newHeight = width / ratio
+            this.setState({ height: newHeight, width })
           }}
-          /> : null}
-          {/* <WebView
+        /> : null}
+        {this.props.item.video_name ?
+        <View style={{alignItems:'center'}}>
+          <Video
+            source={{ uri: 'https://videostream777.herokuapp.com/video?path=' + this.props.item.video_name }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode='contain'
+            isLooping={true}
+            useNativeControls={true}
+            style={{ width: 300, height: 300 }}
+          /></View> : null
+        }
+        {/* <WebView
             source={{html: `<iframe src=\"http://www.dailymotion.com/embed/video/x26m1j4\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen=true allow=\"autoplay\""></iframe>`}}
             style={{ width, height: 0.6*width, backgroundColor: 'black'}}
           /> */}

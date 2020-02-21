@@ -14,6 +14,7 @@ export default class PhoneScreen extends Component {
     async  logIn() {
         console.log(this.props.navigation.state.params.user)
        createUser(this.state.number,this.props.navigation.state.params.user)
+       this.navigation.navigate('Home')
     }
 
     render() {

@@ -1,5 +1,4 @@
-import io from "socket.io-client";
-
+import { AsyncStorage } from 'react-native';
 const apiKey =
   'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
 export const baseUrl = 'http://192.168.1.3:4000/';
@@ -28,7 +27,7 @@ export const baseUrl = 'http://192.168.1.3:4000/';
       .then(response => response.json())
   };
 
-  function  createPost (text,url){
+  function  createPost (text,url,videoName){
  return fetch(baseUrl+'posts', {
     method: 'POST',
     headers: {
@@ -38,6 +37,7 @@ export const baseUrl = 'http://192.168.1.3:4000/';
     body: JSON.stringify({
       text: text,
       url: url,
+      video_name:videoName,
     }),
   }).then(response=>response.json());
 }
@@ -119,6 +119,14 @@ function  checkUser (email){
     }),
   }).then(response=>response.json())
 }
+const _storeData = async (token) => {
+  try {
+    await AsyncStorage.setItem('token',token);
+  } catch (error) {
+    // Error saving data
+  }
+};
+
 function  createUser (phone,user){
   console.log(user.email)
  return fetch(baseUrl+'Users', {
@@ -133,9 +141,9 @@ function  createUser (phone,user){
       email:user.email,
       phone:phone
     }),
-  }).then(response=>response.json())
+  }).then(response=>response.json()).then(response=> _storeData(response))
 }
-  this.socket = io("http://192.168.1.7:4000");
-const socket=this.socket;
+  // this.socket = io("http://192.168.1.7:4000");
+// const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment,socket,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser};
+export {createPost,getPosts,getCommentsByPostId,createComment,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser};

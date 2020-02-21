@@ -19,9 +19,9 @@ function* requestEvents({offset}) {
     });
   }
 }
-function* createPosts({text,url}) {
+function* createPosts({text,url,videoName}) {
   try {
-    let data = yield call(createPost,text,url);
+    let data = yield call(createPost,text,url,videoName);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.CREATE_POST_SUCCESS, 

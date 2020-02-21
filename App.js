@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo';
+import { AppLoading ,ScreenOrientation,} from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
@@ -11,6 +11,8 @@ import reducers from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import {Router} from './navigation/MainTabNavigator'
 import * as firebase from 'firebase';
+import { DeviceMotion,orientation } from 'expo-sensors';
+import { AsyncStorage } from 'react-native';
 
 // import StorybookUI from './storybook';
 
@@ -19,6 +21,10 @@ import * as firebase from 'firebase';
 export default function App(props) {
   
 // Initialize Firebase
+// AsyncStorage.setItem('token',"saving token")
+// const value =await AsyncStorage.getItem('token');
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyCFVT-tOrR43XpCY0zKy7qRVHqJ93Au_2c",
   authDomain: "",
@@ -29,6 +35,19 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 
 }
+// let ori=0;
+// DeviceMotion.addListener(orientation)
+// DeviceMotion.addListener(Orientation=> Orientation.rotation.gamma<-0.5?ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE):ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT))
+
+// console.log(ori)
+//  if(ori!==0){
+// ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+//  }else{
+// ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+
+//  }
+// ScreenOrientation.Orientation.
+// ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const sagaMiddleware = createSagaMiddleware();
   this.store = createStore(reducers, applyMiddleware(sagaMiddleware));

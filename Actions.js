@@ -6,8 +6,8 @@ export function fetchPosts(offset) {
 export function fetchComments(offset,post_id) {
   return {type: types.FETCH_COMMENTS,offset,post_id};
 }
-export function createPosts(text,url) {
-  return {type: types.CREATE_POST,text,url};
+export function createPosts(text,url,videoName) {
+  return {type: types.CREATE_POST,text,url,videoName};
 }
 export function postsReceived(post) {
   return {type: types.POSTS_RECEIVED, post};
