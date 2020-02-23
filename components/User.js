@@ -12,7 +12,7 @@ export default class User extends React.Component {
     return (
         <View style={{marginLeft:10,height:50,flexDirection:'row',flex:1,marginTop:-7}}>
         <View>
-            <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
+            <Image source={{uri:this.props.item.user.image_url}}
             style={{height:50,width:50,borderRadius:25}}/>
         </View>
         <View style={{marginLeft:7,flexDirection:'column'}}>

@@ -1,21 +1,25 @@
 import { AsyncStorage } from 'react-native';
-const apiKey =
-  'cda11v2OkqSI1rhQm37PBXKnpisMtlaDzoc4w0U6uNATgZRbJG&fbclid=IwAR0xMMxqpz0NIJwy9L5hq7qKTPrNQZwRaBCebgRVCxIq5fkO4oYIT1wsp2E';
-export const baseUrl = 'http://192.168.1.3:4000/';
+import {Token} from '../screens/LoginScreen'
+import getEnv from '../configs';
+export const baseUrl = getEnv().baseUrl;
+//  async function _retrieveData  () {
+//      try {
+//        const value = await AsyncStorage.getItem('token');
+//        return value;
+//      } catch (error) {
+//        // Error retrieving data
+//      }
+//    };
+//       let token=  await _retrieveData();
 // export const baseUrl = 'https://social-network123.herokuapp.com/';
   function doRequest(url, options = {}, data = {}) {
-    // console.log(url)
-    let headers = {};
-    if (options) {
-      headers = {
-        ...headers,
-        ...options.headers,
-      };
-    }
+    // console.log("ya 3mmmyy feeen 3mo el hearder",Token)
     const queryString = Object.keys(data)
       .map(key => key + '=' + data[key])
       .join('&');
-    return fetch(`${baseUrl}${url}?${queryString}`);
+    return fetch(`${baseUrl}${url}?${queryString}`,{headers:{  Accept: 'application/json',
+    'Content-Type': 'application/json',
+    token: Token}});
   }
 
   const getPosts = (offset) => {
@@ -28,11 +32,13 @@ export const baseUrl = 'http://192.168.1.3:4000/';
   };
 
   function  createPost (text,url,videoName){
+    console.log("fel create",Token)
  return fetch(baseUrl+'posts', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      token: Token
     },
     body: JSON.stringify({
       text: text,
@@ -49,13 +55,26 @@ const getCommentsByPostId = (offset,post_id) => {
   return eventsRequest()
     .then(response => response.json())
 };
-
+async function getUserbyEmail(email) {
+  console.log("d5lna gwa el user")
+ const session =await fetch(baseUrl+'users/'+email, {
+  method: 'GET',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    token:'null'
+  },
+}).then(response=>response.json())
+await _storeData(session)
+  return session;
+}
 function  createComment (text,post_id,parent_id){
   return fetch(baseUrl+'comments', {
      method: 'POST',
      headers: {
        Accept: 'application/json',
        'Content-Type': 'application/json',
+       token:Token
      },
      body: JSON.stringify({
        text: text,
@@ -71,6 +90,7 @@ function  createComment (text,post_id,parent_id){
      headers: {
        Accept: 'application/json',
        'Content-Type': 'application/json',
+       token:Token
      },
      body: JSON.stringify({
        type: type,
@@ -86,6 +106,7 @@ function  createComment (text,post_id,parent_id){
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      token:Token
     },
     body: JSON.stringify({
       type: type,
@@ -100,6 +121,7 @@ function  deleteEmoji (post_id){
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      token:Token
     },
     body: JSON.stringify({
       post_id: post_id,
@@ -107,12 +129,14 @@ function  deleteEmoji (post_id){
   }).then(response=>response.json())
 }
 function  checkUser (email){
-  console.log(email)
+  // console.log(email)
+  // console.log(Token)
  return fetch(baseUrl+'checkUsers', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      token:null
     },
     body: JSON.stringify({
       email:email,
@@ -121,15 +145,16 @@ function  checkUser (email){
 }
 const _storeData = async (token) => {
   try {
+    console.log("el token ya 3moo",token)
     await AsyncStorage.setItem('token',token);
   } catch (error) {
     // Error saving data
   }
 };
 
-function  createUser (phone,user){
-  console.log(user.email)
- return fetch(baseUrl+'Users', {
+async function  createUser (phone,user){
+  // console.log(user.email)
+ const session= await fetch(baseUrl+'Users', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -139,11 +164,25 @@ function  createUser (phone,user){
     body: JSON.stringify({
       name:user.name,
       email:user.email,
-      phone:phone
+      phone:phone,
+      image_url:user.picture.data.url
     }),
-  }).then(response=>response.json()).then(response=> _storeData(response))
+  }).then(response=>response.json())
+  // console.log(Token)
+ await _storeData(session);
+  return session;
+}
+function  getMyProfile (){
+ return fetch(baseUrl+'users/profile/myProfile', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token:Token
+    },
+  }).then(response=>response.json())
 }
   // this.socket = io("http://192.168.1.7:4000");
 // const socket=this.socket;
 
-export {createPost,getPosts,getCommentsByPostId,createComment,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser};
+export {createPost,getPosts,getCommentsByPostId,createComment,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser,getUserbyEmail,getMyProfile};

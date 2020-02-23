@@ -17,6 +17,7 @@ import * as actions from '../Actions';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { socket } from '../services/Api'
 import io from "socket.io-client";
+import getEnv from '../configs';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -27,13 +28,13 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    const posts = io.connect('https://social-network123.herokuapp.com/posts')
+    const posts = io.connect(getEnv().socket.posts)
     const { postsReceived } = this.props;
     posts.on('new_post',(data)=>{
       console.log(data)
       postsReceived(data);
     })
-    this.postsRectionsSocket = io.connect('https://social-network123.herokuapp.com/posts/reactions')
+    this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
 
     this.getPosts();
   }

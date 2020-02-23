@@ -24,7 +24,7 @@ export default class Comment extends React.Component {
             </TouchableOpacity>
             </View>
         <View style={{flexDirection:'row',marginLeft:10}}>
-        <Image source={{uri:'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg'}}
+        <Image source={{uri:this.props.item.user.image_url}}
             style={{height:35,width:35,borderRadius:17.5}}/>
         <View style={{flexDirection:'column',marginLeft:10}}>
       <View style={{flexDirection:'row'}}> 

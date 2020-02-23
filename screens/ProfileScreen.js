@@ -16,7 +16,7 @@ import Post from '../components/Post';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { socket } from '../services/Api'
+import { socket, getMyProfile } from '../services/Api'
 import io from "socket.io-client";
 const { width } = Dimensions.get('window');
 
@@ -25,21 +25,20 @@ class ProfileScreen extends Component {
     super(props);
     this.state = {
       data: [],
-      selectPosts:1
+      selectPosts:1,
+      user:''
     };
   }
 
   componentDidMount() {
-    // const posts = io.connect('https://social-network123.herokuapp.com/posts')
-    // const { postsReceived } = this.props;
-    // posts.on('new_post',(data)=>{
-    //   console.log(data)
-    //   postsReceived(data);
-    // })
-    // this.postsRectionsSocket = io.connect('https://social-network123.herokuapp.com/posts/reactions')
-
     this.getPosts();
+    this.getProfile();
   }
+ async  getProfile(){
+ const user=await getMyProfile();
+  this.setState({user})
+  console.log("el user",user)
+   }
   getPosts(offset = 0) {
     const { fetchPosts } = this.props;
     fetchPosts(offset);
@@ -53,7 +52,7 @@ class ProfileScreen extends Component {
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
         <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 5 }}>
-          <Image source={{ uri: 'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg' }}
+          <Image source={{ uri: this.state.user.image_url }}
             style={{ height: 100, width: 100, borderRadius: 50 }} />
           <View style={{ flexDirection: 'column', marginTop: 25 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width - 100 }}>
@@ -73,9 +72,9 @@ class ProfileScreen extends Component {
           </View>
         </View>
         <View style={{ marginLeft: 15, marginTop: 10 }}>
-          <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>Mina Makar</Text>
+     <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>{this.state.user.name}</Text>
           <Text style={{ color: 'white', fontWeight: 'normal' }}>About :</Text>
-          <Text style={{ color: 'white', marginRight: 15 }}>i am a software engineer making this application with expo </Text>
+    <Text style={{ color: 'white', marginRight: 15 }}>{this.state.user.email}</Text>
         </View>
         <View>
           <View style={{ flexDirection: 'row',margin:7,padding:2}} >

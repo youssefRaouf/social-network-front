@@ -7,6 +7,7 @@ import * as actions from '../Actions';
 import { AccessoryView } from '../components/AccessoryView';
 import { createComment } from '../services/Api'
 import io from "socket.io-client";
+import getEnv from '../configs';
 class CommentScreen extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +16,8 @@ class CommentScreen extends Component {
   componentDidMount() {
     const postId = this.props.navigation.getParam('postId');
     this.getComments();
-    this.comments = io.connect('https://social-network123.herokuapp.com/posts/comments')
+    
+    this.comments = io.connect(getEnv().socket.comments)
     const { commentsReceived } = this.props;
     this.comments.on('new_comment' + postId, (data) => {
       console.log("youssef raouf", data)
