@@ -7,6 +7,9 @@ import { checkUser,getUserbyEmail } from '../services/Api';
 import { AsyncStorage } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 export let Token;
+export const updateToken=(token)=>{
+    Token=token
+}
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props)

@@ -106,6 +106,7 @@ class CreatePostScreen extends Component {
 
   uploadImage = async (uri) => {
     let file = await ImageManipulator.manipulateAsync(uri, [{ resize: { height: 400, resizeMode: 'contain' } }], { compress: 0.48 })
+    console.log("ml upload",file.uri)
     const response = await fetch(file.uri);
     const blob = await response.blob();
     var ref = firebase.storage().ref().child("images/" + new Date().getTime());

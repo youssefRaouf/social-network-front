@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert, Dimensions } from 'react-native';
-import { Linking } from 'expo';
-import * as firebase from 'firebase';
-import * as Facebook from 'expo-facebook';
-import { checkUser, createUser } from '../services/Api';
+import { updateToken } from '../screens/LoginScreen'
+import {  createUser } from '../services/Api';
 
 export default class PhoneScreen extends Component {
     constructor(props) {
@@ -13,7 +11,9 @@ export default class PhoneScreen extends Component {
 
     async  logIn() {
         console.log(this.props.navigation.state.params.user)
-        createUser(this.state.number, this.props.navigation.state.params.user).then(() => this.props.navigation.navigate('Home'))
+        const session= await createUser(this.state.number, this.props.navigation.state.params.user)
+        updateToken(session);
+        this.props.navigation.navigate('Home')
     }
 
     render() {
@@ -26,7 +26,7 @@ export default class PhoneScreen extends Component {
                         multiline={true}
                         keyboardType='numeric'
                         placeholder="     enter your phone number"
-                        onChangeText={text => this.setState({ text })}
+                        onChangeText={text => this.setState({ number:text })}
                         value={this.state.text}
                     />
                 </View>

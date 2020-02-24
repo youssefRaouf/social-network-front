@@ -55,19 +55,7 @@ const getCommentsByPostId = (offset,post_id) => {
   return eventsRequest()
     .then(response => response.json())
 };
-async function getUserbyEmail(email) {
-  console.log("d5lna gwa el user")
- const session =await fetch(baseUrl+'users/'+email, {
-  method: 'GET',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    token:'null'
-  },
-}).then(response=>response.json())
-await _storeData(session)
-  return session;
-}
+
 function  createComment (text,post_id,parent_id){
   return fetch(baseUrl+'comments', {
      method: 'POST',
@@ -84,7 +72,6 @@ function  createComment (text,post_id,parent_id){
    }).then(response=>response.json())
  }
  function  createEmoji (type,post_id){
-   console.log("yoyou",post_id)
   return fetch(baseUrl+'emojis', {
      method: 'POST',
      headers: {
@@ -100,7 +87,6 @@ function  createComment (text,post_id,parent_id){
  }
 
  function  updateEmoji (type,post_id){
-  console.log(type,post_id)
  return fetch(baseUrl+'emojis', {
     method: 'PUT',
     headers: {
@@ -145,13 +131,24 @@ function  checkUser (email){
 }
 const _storeData = async (token) => {
   try {
-    console.log("el token ya 3moo",token)
     await AsyncStorage.setItem('token',token);
   } catch (error) {
     // Error saving data
   }
 };
-
+async function getUserbyEmail(email) {
+  console.log("d5lna gwa el user")
+ const session =await fetch(baseUrl+'users/'+email, {
+  method: 'GET',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    token:'null'
+  },
+}).then(response=>response.json())
+await _storeData(session)
+  return session;
+}
 async function  createUser (phone,user){
   // console.log(user.email)
  const session= await fetch(baseUrl+'Users', {
@@ -159,7 +156,7 @@ async function  createUser (phone,user){
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      // token
+      token:'null'
     },
     body: JSON.stringify({
       name:user.name,
