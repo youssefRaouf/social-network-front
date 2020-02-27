@@ -6,6 +6,7 @@ let POSTS_INITIAL_STATE = {
   offset: 1,
   hasMore: true,
   activeEvent: {},
+  user_id:''
 };
 
 function posts(state = POSTS_INITIAL_STATE, action) {
@@ -33,6 +34,36 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         list: state.list.concat(newItems),
         hasMore: list.length > 0,
       };
+      case types.FETCH_POSTS_USER_ID:
+        return {
+          ...state,
+          isLoading: true,
+          isFetching: true,
+        };
+      case types.FETCH_POSTS_USER_ID_SUCCESS:
+        const oldUserPosts = (state[action.user_id]&&state[action.user_id].list) || []
+        const listPosts = action.data||[];
+        const prevIdsPosts = oldUserPosts.map(item => item.id);
+       
+        // if(list){
+       const  newUserPosts = listPosts.filter(item => !prevIdsPosts.includes(item.id));
+        // }
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+          [action.user_id]: {
+            list: [...oldUserPosts, ...newUserPosts],
+            hasMore: listPosts.length > 0
+          }
+        };
+      case types.FETCH_POSTS_USER_ID_FAIL:
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+        };
+  
     case types.FETCH_POSTS_FAIL:
       return {
         ...state,
@@ -84,7 +115,7 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           list: newList1
         }    
         case types.EMOJIS_COUNT_CHANGE:
-          // console.log("hna et8yr aho")
+      
           const newList2 = [...(state.list.map(post => {
             if(post.id === action.post_id){
               post=action.post

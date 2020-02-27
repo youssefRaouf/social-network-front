@@ -11,6 +11,7 @@ import CommentScreen from '../screens/CommentScreen'
 import TabBarIcon from '../components/TabBarIcon';
 import LoginScreen from '../screens/LoginScreen';
 import PhoneScreen from '../screens/PhoneScreen';
+import UserScreen from '../screens/UserScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -120,6 +121,9 @@ export const Router = createAppContainer(
       },
       Phone: {
         screen: PhoneScreen
+      },
+      User:{
+        screen:UserScreen
       }
     },
     {

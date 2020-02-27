@@ -22,26 +22,29 @@ import getEnv from '../configs';
 
 const { width } = Dimensions.get('window');
 
-class ProfileScreen extends Component {
+class UserScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       selectPosts:1,
+      user:''
     };
   }
 
   componentDidMount() {
-    this.getPosts();
+    this.setState({user:this.props.navigation.getParam('user')})
+    console.log("mt2olsh",this.props.navigation.getParam('user'));
+        this.getPosts();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
   }
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
-    fetchPostsByUserId(offset,this.props.user.id);
+    fetchPostsByUserId(offset,this.props.navigation.getParam('user').id);
   }
   renderItem(item) {
     item= item.item
-    return <Post postSocket={this.postsRectionsSocket} item={item} navigation={this.props.navigation}></Post>
+    return <Post postSocket={null} item={item} navigation={this.props.navigation}></Post>
   }
   render() {
     this.state.data = this.props.posts;
@@ -49,7 +52,7 @@ class ProfileScreen extends Component {
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
         <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 5 }}>
-          <Image source={{ uri:this.props.user.image_url }}
+          <Image source={{ uri:this.state.user.image_url }}
             style={{ height: 100, width: 100, borderRadius: 50 }} />
           <View style={{ flexDirection: 'column', marginTop: 25 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width - 100 }}>
@@ -77,9 +80,9 @@ class ProfileScreen extends Component {
           </View>
         </View>
         <View style={{ marginLeft: 15, marginTop: 10 }}>
-     <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>{this.props.user.name}</Text>
+     <Text style={{ color: 'white', fontSize: 18, fontWeight: '800' }}>{this.state.user.name}</Text>
           <Text style={{ color: 'white', fontWeight: 'normal' }}>About :</Text>
-    <Text style={{ color: 'white', marginRight: 15 }}>{this.props.user.email}</Text>
+    <Text style={{ color: 'white', marginRight: 15 }}>{this.state.user.email}</Text>
         </View>
         <View>
           <View style={{ flexDirection: 'row',margin:7,padding:2}} >
@@ -110,7 +113,7 @@ class ProfileScreen extends Component {
     );
   }
 }
-ProfileScreen.navigationOptions = {
+UserScreen.navigationOptions = {
   header: null
 };
 const mapStateToProps = ({ posts, user }, props) => {
@@ -119,7 +122,6 @@ const mapStateToProps = ({ posts, user }, props) => {
   return {
     posts: (posts[userId]&&posts[userId].list) || [],
     post: activePost,
-    user:user.user
   };
 };
 
@@ -131,7 +133,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ProfileScreen);
+)(UserScreen);
 // CreatePostScreen.navigationOptions = {
 //   header: null,
 // };

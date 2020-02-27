@@ -3,6 +3,10 @@ import * as types from './utils/Consts';
 export function fetchPosts(offset) {
     return {type: types.FETCH_POSTS,offset};
 }
+export function fetchPostsByUserId(offset,user_id) {
+  console.log("d5lna user posts",user_id)
+  return {type: types.FETCH_POSTS_USER_ID,offset,user_id};
+}
 export function fetchComments(offset,post_id) {
   return {type: types.FETCH_COMMENTS,offset,post_id};
 }
@@ -40,5 +44,14 @@ export function deleteEmojis(post_id) {
 }
 export function fetchCategories(page = 1, refresh) {
   return {type: types.FETCH_CATEGORIES, page, refresh};
+}
+export function checkUser(email) {
+  return {type: types.CHECK_USER,email};
+}
+export function createUser(phone,user) {
+  return {type: types.CREATE_USER,phone,user};
+}
+export function fetchUser() {
+  return {type: types.FETCH_USER};
 }
 

@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import * as actions from '../Actions';
 import { WebView } from 'react-native-webview';
 import { Video } from 'expo-av';
+import VideoPlayer from 'expo-video-player'
+import { ScreenOrientation } from 'expo';
 const { width } = Dimensions.get('window');
 
 class Post extends Component {
@@ -19,7 +21,7 @@ class Post extends Component {
     super(props);
     let arr = [null, Love, Laugh, Wow, Sad, Angry]
     let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
-    this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null, emojiCountShow: false, height: 400, width };
+    this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null, emojiCountShow: false, videoHeight: 400, height: 400, width, fullScreen: false };
     if (this.props.item.myEmojis != null) {
       if (this.props.item.myEmojis[0]) {
         const type = this.props.item.myEmojis[0].type;
@@ -46,7 +48,7 @@ class Post extends Component {
         this.props.postCommentsCountChange(this.props.item.id, commentsCount);
       })
       this.props.postSocket.on(`emojis_count_${this.props.item.id}`, (post) => {
-        // console.log("connection hna")      
+        console.log("connection hna")
         this.props.postEmojisCountChange(this.props.item.id, post);
       })
     }
@@ -116,7 +118,9 @@ class Post extends Component {
     //  c
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
-        <User item={this.props.item} />
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate('User',{user:this.props.item.user})}>
+          <User item={this.props.item} />
+        </TouchableOpacity>
         <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
         {this.props.item.url ? <Image source={{ uri: this.props.item.url }}
           style={{ height: this.state.height, resizeMode: 'contain', }}
@@ -127,17 +131,39 @@ class Post extends Component {
           }}
         /> : null}
         {this.props.item.video_name ?
-        <View style={{alignItems:'center'}}>
-          <Video
-            source={{ uri: 'https://videostream777.herokuapp.com/video?path=' + this.props.item.video_name }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode='contain'
-            isLooping={true}
-            useNativeControls={true}
-            style={{ width: 300, height: 300 }}
-          /></View> : null
+          <View style={{ alignItems: 'center' }}>
+            <Video
+              source={{ uri: 'https://videostream777.herokuapp.com/video?path=' + this.props.item.video_name }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode='contain'
+              isLooping={false}
+              useNativeControls={true}
+              style={{ width: Dimensions.get('window').width, aspectRatio: 1 }}
+            />
+            {/* source={{ uri: 'https://videostream777.herokuapp.com/video?path=' + this.props.item.video_name }} */}
+            {/* <VideoPlayer
+              videoProps={{
+                // onFullscreenUpdate:()=>{this.setState({fullScreen:!fullScreen})},
+                shouldPlay: false,
+                resizeMode: Video.RESIZE_MODE_CONTAIN,
+                source: {
+                 uri: 'https://videostream777.herokuapp.com/video?path=' + this.props.item.video_name ,
+                },
+              }}
+              height={500}
+              inFullscreen={this.state.fullScreen}
+              showFullscreenButton={false}
+              showControlsOnLoad={true}
+              switchToLandscape={()=>{ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+                this.setState({fullScreen:!this.state.fullScreen})
+                }}
+              switchToPortrait={()=>{ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+                this.setState({fullScreen:!this.state.fullScreen})
+              }} */}
+            {/* /> */}
+          </View> : null
         }
         {/* <WebView
             source={{html: `<iframe src=\"http://www.dailymotion.com/embed/video/x26m1j4\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen=true allow=\"autoplay\""></iframe>`}}
@@ -145,49 +171,49 @@ class Post extends Component {
           /> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            {emojis[1] != null ?
+            {emojis && emojis[1] != null ?
               <View style={{ marginRight: 5, flexDirection: 'row' }}>
                 <Text style={{ color: 'white', marginRight: 2 }}>{emojis[1]}</Text>
                 <AntDesign style={{ fontSize: 18, color: 'blue' }} name="like2" />
               </View>
               : null
             }
-            {emojis[2] != null ?
+            {emojis && emojis[2] != null ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white' }}>{emojis[2]}</Text>
                 <Love stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} />
               </View>
               : null
             }
-            {emojis[3] != null ?
+            {emojis && emojis[3] != null ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[3]}</Text>
                 <Laugh stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={20} />
               </View>
               : null
             }
-            {emojis[4] != null ?
+            {emojis && emojis[4] != null ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[4]}</Text>
                 <Wow stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis[5] != null ?
+            {emojis && emojis[5] != null ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[5]}</Text>
                 <Sad stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis[6] != null ?
+            {emojis && emojis[6] != null ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[6]}</Text>
                 <Angry stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {this.props.item.emojis.length === 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
+            {emojis && this.props.item.emojis.length === 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
 
           </View>
 
@@ -230,11 +256,12 @@ class Post extends Component {
     );
   }
 }
-const mapStateToProps = ({ emojis }, props) => {
+const mapStateToProps = ({ emojis, user }, props) => {
   const { activePost, isLoading } = emojis;
   return {
     emojis: emojis.list,
     isLoading,
+    user: user.user
   };
 };
 

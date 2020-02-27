@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { View, Image, TextInput, Button, StyleSheet, Text, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import { updateToken } from '../screens/LoginScreen'
 import {  createUser } from '../services/Api';
-
-export default class PhoneScreen extends Component {
+import { connect } from 'react-redux';
+import * as actions from '../Actions';
+ class PhoneScreen extends Component {
     constructor(props) {
         super(props)
         this.state = { number: 2 };
@@ -11,9 +12,11 @@ export default class PhoneScreen extends Component {
 
     async  logIn() {
         console.log(this.props.navigation.state.params.user)
-        const session= await createUser(this.state.number, this.props.navigation.state.params.user)
-        updateToken(session);
+        this.props.createUser(this.state.number, this.props.navigation.state.params.user)
+        if(this.props.loading){
+            console.log("5lsna creationnnnn")
         this.props.navigation.navigate('Home')
+        }
     }
 
     render() {
@@ -60,3 +63,21 @@ const styles = StyleSheet.create({
     underlineStyleHighLighted: {
     },
 });
+const mapStateToProps = ({ user }, props) => {
+    // const { activePost, isLoading } = posts;
+    return {
+      user: user.user || null,
+      loading:user.loading1
+    };
+  };
+  
+  const mapDispatchToProps = dispatch => ({
+    createUser: (number,user) => dispatch(actions.createUser(number,user)),
+    // postsReceived: post => dispatch(actions.postsReceived(post)),
+  });
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(PhoneScreen);
+  

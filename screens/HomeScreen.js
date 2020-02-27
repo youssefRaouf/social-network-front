@@ -15,10 +15,9 @@ import Post from '../components/Post';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { socket } from '../services/Api'
+import { socket, getMyProfile } from '../services/Api'
 import io from "socket.io-client";
 import getEnv from '../configs';
-
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -35,9 +34,9 @@ class HomeScreen extends Component {
       postsReceived(data);
     })
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
-
     this.getPosts();
   }
+  
   getPosts(offset = 0) {
     console.log("ss")
     const { fetchPosts } = this.props;
@@ -51,13 +50,7 @@ class HomeScreen extends Component {
   render() {
 
 
-    //     socket.on("createPost", data => {
-    //       this.setState({ data: [...this.state.data,data]   
-    //  });
-    //  console.log("bam")
-    // })
     this.state.data = this.props.posts;
-    // console.log("el data",this.state.data) 
     return (
       <View style={styles.container}>
         <FlatList

@@ -1,19 +1,12 @@
 import { AsyncStorage } from 'react-native';
-import {Token} from '../screens/LoginScreen'
 import getEnv from '../configs';
+import { connect } from 'react-redux';
+
 export const baseUrl = getEnv().baseUrl;
-//  async function _retrieveData  () {
-//      try {
-//        const value = await AsyncStorage.getItem('token');
-//        return value;
-//      } catch (error) {
-//        // Error retrieving data
-//      }
-//    };
-//       let token=  await _retrieveData();
-// export const baseUrl = 'https://social-network123.herokuapp.com/';
-  function doRequest(url, options = {}, data = {}) {
-    // console.log("ya 3mmmyy feeen 3mo el hearder",Token)
+let Token 
+ async function doRequest(url, options = {}, data = {}) {
+  let dataUser= await fetchUser()
+   Token = dataUser[1]
     const queryString = Object.keys(data)
       .map(key => key + '=' + data[key])
       .join('&');
@@ -30,9 +23,17 @@ export const baseUrl = getEnv().baseUrl;
     return eventsRequest()
       .then(response => response.json())
   };
+  const getPostsByUserId = (offset,user_id) => {
+    const limit =15;
+    const eventsRequest = () => {
+        return doRequest('users/'+user_id+'/posts', {method: 'GET'}, {offset,limit});
+    };
+    return eventsRequest()
+      .then(response => response.json())
+  };
 
   function  createPost (text,url,videoName){
-    console.log("fel create",Token)
+   console.log(Token)
  return fetch(baseUrl+'posts', {
     method: 'POST',
     headers: {
@@ -56,7 +57,8 @@ const getCommentsByPostId = (offset,post_id) => {
     .then(response => response.json())
 };
 
-function  createComment (text,post_id,parent_id){
+async function  createComment (text,post_id,parent_id){
+
   return fetch(baseUrl+'comments', {
      method: 'POST',
      headers: {
@@ -71,7 +73,8 @@ function  createComment (text,post_id,parent_id){
      }),
    }).then(response=>response.json())
  }
- function  createEmoji (type,post_id){
+  async function  createEmoji (type,post_id){
+ 
   return fetch(baseUrl+'emojis', {
      method: 'POST',
      headers: {
@@ -86,7 +89,8 @@ function  createComment (text,post_id,parent_id){
    }).then(response=>response.json())
  }
 
- function  updateEmoji (type,post_id){
+  async function  updateEmoji (type,post_id){
+  
  return fetch(baseUrl+'emojis', {
     method: 'PUT',
     headers: {
@@ -100,7 +104,8 @@ function  createComment (text,post_id,parent_id){
     }),
   }).then(response=>response.json()).then(response=> console.log(response))
 }
-function  deleteEmoji (post_id){
+ async function  deleteEmoji (post_id){
+ 
   // console.log("yoyou",post_id)
  return fetch(baseUrl+'emojis', {
     method: 'DELETE',
@@ -114,10 +119,10 @@ function  deleteEmoji (post_id){
     }),
   }).then(response=>response.json())
 }
-function  checkUser (email){
+async function  checkUser (email){
   // console.log(email)
   // console.log(Token)
- return fetch(baseUrl+'checkUsers', {
+  let data= await fetch(baseUrl+'checkUsers', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -128,12 +133,27 @@ function  checkUser (email){
       email:email,
     }),
   }).then(response=>response.json())
+  console.log("el data ely rg3a ml check",data)
+
+  await _storeData(data[0],data[1])
+  console.log("5lsna saving")
+  // if(data[0]!==null){await _storeData(data[0],data[1])
+  // console.log("lol",data[1])
+// return data;}
+  return data;
 }
-const _storeData = async (token) => {
+const _storeData = async (user,token) => {
   try {
+    console.log("bnsyev")
+    if(user!==null&&token!==null){
+    const strData = JSON.stringify(user);
+    await AsyncStorage.setItem('user',strData);
     await AsyncStorage.setItem('token',token);
+    console.log("syvna")
+    }
   } catch (error) {
     // Error saving data
+    console.log(error)
   }
 };
 async function getUserbyEmail(email) {
@@ -150,8 +170,8 @@ await _storeData(session)
   return session;
 }
 async function  createUser (phone,user){
-  // console.log(user.email)
- const session= await fetch(baseUrl+'Users', {
+  console.log(phone)
+ let data= await fetch(baseUrl+'Users', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -165,11 +185,12 @@ async function  createUser (phone,user){
       image_url:user.picture.data.url
     }),
   }).then(response=>response.json())
-  // console.log(Token)
- await _storeData(session);
-  return session;
+  console.log(data)
+  await _storeData(data[0],data[1])
+  return data;
 }
-function  getMyProfile (){
+async function  getMyProfile (){
+
  return fetch(baseUrl+'users/profile/myProfile', {
     method: 'GET',
     headers: {
@@ -178,8 +199,17 @@ function  getMyProfile (){
       token:Token
     },
   }).then(response=>response.json())
-}
-  // this.socket = io("http://192.168.1.7:4000");
-// const socket=this.socket;
+} 
+ async function fetchUser() {
+  try {
+    let token = await AsyncStorage.getItem('token');
+    let user = await AsyncStorage.getItem('user');
+    // user=JSON.parse(user)
+    return [user,token];
+  } catch (error) {
+    // Error retrieving data
+  }
+};
 
-export {createPost,getPosts,getCommentsByPostId,createComment,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser,getUserbyEmail,getMyProfile};
+
+export {createPost,getPosts,getCommentsByPostId,createComment,createEmoji,updateEmoji,deleteEmoji,checkUser,createUser,getUserbyEmail,getMyProfile,getPostsByUserId,fetchUser};

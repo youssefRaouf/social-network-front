@@ -155,11 +155,11 @@ class CreatePostScreen extends Component {
         </View>
         <View style={{ marginLeft: 10, height: 50, flexDirection: 'row', marginTop: 10 }}>
           <View>
-            <Image source={{ uri: 'https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg' }}
+            <Image source={{ uri: this.props.user.image_url}}
               style={{ height: 50, width: 50, borderRadius: 25 }} />
           </View>
           <View style={{ marginLeft: 10, flexDirection: 'column' }}>
-            <Text style={{ fontSize: 18, color: 'white' }}>Youssef Raouf</Text>
+            <Text style={{ fontSize: 18, color: 'white' }}>{this.props.user.name}</Text>
           </View>
           <View style={{ flexDirection: 'row-reverse', flex: 1 }}>
             <TouchableOpacity style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}>
@@ -233,12 +233,9 @@ class CreatePostScreen extends Component {
     );
   }
 }
-const mapStateToProps = ({ posts }, props) => {
-  const { activePost, isLoading } = posts;
+const mapStateToProps = ({user }, props) => {
   return {
-    posts: posts.list || [],
-    post: activePost,
-    isLoading,
+    user:user.user
   };
 };
 
