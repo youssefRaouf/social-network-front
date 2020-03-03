@@ -26,6 +26,7 @@ function* requestEventsByUserId({offset,user_id}) {
     yield put({
       type: types.FETCH_POSTS_USER_ID_SUCCESS, 
       data,
+      user_id
     });
   } catch (error) {
     console.log(error);

@@ -41,6 +41,7 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           isFetching: true,
         };
       case types.FETCH_POSTS_USER_ID_SUCCESS:
+        // console.log("lolll",action.user_id)
         const oldUserPosts = (state[action.user_id]&&state[action.user_id].list) || []
         const listPosts = action.data||[];
         const prevIdsPosts = oldUserPosts.map(item => item.id);

@@ -54,4 +54,12 @@ export function createUser(phone,user) {
 export function fetchUser() {
   return {type: types.FETCH_USER};
 }
-
+export function getFollowers(offset,userId) {
+  return {type: types.FETCH_FOLLOWERS,offset,userId};
+}
+export function getFollowings(offset,userId) {
+  return {type: types.FETCH_FOLLOWINGS,offset,userId};
+}
+export function createFollow(to_user) {
+  return {type: types.CREATE_FOLLOW,to_user};
+}

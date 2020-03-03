@@ -12,13 +12,14 @@ export default class User extends React.Component {
     return (
         <View style={{marginLeft:10,height:50,flexDirection:'row',flex:1,marginTop:-7}}>
         <View>
-            <Image source={{uri:this.props.item.user.image_url}}
+            <Image source={{uri:this.props.user.image_url}}
             style={{height:50,width:50,borderRadius:25}}/>
         </View>
         <View style={{marginLeft:7,flexDirection:'column'}}>
           
-          <Text style={{fontSize:16,color:'white'}}>{this.props.item.user.name}</Text>
-    <Text style={{color:'#555555'}}>{timeStamp(this.props.item.created_at)}</Text>   
+          <Text style={{fontSize:16,color:'white'}}>{this.props.user.name}</Text>
+
+    {this.props.item!==null?<Text style={{color:'#555555'}}>{timeStamp(this.props.item.created_at)}</Text> :null}  
         </View>
         <View style={{flexDirection:'row-reverse',flex:1}}>
        <TouchableOpacity style={{alignItems:'flex-end',marginRight:10,marginTop:0}}>        

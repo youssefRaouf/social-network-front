@@ -119,7 +119,7 @@ class Post extends Component {
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
         <TouchableOpacity onPress={()=>this.props.navigation.navigate('User',{user:this.props.item.user})}>
-          <User item={this.props.item} />
+          <User user={this.props.item.user} item={this.props.item} />
         </TouchableOpacity>
         <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
         {this.props.item.url ? <Image source={{ uri: this.props.item.url }}
