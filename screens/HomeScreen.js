@@ -35,10 +35,11 @@ class HomeScreen extends Component {
     })
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.getPosts();
+    console.log(this.props.user.id)
+    this.props.getFollowings(0,this.props.user.id);
   }
   
   getPosts(offset = 0) {
-    console.log("ss")
     const { fetchPosts } = this.props;
     fetchPosts(offset);
   }
@@ -85,18 +86,20 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = ({ posts }, props) => {
+const mapStateToProps = ({ posts,user }, props) => {
   const { activePost, isLoading } = posts;
   return {
     posts: posts.list || [],
     post: activePost,
     isLoading,
+    user:user.user
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
+  getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });
 
 export default connect(

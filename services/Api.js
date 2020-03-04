@@ -230,7 +230,7 @@ const getFollowings = (offset, userId) => {
   return eventsRequest()
     .then(response => response.json())
 };
-async function createFollow( toUser) {
+async function createFollow(toUser) {
   return fetch(baseUrl + 'users/followToUsers', {
     method: 'POST',
     headers: {
@@ -243,7 +243,20 @@ async function createFollow( toUser) {
     }),
   }).then(response => response.json())
 }
+async function deleteFollow(to_user) {
+  return fetch(baseUrl + 'users/'+to_user+'/followToUsers', {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token: Token
+    },
+    body: JSON.stringify({
+      to_user
+    }),
+  }).then(response => response.json())
+}
 
 
 
-export {createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+export { deleteFollow,createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };

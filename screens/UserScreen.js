@@ -30,7 +30,7 @@ class UserScreen extends Component {
       followers: [],
       followings: [],
       selectPosts: 1,
-      follow:'Follow',
+      follow: 'Follow',
       user: ''
     };
   }
@@ -41,6 +41,11 @@ class UserScreen extends Component {
     this.getFollowers();
     this.getFollowings();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
+    this.props.followingsMyUser.map((item) => {
+      if (item.to_user === this.props.navigation.getParam('user').id) {
+        this.setState({ follow: 'Unfollow' })
+      }
+    })
   }
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
@@ -88,7 +93,7 @@ class UserScreen extends Component {
       return (
         <View style={{ marginTop: 7 }}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Profile', { user: item,})}>
+            onPress={() => this.props.navigation.navigate('Profile', { user: item, })}>
             <User user={item} item={null} />
           </TouchableOpacity>
         </View>
@@ -97,16 +102,23 @@ class UserScreen extends Component {
       return (
         <View style={{ marginTop: 7 }}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.push('User', { user: item ,})}>
+            onPress={() => this.props.navigation.push('User', { user: item, })}>
             <User user={item} item={null} />
           </TouchableOpacity>
         </View>
       )
     }
   }
-  follow(){
-    const {createFollow}= this.props;
-    createFollow(this.props.navigation.getParam('user').id);
+  follow() {
+    const { createFollow,deleteFollow } = this.props;
+    if (this.state.follow === 'Follow') {
+      this.setState({ follow: 'Unfollow' })
+      createFollow(this.props.navigation.getParam('user').id);
+    }else{
+      this.setState({follow:'Follow'})
+      deleteFollow(this.props.navigation.getParam('user').id);
+    }
+    this.props.getFollowings(0,this.props.user.id);
   }
   render() {
     this.state.data = this.props.posts;
@@ -132,13 +144,13 @@ class UserScreen extends Component {
                 <Text style={{ color: 'white' }}>following</Text>
               </View>
             </View>
-            <View style={{ marginRight: 20, flexDirection: 'row', width: width - 100 }}>
-              <TouchableOpacity style={{ flexDirection: 'column', width: (width - 110) / 2 }}
-               onPress={()=>this.follow()}>
-                <Text style={{ color: 'white' }}>{this.state.follow}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width -160}}>
+              <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}
+                onPress={() => this.follow()}>
+                <Text style={{ color: 'white',fontSize:15 }}>{this.state.follow}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ flexDirection: 'column', width: (width - 110) / 2 }}>
-                <Text style={{ color: 'white' }}>message</Text>
+              <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}>
+                <Text style={{ color: 'white',fontSize:15  }}>message</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -209,9 +221,11 @@ const mapStateToProps = ({ posts, user, followers }, props) => {
   return {
     posts: (posts[userId] && posts[userId].list) || [],
     post: activePost,
-    user:user.user,
+    user: user.user,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
+    followingsMyUser: (followers[user.user.id] && followers[user.user.id].listFollowings) || [],
+
   };
 };
 
@@ -219,7 +233,8 @@ const mapDispatchToProps = dispatch => ({
   fetchPostsByUserId: (offset, user_id) => dispatch(actions.fetchPostsByUserId(offset, user_id)),
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
-  createFollow: (toUser) => dispatch(actions.createFollow( toUser)),
+  createFollow: (toUser) => dispatch(actions.createFollow(toUser)),
+  deleteFollow: (toUser) => dispatch(actions.deleteFollow(toUser)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
 });
 

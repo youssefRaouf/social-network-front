@@ -61,7 +61,6 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
       const oldFollowings = (state[action.userId]&&state[action.userId].listFollowings) || []
       const prevIds1 = oldFollowings.map(item => item.id);
      const  newItems1 = list1.filter(item => !prevIds1.includes(item.id));
-    //  console.log("hna gowa el success",newItems,state.list)
       return {
         ...state,
         isLoading: false,
@@ -96,21 +95,24 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
           isLoading: false,
           isFetching: false,
         };
-
-      //   case types.COMMENTS_RECEIVED:
-      //     const comment = action.comment;
-      //     if(comment.post_id != state.postId){
-      //       return state;
-      //     }
-      //     const prevCommentsIds = state.list.map(item => item.id);
-      //     if(prevCommentsIds.includes(comment.id)){
-      //       return state;
-      //     }
-      //     const newList = [comment, ...state.list].sort((a,b)=>a.id-b.id); 
-      //     return {
-      //       ...state,
-      //       list: newList
-      //     };
+        case types.DELETE_FOLLOW:
+        return {
+          ...state,
+          isLoading: true,
+          isFetching: true,
+        };
+      case types.DELETE_FOLLOW_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+        };
+      case types.DELETE_FOLLOW_FAIL:
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+        };
       default:
         return state;
 

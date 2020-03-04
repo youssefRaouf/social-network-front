@@ -63,3 +63,6 @@ export function getFollowings(offset,userId) {
 export function createFollow(to_user) {
   return {type: types.CREATE_FOLLOW,to_user};
 }
+export function deleteFollow(to_user) {
+  return {type: types.DELETE_FOLLOW,to_user};
+}
