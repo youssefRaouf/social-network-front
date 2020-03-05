@@ -12,6 +12,8 @@ import TabBarIcon from '../components/TabBarIcon';
 import LoginScreen from '../screens/LoginScreen';
 import PhoneScreen from '../screens/PhoneScreen';
 import UserScreen from '../screens/UserScreen';
+import ChatScreen from '../screens/ChatScreen';
+import UserChatScreen from '../screens/UserChatScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -34,7 +36,7 @@ HomeStack.navigationOptions = {
       name={
         Platform.OS === 'ios'
           ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          : 'md-home'
       }
     />
   ),
@@ -53,7 +55,7 @@ const ProfileStack = createStackNavigator(
 ProfileStack.navigationOptions = {
   tabBarLabel: 'Profile',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'md-contact' : 'md-contact'} />
   ),
 };
 
@@ -74,11 +76,27 @@ SettingsStack.navigationOptions = {
 };
 
 SettingsStack.path = '';
+const ChatStack = createStackNavigator(
+  {
+    Chat: ChatScreen,
+  },
+  config
+);
+
+ChatStack.navigationOptions = {
+  tabBarLabel: 'Chat',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'md-chatbubbles' : 'md-chatbubbles'} />
+  ),
+};
+
+ChatStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   ProfileStack,
   SettingsStack,
+  ChatStack
 },
   {
     tabBarOptions: {
@@ -123,7 +141,13 @@ export const Router = createAppContainer(
         screen: PhoneScreen
       },
       User:{
-        screen:UserScreen
+        screen: UserScreen
+      },
+      Chat:{
+        screen: ChatScreen
+      },
+      UserChat:{
+        screen: UserChatScreen
       }
     },
     {
