@@ -150,7 +150,7 @@ class UserScreen extends Component {
                 <Text style={{ color: 'white',fontSize:15 }}>{this.state.follow}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}
-              onPress={()=>this.props.navigation.navigate('UserChat')}>
+              onPress={()=>this.props.navigation.navigate('UserChat',{user:user})}>
                 <Text style={{ color: 'white',fontSize:15  }}>message</Text>
               </TouchableOpacity>
             </View>

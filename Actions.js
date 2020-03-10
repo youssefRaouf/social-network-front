@@ -66,3 +66,17 @@ export function createFollow(to_user) {
 export function deleteFollow(to_user) {
   return {type: types.DELETE_FOLLOW,to_user};
 }
+export function messagesReceived(message) {
+  return {type: types.MESSAGES_RECEIVED,message};
+}
+export function fetchMessages(offset,id) {
+  console.log(id)
+  return {type: types.FETCH_MESSAGES,offset,id};
+}
+export function createMessage(message,from_user,id) {
+  return {type: types.CREATE_MESSAGE,message,from_user,id};
+}
+export function fetchRooms(offset,id) {
+  return {type: types.FETCH_ROOMS,offset,id};
+}
+

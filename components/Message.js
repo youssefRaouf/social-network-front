@@ -8,10 +8,8 @@ export default class Message extends React.Component {
 
   render() {
     return (
-      <View style={{ marginLeft:10,marginBottom:15,marginRight:10}}>
-        <View style={{}}>
-     <Text style={{ color: 'white',backgroundColor:'rgb(26, 33, 42)',borderRadius:20,padding:5}}>twesdsdsadasdasdasdasdasdas           dasdas             dasda          asd  dassssssssssssssssssssssssssssssssss          asssssssssssssssssssssssssssdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddsdasdsadasdasdasdsadasdasdssssssssssssssssssssssssssssssssssssssshis is a dummy message for testing sxdgxcmvndxmfnsdjfnsdnfsdf</Text>
-        </View>
+      <View style={{ marginLeft:10,marginBottom:15,marginRight:10,alignSelf:this.props.item.from_user===this.props.id?'flex-end':'flex-start'}}>
+    <Text style={{ color: 'white',backgroundColor:'rgb(26, 33, 42)',borderRadius:20,padding:5}}>{this.props.item.text}</Text>
       </View>
     );
   }

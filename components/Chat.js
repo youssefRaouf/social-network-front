@@ -10,7 +10,7 @@ export default class Chat extends React.Component {
     return (
       <View style={{ marginLeft: 10,marginBottom:30}}>
         <User user={this.props.user} item={null} />
-        <View style={{marginTop:25}}>
+        <View style={{marginTop:-20}}>
      <Text style={{ color: 'white', marginLeft: 70,}}>{this.props.item.lastMessage}</Text>
         </View>
       </View>

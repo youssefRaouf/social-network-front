@@ -10,7 +10,6 @@ function user(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.FETCH_USER_SUCCESS:
     let fetchUser =JSON.parse( action.data[0]) || null;
-    console.log("d5lna el fetch", fetchUser)
     let fetchToken = action.data[1] || null;
       return {
         ...state,
@@ -22,7 +21,6 @@ function user(state = INITIAL_STATE, action) {
     case types.CREATE_USER_SUCCESS:
       let createUser = action.data[0]||'';
       let createToken = action.data[1] || null;
-      console.log("creation be nga7")
       return {
         ...state,
         user: createUser,
@@ -30,12 +28,10 @@ function user(state = INITIAL_STATE, action) {
         loading1: true
       };
     case types.CREATE_USER_FAIL:
-      console.log("lol",action.error)
       return state
     case types.CHECK_USER_SUCCESS:
       let user =  action.data[0]|| '';
       let token = action.data[1] || null;
-      console.log("ya rb tesht8l", user, token)
       return {
         ...state,
         user,

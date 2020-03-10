@@ -23,7 +23,6 @@ class ChatScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
     };
   }
 
@@ -35,42 +34,39 @@ class ChatScreen extends Component {
     //   postsReceived(data);
     // })
     // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
-    // this.getPosts();
+    this.getRooms();
     // console.log(this.props.user.id)
     // this.props.getFollowings(0,this.props.user.id);
   }
 
-  getPosts(offset = 0) {
-    const { fetchPosts } = this.props;
-    fetchPosts(offset);
+  getRooms(offset = 0) {
+    const { fetchRooms } = this.props;
+    fetchRooms(offset, this.props.user.id);
   }
   renderItem(item) {
     item = item.item;
-    return <Post postSocket={this.postsRectionsSocket} item={item} navigation={this.props.navigation}></Post>
+    return (
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('UserChat', { id:item.id })}>
+        <Chat user={this.props.user.id===item.user1.id?item.user2:item.user1} item={{ lastMessage: 'this is a dummy message for testing' }} />
+      </TouchableOpacity>
+    )
   }
 
   render() {
-
-
-    // this.state.data = this.props.posts;
+    let data = this.props.rooms
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate('UserChat')}>
-          <Chat user={{ name: 'Youssef Raouf', image_url: 'https://tinyjpg.com/images/social/website.jpg' }} item={{ lastMessage: 'this is a dummy message for testing' }} />
-        </TouchableOpacity>
-        <Chat user={{ name: 'Youssef Raouf', image_url: 'https://tinyjpg.com/images/social/website.jpg' }} item={{ lastMessage: 'this is a dummy message for testing' }} />
 
-
-        {/* <FlatList
-          data={this.state.data}
+        <FlatList
+          data={data}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={item => item.id.toString()}
           onEndReached={() => {
-            const offset = this.props.posts.length;
-            this.getPosts(offset);
+            const offset = this.props.rooms.length;
+            this.getRooms(offset);
           }}
         // windowSize={2}
-        /> */}
+        />
         {/* <TouchableOpacity style={{ position: 'absolute', bottom: 20, right: 10, backgroundColor: '#555555', borderRadius: 30, height: 60, width: 60, justifyContent: 'center', alignItems: 'center' }}
           onPress={() => this.props.navigation.navigate("CreatePost")}
         >
@@ -93,12 +89,9 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = ({ posts, user }, props) => {
-  const { activePost, isLoading } = posts;
+const mapStateToProps = ({ user, rooms }, props) => {
   return {
-    posts: posts.list || [],
-    post: activePost,
-    isLoading,
+    rooms: rooms.list || [],
     user: user.user
   };
 };
@@ -106,6 +99,7 @@ const mapStateToProps = ({ posts, user }, props) => {
 const mapDispatchToProps = dispatch => ({
   fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
+  fetchRooms: (offset, id) => dispatch(actions.fetchRooms(offset, id)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });
 

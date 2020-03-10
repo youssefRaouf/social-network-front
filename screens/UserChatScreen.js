@@ -12,7 +12,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Dimensions,
-  TextInput
+  TextInput,
+  Keyboard
 } from 'react-native';
 import Post from '../components/Post';
 import { connect } from 'react-redux';
@@ -34,46 +35,55 @@ class UserChatScreen extends Component {
   }
 
   componentDidMount() {
-    // const posts = io.connect(getEnv().socket.posts)
-    // const { postsReceived } = this.props;
-    // posts.on('new_post',(data)=>{
+    const messages = io.connect(getEnv().socket.messages)
+    messages.on('new_message' + this.props.navigation.getParam('id') , (data) => {
+      console.log("7sl")
+     this.props.messagesReceived(data);
+    })
+    // messages.on('new_message' + this.props.navigation.getParam('user').id + this.props.user.id, (data) => {
+    //   console.log("true")
     //   console.log(data)
-    //   postsReceived(data);
+    // this.props.messagesReceived(data);
     // })
-    // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
-    // this.getPosts();
-    // console.log(this.props.user.id)
-    // this.props.getFollowings(0,this.props.user.id);
+    this.getMessages();
   }
 
-  getPosts(offset = 0) {
-    const { fetchPosts } = this.props;
-    fetchPosts(offset);
+  getMessages(offset = 0) {
+    const { fetchMessages } = this.props;
+    fetchMessages(offset, this.props.navigation.getParam('id'));
   }
   renderItem(item) {
     item = item.item;
-    return <Message user={{ name: 'Youssef Raouf', image_url: 'https://tinyjpg.com/images/social/website.jpg' }} item={{ lastMessage: 'this is a dummy message for testing' }} />
-
+    // console.log(item)
+    return <Message id={this.props.user.id}item={item} />
   }
-
+  createMessages(){
+    this.props.createMessage(this.state.text,this.props.user.id,this.props.navigation.getParam('id'))
+    this.setState({
+      text: ''
+    })
+    Keyboard.dismiss();
+  }
   render() {
+    // console.log(this.props.messages)
     const screenHeight = Math.round(Dimensions.get('window').height);
     const screeenWidth = Math.round(Dimensions.get('window').width);
-  let  data = [1,2,3,4]
+    let data = this.props.messages
     return (
-      <KeyboardAvoidingView style={{ backgroundColor: 'black',height:screenHeight ,flex: 1 }} behavior="height" enabled>
-        <View style={{paddingTop:50}}></View>
+      <KeyboardAvoidingView style={{ backgroundColor: 'black', height: screenHeight, flex: 1 }} behavior="height" enabled>
+        <View style={{ paddingTop: 50 }}></View>
         <User user={{ name: 'Youssef Raouf', image_url: 'https://tinyjpg.com/images/social/website.jpg' }} item={null} />
         <FlatList
-        data={data}
+          data={data}
           renderItem={this.renderItem.bind(this)}
+          inverted={true}
           // keyExtractor={item => item.id.toString()}
           onEndReached={() => {
-            // const offset = this.props.comments.length;
+            const offset = this.props.messages.length;
             // console.log(offset)
-            // this.getComments(offset);
+            this.getMessages(offset);
           }}
-style={{marginTop:60}}
+          // style={{ marginTop: 60 }}
         // windowSize={2}
         />
         <View style={{ justifyContent: 'center', alignItems: 'center', width: screeenWidth, height: 100, backgroundColor: 'rgb(26, 33, 42)', borderTopColor: 'black' }}>
@@ -89,6 +99,7 @@ style={{marginTop:60}}
           </View>
         </View>
         <AccessoryView
+          onSubmit={this.createMessages.bind(this)}
           textInserted={this.state.text}
           id={'youssef'}
         />
@@ -109,19 +120,17 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = ({ posts, user }, props) => {
-  const { activePost, isLoading } = posts;
+const mapStateToProps = ({ user, messages }, props) => {
   return {
-    posts: posts.list || [],
-    post: activePost,
-    isLoading,
+    messages: messages.list || [],
     user: user.user
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
-  postsReceived: post => dispatch(actions.postsReceived(post)),
+  fetchMessages: (offset,id) => dispatch(actions.fetchMessages(offset,id)),
+  messagesReceived: message => dispatch(actions.messagesReceived(message)),
+  createMessage: (message, from_user, room_id) => dispatch(actions.createMessage(message, from_user, room_id)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });
 

@@ -10,7 +10,7 @@ export default class User extends React.Component {
 
   render() {
     return (
-        <View style={{marginLeft:10,height:50,flexDirection:'row',flex:1,marginTop:-7}}>
+        <View style={{marginLeft:10,height:50,flexDirection:'row',marginTop:-7}}>
         <View>
             <Image source={{uri:this.props.user.image_url}}
             style={{height:50,width:50,borderRadius:25}}/>
