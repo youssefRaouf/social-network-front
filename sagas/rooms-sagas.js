@@ -1,7 +1,7 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import * as types from '../utils/Consts';
 // import Event from '../models/Event';
-import {getRooms} from '../services/Api';
+import {getRooms,createRoom} from '../services/Api';
 
 function* requestRooms({offset,id}) {
   try {
@@ -20,25 +20,26 @@ function* requestRooms({offset,id}) {
     });
   }
 }
-// function* createMessages({message,from_user,to_user}) {
-//   try {
-//     let data = yield call(createMessage,message,from_user,to_user);
-//     // data = data.map(event => new Event(event));
-//     yield put({
-//       type: types.CREATE_MESSAGE_SUCCESS, 
-//       data,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     yield put({
-//       type: types.CREATE_MESSAGE_FAIL,
-//       error,
-//     });
-//   }
-// }
+function* createRooms({user1_id,user2_id}) {
+  try {
+    let data = yield call(createRoom,user1_id,user2_id);
+    // data = data.map(event => new Event(event));
+    console.log("saga",data)
+    yield put({
+      type: types.CREATE_ROOM_SUCCESS, 
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: types.CREATE_ROOM_FAIL,
+      error,
+    });
+  }
+}
 
 export default function* roomsSagas() {
   yield takeLatest(types.FETCH_ROOMS, requestRooms);
-  // yield takeLatest(types.CREATE_MESSAGE, createMessages);
+  yield takeLatest(types.CREATE_ROOM, createRooms);
 
 }

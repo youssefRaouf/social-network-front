@@ -59,7 +59,7 @@ const getCommentsByPostId = (offset, post_id) => {
   return eventsRequest()
     .then(response => response.json())
 };
-const getMessages = (offset,id) => {
+const getMessages = (offset, id) => {
   const limit = 15;
   const eventsRequest = () => {
     return doRequest(`${'messages/'}${id}`, { method: 'GET' }, { offset, limit });
@@ -92,7 +92,7 @@ async function createComment(text, post_id, parent_id) {
     }),
   }).then(response => response.json())
 }
-async function createMessage(text, from_user,id) {
+async function createMessage(text, from_user, id) {
 
   return fetch(baseUrl + 'messages', {
     method: 'POST',
@@ -264,7 +264,7 @@ async function createFollow(toUser) {
   }).then(response => response.json())
 }
 async function deleteFollow(to_user) {
-  return fetch(baseUrl + 'users/'+to_user+'/followToUsers', {
+  return fetch(baseUrl + 'users/' + to_user + '/followToUsers', {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -276,7 +276,19 @@ async function deleteFollow(to_user) {
     }),
   }).then(response => response.json())
 }
+function createRoom(user1_id, user2_id) {
+  return fetch(baseUrl + 'rooms', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token: Token
+    },
+    body: JSON.stringify({
+      user1_id,
+      user2_id
+    }),
+  }).then(response => response.json());
+}
 
-
-
-export {getRooms,getMessages,createMessage, deleteFollow,createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+export { createRoom,getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };

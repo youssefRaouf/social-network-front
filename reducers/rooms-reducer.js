@@ -6,6 +6,7 @@ let ROOMS_INITIAL_STATE = {
   offset: 1,
   hasMore: true,
   activeEvent: {},
+  roomId:0
 };
 function rooms(state = ROOMS_INITIAL_STATE, action) {
   switch (action.type) {
@@ -40,24 +41,27 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         isLoading: false,
         isFetching: false,
       };
-    // case types.CREATE_MESSAGE:
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     isFetching: true,
-    //   };
-    // case types.CREATE_MESSAGE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     isFetching: false,
-    //   };
-    // case types.CREATE_MESSAGE_FAIL:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     isFetching: false,
-    //   };
+    case types.CREATE_ROOM:
+      return {
+        ...state,
+        isLoading: true,
+        isFetching: true,
+      };
+    case types.CREATE_ROOM_SUCCESS:
+      console.log("reducer",action.data.id)
+      return {
+        ...state,
+        isLoading: false,
+        isFetching: false,
+        roomId:action.data.id
+        
+      };
+    case types.CREATE_ROOM_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        isFetching: false,
+      };
 
     // case types.MESSAGES_RECEIVED:
     //   console.log("hna")

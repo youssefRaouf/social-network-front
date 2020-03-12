@@ -19,6 +19,7 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import io from "socket.io-client";
 import getEnv from '../configs';
 import User from '../components/User';
+import { createRoom } from '../services/Api';
 
 const { width } = Dimensions.get('window');
 
@@ -120,7 +121,12 @@ class UserScreen extends Component {
     }
     this.props.getFollowings(0,this.props.user.id);
   }
-  render() {
+  async getOrCreateRoom(){
+ let room=await createRoom(this.props.navigation.getParam('user').id,this.props.user.id)
+   console.log(room)
+      this.props.navigation.navigate('UserChat',{id:room.id})
+  }
+  render() {  
     this.state.data = this.props.posts;
     this.state.followers = this.props.followers
     this.state.followings = this.props.followings
@@ -150,7 +156,7 @@ class UserScreen extends Component {
                 <Text style={{ color: 'white',fontSize:15 }}>{this.state.follow}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}
-              onPress={()=>this.props.navigation.navigate('UserChat',{user:user})}>
+              onPress={()=>this.getOrCreateRoom()}>
                 <Text style={{ color: 'white',fontSize:15  }}>message</Text>
               </TouchableOpacity>
             </View>
@@ -216,13 +222,14 @@ class UserScreen extends Component {
 UserScreen.navigationOptions = {
   header: null
 };
-const mapStateToProps = ({ posts, user, followers }, props) => {
+const mapStateToProps = ({ posts, user, followers,rooms }, props) => {
   const { activePost, isLoading } = posts;
   const userId = props.navigation.getParam('user').id
   return {
     posts: (posts[userId] && posts[userId].list) || [],
     post: activePost,
     user: user.user,
+    roomId:rooms.roomId,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
     followingsMyUser: (followers[user.user.id] && followers[user.user.id].listFollowings) || [],
@@ -235,6 +242,7 @@ const mapDispatchToProps = dispatch => ({
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
   createFollow: (toUser) => dispatch(actions.createFollow(toUser)),
+  createRoom: (user1_id,user2_id) => dispatch(actions.createRoom(user1_id,user2_id)),
   deleteFollow: (toUser) => dispatch(actions.deleteFollow(toUser)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
 });

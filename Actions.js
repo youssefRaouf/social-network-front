@@ -79,4 +79,7 @@ export function createMessage(message,from_user,id) {
 export function fetchRooms(offset,id) {
   return {type: types.FETCH_ROOMS,offset,id};
 }
+export function createRoom(user1_id,user2_id) {
+  return {type: types.CREATE_ROOM,user1_id,user2_id};
+}
 
