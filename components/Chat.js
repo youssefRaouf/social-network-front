@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { AntDesign, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
-import { timeStamp } from '../services/timeStamp';
+import { timeStamp,timeStamp1 } from '../services/timeStamp';
 import User from './User';
 export default class Chat extends React.Component {
 
@@ -10,8 +10,9 @@ export default class Chat extends React.Component {
     return (
       <View style={{ marginLeft: 10,marginBottom:30}}>
         <User user={this.props.user} item={null} />
-        <View style={{marginTop:-20}}>
-     <Text style={{ color: 'white', marginLeft: 70,}}>{this.props.item.lastMessage}</Text>
+        <View style={{marginTop:-25,flexDirection:'row',justifyContent:'space-between',marginRight:20}}>
+     <Text style={{ color: 'grey', marginLeft: 70,}}>{this.props.item.lastMessage}</Text>
+    <Text style={{ color: 'grey', marginLeft: 10,}}> {timeStamp1(this.props.item.update_at)}</Text>
         </View>
       </View>
     );

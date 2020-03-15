@@ -39,12 +39,8 @@ class UserChatScreen extends Component {
     messages.on('new_message' + this.props.navigation.getParam('id') , (data) => {
       console.log("7sl")
      this.props.messagesReceived(data);
+     this.props.updateRoom(data.text,this.props.navigation.getParam('id'))
     })
-    // messages.on('new_message' + this.props.navigation.getParam('user').id + this.props.user.id, (data) => {
-    //   console.log("true")
-    //   console.log(data)
-    // this.props.messagesReceived(data);
-    // })
     this.getMessages();
   }
 
@@ -63,6 +59,7 @@ class UserChatScreen extends Component {
       text: ''
     })
     Keyboard.dismiss();
+    this.props.updateRoom(this.state.text,this.props.navigation.getParam('id'))
   }
   render() {
     // console.log(this.props.messages)
@@ -72,7 +69,7 @@ class UserChatScreen extends Component {
     return (
       <KeyboardAvoidingView style={{ backgroundColor: 'black', height: screenHeight, flex: 1 }} behavior="height" enabled>
         <View style={{ paddingTop: 50 }}></View>
-        <User user={{ name: 'Youssef Raouf', image_url: 'https://tinyjpg.com/images/social/website.jpg' }} item={null} />
+        <User user={this.props.navigation.getParam('user')} item={null} />
         <FlatList
           data={data}
           renderItem={this.renderItem.bind(this)}
@@ -130,6 +127,7 @@ const mapStateToProps = ({ user, messages }, props) => {
 const mapDispatchToProps = dispatch => ({
   fetchMessages: (offset,id) => dispatch(actions.fetchMessages(offset,id)),
   messagesReceived: message => dispatch(actions.messagesReceived(message)),
+  updateRoom: (text,roomId) => dispatch(actions.updateRoom(text,roomId)),
   createMessage: (message, from_user, room_id) => dispatch(actions.createMessage(message, from_user, room_id)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });

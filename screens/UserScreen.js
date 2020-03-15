@@ -123,8 +123,7 @@ class UserScreen extends Component {
   }
   async getOrCreateRoom(){
  let room=await createRoom(this.props.navigation.getParam('user').id,this.props.user.id)
-   console.log(room)
-      this.props.navigation.navigate('UserChat',{id:room.id})
+      this.props.navigation.navigate('UserChat',{id:room.id,user:this.props.navigation.getParam('user')})
   }
   render() {  
     this.state.data = this.props.posts;

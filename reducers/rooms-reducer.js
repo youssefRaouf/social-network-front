@@ -63,30 +63,27 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         isFetching: false,
       };
 
-    // case types.MESSAGES_RECEIVED:
-    //   console.log("hna")
-    //   const message = action.message;
-    //   let from;
-    //   let to;
-    //   if (message.from_user < message.to_user) {
-    //     from = message.from_user;
-    //     to = message.to_user;
-    //   } else {
-    //     to = message.from_user;
-    //     from = message.to_user;
-    //   }
-    //   if (from != state.fromUser || to != state.toUser) {
-    //     return state;
-    //   }
-    //   const prevMessagesIds = state.list.map(item => item.id);
-    //   if (prevMessagesIds.includes(message.id)) {
-    //     return state;
-    //   }
-    //   const newList = [message, ...state.list].sort((a, b) => b.id - a.id);
-    //   return {
-    //     ...state,
-    //     list: newList,
-    //   };
+    case types.UPDATE_ROOM:
+   console.log(action);
+   let itemNew;
+    const newList1 = [...(state.list.map(item => {
+        if(item.id === action.roomId){
+          return {
+            ...item,
+            text: action.text,
+            update_at: new Date().getTime()
+          }
+        }else{
+        return item;
+        }
+      }))];
+      // console.log("hna aho ya 3m",itemNew)
+      // newList1.push(itemNew);
+     let newList2= [...newList1].sort((a,b)=>b.update_at-a.update_at)
+      return {
+        ...state,
+        list: newList2,
+      };
     default:
       return state;
 

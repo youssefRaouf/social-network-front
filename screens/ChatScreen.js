@@ -46,8 +46,8 @@ class ChatScreen extends Component {
   renderItem(item) {
     item = item.item;
     return (
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('UserChat', { id:item.id })}>
-        <Chat user={this.props.user.id===item.user1.id?item.user2:item.user1} item={{ lastMessage: 'this is a dummy message for testing' }} />
+      <TouchableOpacity style={{marginTop:8}} onPress={() => this.props.navigation.navigate('UserChat', { id:item.id,user:this.props.user.id===item.user1.id?item.user2:item.user1 })}>
+        <Chat user={this.props.user.id===item.user1.id?item.user2:item.user1} item={{update_at:item.update_at, lastMessage: item.text }} />
       </TouchableOpacity>
     )
   }
@@ -59,19 +59,15 @@ class ChatScreen extends Component {
 
         <FlatList
           data={data}
+          style={{marginTop:0}}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={item => item.id.toString()}
           onEndReached={() => {
             const offset = this.props.rooms.length;
             this.getRooms(offset);
           }}
-        // windowSize={2}
         />
-        {/* <TouchableOpacity style={{ position: 'absolute', bottom: 20, right: 10, backgroundColor: '#555555', borderRadius: 30, height: 60, width: 60, justifyContent: 'center', alignItems: 'center' }}
-          onPress={() => this.props.navigation.navigate("CreatePost")}
-        >
-          <AntDesign style={{ fontSize: 35, color: 'white' }} name="plus" />
-        </TouchableOpacity> */}
+      
       </View>
     );
   }
@@ -84,6 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
+    // paddingTop:10,
     backgroundColor: '#1F1F1F'
   },
 });

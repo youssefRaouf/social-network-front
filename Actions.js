@@ -82,4 +82,7 @@ export function fetchRooms(offset,id) {
 export function createRoom(user1_id,user2_id) {
   return {type: types.CREATE_ROOM,user1_id,user2_id};
 }
+export function updateRoom(text,roomId) {
+  return {type: types.UPDATE_ROOM,text,roomId};
+}
 
