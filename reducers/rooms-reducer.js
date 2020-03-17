@@ -21,11 +21,8 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         hasMore: action.refresh ? true : state.hasMore,
       };
     case types.FETCH_ROOMS_SUCCESS:
-      // console.log("ng7",action.data)
       const list = action.data;
       const prevIds = state.list.map(item => item.id);
-
-      // if(list){
       const newItems = list.filter(item => !prevIds.includes(item.id));
       // }
       return {
@@ -48,7 +45,6 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         isFetching: true,
       };
     case types.CREATE_ROOM_SUCCESS:
-      console.log("reducer",action.data.id)
       return {
         ...state,
         isLoading: false,
@@ -64,8 +60,6 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
       };
 
     case types.UPDATE_ROOM:
-   console.log(action);
-   let itemNew;
     const newList1 = [...(state.list.map(item => {
         if(item.id === action.roomId){
           return {
@@ -77,12 +71,20 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         return item;
         }
       }))];
-      // console.log("hna aho ya 3m",itemNew)
       // newList1.push(itemNew);
-     let newList2= [...newList1].sort((a,b)=>b.update_at-a.update_at)
+      for(let i=0;i<newList1.length;i++){
+        if(newList1[i].id===action.roomId){
+          for(let j=i;j>0;j--){
+            let temp = newList1[j];
+            newList1[j]=newList1[j-1];
+            newList1[j-1]=temp;
+          }
+        }
+      }
+    //  let newList2= [...newList1].sort((a,b)=>b.update_at-a.update_at)
       return {
         ...state,
-        list: newList2,
+        list: newList1,
       };
     default:
       return state;

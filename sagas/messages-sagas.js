@@ -22,9 +22,9 @@ function* requestMessages({offset,id}) {
     });
   }
 }
-function* createMessages({message,from_user,id}) {
+function* createMessages({message,from_user,to_user,id}) {
   try {
-    let data = yield call(createMessage,message,from_user,id);
+    let data = yield call(createMessage,message,from_user,to_user,id);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.CREATE_MESSAGE_SUCCESS, 

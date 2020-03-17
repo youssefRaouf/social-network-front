@@ -73,8 +73,8 @@ export function fetchMessages(offset,id) {
   console.log(id)
   return {type: types.FETCH_MESSAGES,offset,id};
 }
-export function createMessage(message,from_user,id) {
-  return {type: types.CREATE_MESSAGE,message,from_user,id};
+export function createMessage(message,from_user,to_user,id) {
+  return {type: types.CREATE_MESSAGE,message,from_user,to_user,id};
 }
 export function fetchRooms(offset,id) {
   return {type: types.FETCH_ROOMS,offset,id};

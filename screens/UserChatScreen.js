@@ -37,9 +37,8 @@ class UserChatScreen extends Component {
   componentDidMount() {
     const messages = io.connect(getEnv().socket.messages)
     messages.on('new_message' + this.props.navigation.getParam('id') , (data) => {
-      console.log("7sl")
      this.props.messagesReceived(data);
-     this.props.updateRoom(data.text,this.props.navigation.getParam('id'))
+    //  this.props.updateRoom(data.text,this.props.navigation.getParam('id'))
     })
     this.getMessages();
   }
@@ -50,11 +49,10 @@ class UserChatScreen extends Component {
   }
   renderItem(item) {
     item = item.item;
-    // console.log(item)
     return <Message id={this.props.user.id}item={item} />
   }
   createMessages(){
-    this.props.createMessage(this.state.text,this.props.user.id,this.props.navigation.getParam('id'))
+    this.props.createMessage(this.state.text,this.props.user.id,this.props.navigation.getParam('user').id,this.props.navigation.getParam('id'))
     this.setState({
       text: ''
     })
@@ -62,7 +60,6 @@ class UserChatScreen extends Component {
     this.props.updateRoom(this.state.text,this.props.navigation.getParam('id'))
   }
   render() {
-    // console.log(this.props.messages)
     const screenHeight = Math.round(Dimensions.get('window').height);
     const screeenWidth = Math.round(Dimensions.get('window').width);
     let data = this.props.messages
@@ -77,7 +74,6 @@ class UserChatScreen extends Component {
           // keyExtractor={item => item.id.toString()}
           onEndReached={() => {
             const offset = this.props.messages.length;
-            // console.log(offset)
             this.getMessages(offset);
           }}
           // style={{ marginTop: 60 }}
@@ -128,7 +124,7 @@ const mapDispatchToProps = dispatch => ({
   fetchMessages: (offset,id) => dispatch(actions.fetchMessages(offset,id)),
   messagesReceived: message => dispatch(actions.messagesReceived(message)),
   updateRoom: (text,roomId) => dispatch(actions.updateRoom(text,roomId)),
-  createMessage: (message, from_user, room_id) => dispatch(actions.createMessage(message, from_user, room_id)),
+  createMessage: (message, from_user,to_user, room_id) => dispatch(actions.createMessage(message, from_user,to_user, room_id)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });
 

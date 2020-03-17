@@ -33,6 +33,10 @@ class ChatScreen extends Component {
     //   console.log(data)
     //   postsReceived(data);
     // })
+    const rooms = io.connect(getEnv().socket.rooms)
+    rooms.on('new_message' + this.props.user.id , (data) => {
+     this.props.updateRoom(data.text,data.room_id)
+    })
     // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.getRooms();
     // console.log(this.props.user.id)
@@ -97,6 +101,7 @@ const mapDispatchToProps = dispatch => ({
   fetchPosts: offset => dispatch(actions.fetchPosts(offset)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
   fetchRooms: (offset, id) => dispatch(actions.fetchRooms(offset, id)),
+  updateRoom: (text,roomId) => dispatch(actions.updateRoom(text,roomId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
 });
 
