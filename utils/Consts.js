@@ -92,3 +92,8 @@ export const DELETE_FOLLOW_FAIL = 'DELETE_FOLLOW_FAIL'
 
 export const UPDATE_ROOM = 'UPDATE_ROOM'
 
+export const FIND_USERS ='FIND_USERS'
+export const FIND_USERS_SUCCESS = 'FIND_USERS_SUCCESS'
+export const FIND_USERS_FAIL = 'FIND_USERS_FAIL'
+
+

@@ -14,7 +14,7 @@ import {
 import Post from '../components/Post';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { socket, getMyProfile } from '../services/Api'
 import io from "socket.io-client";
 import getEnv from '../configs';
@@ -29,16 +29,16 @@ class HomeScreen extends Component {
   componentDidMount() {
     const posts = io.connect(getEnv().socket.posts)
     const { postsReceived } = this.props;
-    posts.on('new_post',(data)=>{
+    posts.on('new_post', (data) => {
       console.log(data)
       postsReceived(data);
     })
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.getPosts();
     console.log(this.props.user.id)
-    this.props.getFollowings(0,this.props.user.id);
+    this.props.getFollowings(0, this.props.user.id);
   }
-  
+
   getPosts(offset = 0) {
     const { fetchPosts } = this.props;
     fetchPosts(offset);
@@ -47,13 +47,20 @@ class HomeScreen extends Component {
     item = item.item;
     return <Post postSocket={this.postsRectionsSocket} item={item} navigation={this.props.navigation}></Post>
   }
-  
+
   render() {
 
 
     this.state.data = this.props.posts;
     return (
       <View style={styles.container}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+          <Text style={{ fontSize: 25, color: 'white', marginLeft: 20 }} >Deal</Text>
+
+          <TouchableOpacity onPress={()=>this.props.navigation.navigate('Search')}>
+            <FontAwesome style={{ fontSize: 25, color: 'white', marginRight: 20 }} name="search" />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem.bind(this)}
@@ -86,13 +93,13 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = ({ posts,user }, props) => {
+const mapStateToProps = ({ posts, user }, props) => {
   const { activePost, isLoading } = posts;
   return {
     posts: posts.list || [],
     post: activePost,
     isLoading,
-    user:user.user
+    user: user.user
   };
 };
 

@@ -13,6 +13,7 @@ import LoginScreen from '../screens/LoginScreen';
 import PhoneScreen from '../screens/PhoneScreen';
 import UserScreen from '../screens/UserScreen';
 import ChatScreen from '../screens/ChatScreen';
+import SearchScreen from '../screens/SearchScreen';
 import UserChatScreen from '../screens/UserChatScreen';
 
 const config = Platform.select({
@@ -148,6 +149,9 @@ export const Router = createAppContainer(
       },
       UserChat:{
         screen: UserChatScreen
+      },
+      Search:{
+        screen: SearchScreen
       }
     },
     {

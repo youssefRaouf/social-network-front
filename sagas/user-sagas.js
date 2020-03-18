@@ -1,6 +1,6 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import * as types from '../utils/Consts';
-import {checkUser, updateEmoji, deleteEmoji, createUser, fetchUser} from '../services/Api';
+import {checkUser, updateEmoji, deleteEmoji, createUser, fetchUser, search} from '../services/Api';
 function* checkUsers({email}) {
   try {
     let data = yield call(checkUser,email);
@@ -49,39 +49,28 @@ function* fetchUsers({}) {
     });
   }
 }
-function* updateEmojis({index,post_id}) {
+function* findUsers({offset,name}) {
   try {
-    let data = yield call(updateEmoji,index,post_id);
+    if(name!==''){
+    let data = yield call(search,offset,name);
     yield put({
-      type: types.UPDATE_EMOJI_SUCCESS, 
+      type: types.FIND_USERS_SUCCESS, 
       data,
-    });
-  } catch (error) {
-    console.log(error);
-    yield put({
-      type: types.UPDATE_EMOJI_FAIL,
-      error,
     });
   }
-}
-function* deleteEmojis({post_id}) {
-  try {
-    let data = yield call(deleteEmoji,post_id);
-    yield put({
-      type: types.DELETE_EMOJI_SUCCESS, 
-      data,
-    });
   } catch (error) {
     console.log(error);
     yield put({
-      type: types.DELETE_EMOJI_FAIL,
+      type: types.FIND_USERS_FAIL,
       error,
     });
   }
 }
 
+
 export default function* userSagas() {
   yield takeLatest(types.CHECK_USER, checkUsers);
   yield takeLatest(types.CREATE_USER, createUsers);
   yield takeLatest(types.FETCH_USER, fetchUsers);
+  yield takeLatest(types.FIND_USERS, findUsers);
 }

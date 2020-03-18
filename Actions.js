@@ -85,4 +85,8 @@ export function createRoom(user1_id,user2_id) {
 export function updateRoom(text,roomId) {
   return {type: types.UPDATE_ROOM,text,roomId};
 }
+export function findUsers(offset,name) {
+  return {type: types.FIND_USERS,offset,name};
+}
+
 

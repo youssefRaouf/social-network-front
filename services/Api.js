@@ -291,5 +291,18 @@ function createRoom(user1_id, user2_id) {
     }),
   }).then(response => response.json());
 }
+function search (offset,name){
+  return fetch(baseUrl + 'search'+'?offset='+offset, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token: Token
+    },
+    body: JSON.stringify({
+     name:name
+    }),
+  }).then(response => response.json());
 
-export { createRoom,getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+}
+export {search, createRoom,getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
