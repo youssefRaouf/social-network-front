@@ -15,11 +15,9 @@ import {
   TextInput,
   Keyboard
 } from 'react-native';
-import Post from '../components/Post';
 import { connect } from 'react-redux';
 import * as actions from '../Actions';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { socket, getMyProfile } from '../services/Api'
+import { AntDesign, MaterialIcons,Ionicons } from '@expo/vector-icons';
 import io from "socket.io-client";
 import getEnv from '../configs';
 import Message from '../components/Message';
@@ -49,7 +47,7 @@ class UserChatScreen extends Component {
   }
   renderItem(item) {
     item = item.item;
-    return <Message id={this.props.user.id}item={item} />
+    return <Message id={this.props.user.id}item={item} user={this.props.user} user2={this.props.navigation.getParam('user')} />
   }
   createMessages(){
     this.props.createMessage(this.state.text,this.props.user.id,this.props.navigation.getParam('user').id,this.props.navigation.getParam('id'))
@@ -65,8 +63,16 @@ class UserChatScreen extends Component {
     let data = this.props.messages
     return (
       <KeyboardAvoidingView style={{ backgroundColor: 'black', height: screenHeight, flex: 1 }} behavior="height" enabled>
-        <View style={{ paddingTop: 50 }}></View>
-        <User user={this.props.navigation.getParam('user')} item={null} />
+        <View style={{ paddingTop: 50,flexDirection:'row',alignItems:'center' }}>
+        <TouchableOpacity onPress={() => this.props.navigation.goBack()} >
+            <Ionicons style={{ marginLeft: 30, fontSize: 25, color: 'white' }} name="md-arrow-round-back" />
+          </TouchableOpacity>
+          <View style={{flexDirection:'row',alignItems:'center',marginLeft:10}}>
+          <Image source={{uri:this.props.navigation.getParam('user').image_url}}
+            style={{height:40,width:40,borderRadius:20,marginRight:10}}/>
+          <Text style={{fontSize:16,color:'white'}}>{this.props.navigation.getParam('user').name}</Text>
+            </View>
+        </View>
         <FlatList
           data={data}
           renderItem={this.renderItem.bind(this)}

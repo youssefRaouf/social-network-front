@@ -4,7 +4,7 @@ export function fetchPosts(offset) {
     return {type: types.FETCH_POSTS,offset};
 }
 export function fetchPostsByUserId(offset,user_id) {
-  console.log("d5lna user posts",user_id)
+  console.log("d5lna user posts",user_id,offset)
   return {type: types.FETCH_POSTS_USER_ID,offset,user_id};
 }
 export function fetchComments(offset,post_id) {

@@ -41,20 +41,21 @@ function posts(state = POSTS_INITIAL_STATE, action) {
           isFetching: true,
         };
       case types.FETCH_POSTS_USER_ID_SUCCESS:
-        // console.log("lolll",action.user_id)
+        console.log("lolll",action.data)
         const oldUserPosts = (state[action.user_id]&&state[action.user_id].list) || []
         const listPosts = action.data||[];
         const prevIdsPosts = oldUserPosts.map(item => item.id);
        
         // if(list){
        const  newUserPosts = listPosts.filter(item => !prevIdsPosts.includes(item.id));
+       const list1 =[...oldUserPosts,...newUserPosts].sort((a,b)=>b.id-a.id)
         // }
         return {
           ...state,
           isLoading: false,
           isFetching: false,
           [action.user_id]: {
-            list: [...oldUserPosts, ...newUserPosts],
+            list: list1,
             hasMore: listPosts.length > 0
           }
         };

@@ -131,6 +131,12 @@ class ProfileScreen extends Component {
         </View>
         {this.state.selectPosts === 1 ?
           <FlatList
+          refreshing={false}
+          onRefresh={()=>{
+            
+            const offset =0;
+            this.getPosts(offset);
+          }}
             data={this.state.data}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={item => item.id.toString()}
