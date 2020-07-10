@@ -59,7 +59,7 @@ class CommentScreen extends Component {
         <FlatList
         data={data}
           renderItem={this.renderItem.bind(this)}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           onEndReached={() => {
             const offset = this.props.comments.length;
             console.log(offset)

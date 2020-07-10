@@ -29,10 +29,10 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
     case types.FETCH_COMMENTS_SUCCESS:
       // console.log("ng7",action.data)
       const list = action.data;
-      const prevIds = state.list.map(item => item.id);
+      const prevIds = state.list.map(item => item._id);
      
       // if(list){
-     const  newItems = list.filter(item => !prevIds.includes(item.id));
+     const  newItems = list.filter(item => !prevIds.includes(item._id));
       // }
       return {
         ...state,
@@ -71,11 +71,11 @@ function comments(state = COMMENTS_INITIAL_STATE, action) {
           if(comment.post_id != state.postId){
             return state;
           }
-          const prevCommentsIds = state.list.map(item => item.id);
-          if(prevCommentsIds.includes(comment.id)){
+          const prevCommentsIds = state.list.map(item => item._id);
+          if(prevCommentsIds.includes(comment._id)){
             return state;
           }
-          const newList = [comment, ...state.list].sort((a,b)=>a.id-b.id); 
+          const newList = [comment, ...state.list].sort((a,b)=>a._id-b._id); 
           return {
             ...state,
             list: newList

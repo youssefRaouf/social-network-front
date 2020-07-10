@@ -35,8 +35,8 @@ class HomeScreen extends Component {
     })
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.getPosts();
-    console.log(this.props.user.id)
-    this.props.getFollowings(0, this.props.user.id);
+    console.log(this.props.user._id)
+    this.props.getFollowings(0, this.props.user._id);
   }
 
   getPosts(offset = 0) {
@@ -64,7 +64,7 @@ class HomeScreen extends Component {
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem.bind(this)}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           onEndReached={() => {
             const offset = this.props.posts.length;
             this.getPosts(offset);

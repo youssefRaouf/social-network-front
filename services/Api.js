@@ -92,7 +92,7 @@ async function createComment(text, post_id, parent_id) {
     }),
   }).then(response => response.json())
 }
-async function createMessage(text, from_user,to_user, id) {
+async function createMessage(text, from_user, to_user, id) {
 
   return fetch(baseUrl + 'messages', {
     method: 'POST',
@@ -104,7 +104,7 @@ async function createMessage(text, from_user,to_user, id) {
     body: JSON.stringify({
       text: text,
       from_user: from_user,
-      to_user:to_user,
+      to_user: to_user,
       room_id: id
     }),
   }).then(response => response.json())
@@ -291,8 +291,9 @@ function createRoom(user1_id, user2_id) {
     }),
   }).then(response => response.json());
 }
-function search (offset,name){
-  return fetch(baseUrl + 'search'+'?offset='+offset, {
+
+function search(offset, name) {
+  return fetch(baseUrl + 'search' + '?offset=' + offset, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -300,9 +301,9 @@ function search (offset,name){
       token: Token
     },
     body: JSON.stringify({
-     name:name
+      name: name
     }),
   }).then(response => response.json());
 
 }
-export {search, createRoom,getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+export { search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };

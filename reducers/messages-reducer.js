@@ -29,10 +29,10 @@ function messages(state = MESSAGES_INITIAL_STATE, action) {
     case types.FETCH_MESSAGES_SUCCESS:
       // console.log("ng7",action.data)
       const list = action.data;
-      const prevIds = state.list.map(item => item.id);
+      const prevIds = state.list.map(item => item._id);
 
       // if(list){
-      const newItems = list.filter(item => !prevIds.includes(item.id));
+      const newItems = list.filter(item => !prevIds.includes(item._id));
       // }
       return {
         ...state,
@@ -72,11 +72,11 @@ function messages(state = MESSAGES_INITIAL_STATE, action) {
       if (message.room_id != state.roomId ) {
         return state;
       }
-      const prevMessagesIds = state.list.map(item => item.id);
-      if (prevMessagesIds.includes(message.id)) {
+      const prevMessagesIds = state.list.map(item => item._id);
+      if (prevMessagesIds.includes(message._id)) {
         return state;
       }
-      const newList = [message, ...state.list].sort((a, b) => b.id - a.id);
+      const newList = [message, ...state.list].sort((a, b) => b._id - a._id);
       return {
         ...state,
         list: newList,

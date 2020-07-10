@@ -37,30 +37,29 @@ class Post extends Component {
         }
       }
     }
-    let emojis = this.props.item.emojis
+    // let emojis = this.props.item.emojis
 
 
   }
 
   componentDidMount() {
     if (this.props.postSocket !== null) {
-      this.props.postSocket.on(`comments_count_${this.props.item.id}`, (commentsCount) => {
-        this.props.postCommentsCountChange(this.props.item.id, commentsCount);
+      this.props.postSocket.on(`comments_count_${this.props.item._id}`, (commentsCount) => {
+        this.props.postCommentsCountChange(this.props.item._id, commentsCount);
       })
-      this.props.postSocket.on(`emojis_count_${this.props.item.id}`, (post) => {
+      this.props.postSocket.on(`emojis_count_${this.props.item._id}`, (post) => {
         console.log("connection hna")
-        this.props.postEmojisCountChange(this.props.item.id, post);
+        this.props.postEmojisCountChange(this.props.item._id, post);
       })
     }
-    let emojis = this.props.item.emojis
-    for (let i = 0; i < emojis.length; i++) {
-      if (emojis[i] !== null) {
-        //  console.log("s")
-        this.setState({
-          emojiCountShow: true
-        })
-      }
-    }
+    // for (let i = 0; i < emojis.length; i++) {
+    //   if (emojis[i] !== null) {
+    //     //  console.log("s")
+    //     this.setState({
+    //       emojiCountShow: true
+    //     })
+    //   }
+    // }
   }
   emoji = () => {
     this.setState({
@@ -79,11 +78,11 @@ class Post extends Component {
     const { createEmojis, updateEmojis } = this.props;
     let arrText = [Love, Laugh, Wow, Sad, Angry]
     if (this.state.emojiColor === 'white') {
-      createEmojis(arrText.indexOf(type) + 2, this.props.item.id);
+      createEmojis(arrText.indexOf(type) + 2, this.props.item._id);
     }
     else {
 
-      updateEmojis(arrText.indexOf(type) + 2, this.props.item.id);
+      updateEmojis(arrText.indexOf(type) + 2, this.props.item._id);
     }
     this.setState({
       show: false,
@@ -99,13 +98,13 @@ class Post extends Component {
       emojiText: text,
     });
     if (this.state.emojiColor !== 'white') {
-      this.props.deleteEmojis(this.props.item.id)
+      this.props.deleteEmojis(this.props.item._id)
       this.setState({
         emojiColor: 'white',
         emoji: null
       });
     } else {
-      this.props.createEmojis(1, this.props.item.id);
+      this.props.createEmojis(1, this.props.item._id);
       this.setState({
         emojiColor: color
       });
@@ -114,8 +113,7 @@ class Post extends Component {
 
 
   render() {
-    let emojis = this.props.item.emojis
-    //  c
+    let emojis = this.props.item
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
         <TouchableOpacity onPress={()=>this.props.navigation.navigate('User',{user:this.props.item.user})}>
@@ -171,54 +169,54 @@ class Post extends Component {
           /> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            {emojis && emojis[1] != null ?
+            { emojis.like!== 0 ?
               <View style={{ marginRight: 5, flexDirection: 'row' }}>
                 <Text style={{ color: 'white', marginRight: 2 }}>{emojis[1]}</Text>
                 <AntDesign style={{ fontSize: 18, color: 'blue' }} name="like2" />
               </View>
               : null
             }
-            {emojis && emojis[2] != null ?
+            {emojis.love!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white' }}>{emojis[2]}</Text>
                 <Love stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} />
               </View>
               : null
             }
-            {emojis && emojis[3] != null ?
+            {emojis.laugh!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[3]}</Text>
                 <Laugh stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={20} />
               </View>
               : null
             }
-            {emojis && emojis[4] != null ?
+            {emojis.wow!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[4]}</Text>
                 <Wow stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis && emojis[5] != null ?
+            {emojis.sad!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[5]}</Text>
                 <Sad stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis && emojis[6] != null ?
+            {emojis.angry!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
                 <Text style={{ color: 'white', }}>{emojis[6]}</Text>
                 <Angry stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis && this.props.item.emojis.length === 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
+            { emojis.like=== 0&&emojis.love=== 0&&emojis.laugh=== 0&&emojis.wow=== 0&&emojis.sad=== 0&&emojis.angry=== 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
 
           </View>
 
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Comment', { postId: this.props.item.id })}>
-            <Text style={{ color: 'white' }}>{this.props.item.comments + " comments"}</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Comment', { postId: this.props.item._id })}>
+            <Text style={{ color: 'white' }}>{this.props.item.commentsCount + " comments"}</Text>
           </TouchableOpacity>
         </View>
         {this.state.show ?
@@ -237,7 +235,7 @@ class Post extends Component {
             </TouchableOpacity>
           </View>
           <View >
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => this.props.navigation.navigate('Comment', { postId: this.props.item.id })}
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => this.props.navigation.navigate('Comment', { postId: this.props.item._id })}
             >
               <FontAwesome style={{ fontSize: 18, color: 'white' }} name="comment-o" />
               <Text style={{ fontSize: 15, color: 'white', marginLeft: 3 }}>Comment</Text>

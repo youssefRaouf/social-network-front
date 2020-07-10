@@ -22,10 +22,10 @@ function posts(state = POSTS_INITIAL_STATE, action) {
       };
     case types.FETCH_POSTS_SUCCESS:
       const list = action.data||[];
-      const prevIds = state.list.map(item => item.id);
+      const prevIds = state.list.map(item => item._id);
      
       // if(list){
-     const  newItems = list.filter(item => !prevIds.includes(item.id));
+     const  newItems = list.filter(item => !prevIds.includes(item._id));
       // }
       return {
         ...state,
@@ -44,11 +44,11 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         console.log("lolll",action.data)
         const oldUserPosts = (state[action.user_id]&&state[action.user_id].list) || []
         const listPosts = action.data||[];
-        const prevIdsPosts = oldUserPosts.map(item => item.id);
+        const prevIdsPosts = oldUserPosts.map(item => item._id);
        
         // if(list){
-       const  newUserPosts = listPosts.filter(item => !prevIdsPosts.includes(item.id));
-       const list1 =[...oldUserPosts,...newUserPosts].sort((a,b)=>b.id-a.id)
+       const  newUserPosts = listPosts.filter(item => !prevIdsPosts.includes(item._id));
+       const list1 =[...oldUserPosts,...newUserPosts].sort((a,b)=>b._id-a._id)
         // }
         return {
           ...state,
@@ -92,21 +92,21 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         };
       case types.POSTS_RECEIVED:
           const post = action.post;
-          const prevPostsIds = state.list.map(item => item.id);
-          if(prevPostsIds.includes(post.id)){
+          const prevPostsIds = state.list.map(item => item._id);
+          if(prevPostsIds.includes(post._id)){
             return state;
           }
-          const newList = [post, ...state.list].sort((a,b)=>b.id-a.id); 
+          const newList = [post, ...state.list].sort((a,b)=>b._id-a._id); 
           return {
             ...state,
             list: newList
           };
       case types.COMMENTS_COUNT_CHANGE:
         const newList1 = [...(state.list.map(post => {
-          if(post.id === action.post_id){
+          if(post._id === action.post_id){
             return {
               ...post,
-              comments: action.commentsCount
+              commentsCount: action.commentsCount
             }
           }
           return post;
@@ -119,7 +119,7 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         case types.EMOJIS_COUNT_CHANGE:
       
           const newList2 = [...(state.list.map(post => {
-            if(post.id === action.post_id){
+            if(post._id === action.post_id){
               post=action.post
               return {
                 ...post,
