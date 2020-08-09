@@ -82,7 +82,7 @@ class Post extends Component {
     }
     else {
 
-      updateEmojis(arrText.indexOf(type) + 2, this.props.item._id);
+      updateEmojis(arrText.indexOf(type) + 2, this.props.item._id,this.state.emojiText.toLowerCase());
     }
     this.setState({
       show: false,
@@ -98,7 +98,8 @@ class Post extends Component {
       emojiText: text,
     });
     if (this.state.emojiColor !== 'white') {
-      this.props.deleteEmojis(this.props.item._id)
+      console.log(this.state.emojiText)
+      this.props.deleteEmojis(this.props.item._id,this.state.emojiText)
       this.setState({
         emojiColor: 'white',
         emoji: null
@@ -110,13 +111,20 @@ class Post extends Component {
       });
     }
   }
-
+ 
+  onUserPress=()=>{
+    if(this.props.user._id===this.props.item.user._id){
+      this.props.navigation.navigate('Profile')
+      return;
+    }
+    this.props.navigation.navigate('User',{user:this.props.item.user})
+  }
 
   render() {
     let emojis = this.props.item
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate('User',{user:this.props.item.user})}>
+        <TouchableOpacity onPress={this.onUserPress}>
           <User user={this.props.item.user} item={this.props.item} />
         </TouchableOpacity>
         <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
@@ -171,42 +179,42 @@ class Post extends Component {
           <View style={{ flexDirection: 'row' }}>
             { emojis.like!== 0 ?
               <View style={{ marginRight: 5, flexDirection: 'row' }}>
-                <Text style={{ color: 'white', marginRight: 2 }}>{emojis[1]}</Text>
+                <Text style={{ color: 'white', marginRight: 2 }}>{emojis.like}</Text>
                 <AntDesign style={{ fontSize: 18, color: 'blue' }} name="like2" />
               </View>
               : null
             }
             {emojis.love!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white' }}>{emojis[2]}</Text>
+                <Text style={{ color: 'white' }}>{emojis.love}</Text>
                 <Love stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} />
               </View>
               : null
             }
             {emojis.laugh!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis[3]}</Text>
+                <Text style={{ color: 'white', }}>{emojis.laugh}</Text>
                 <Laugh stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={20} />
               </View>
               : null
             }
             {emojis.wow!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis[4]}</Text>
+                <Text style={{ color: 'white', }}>{emojis.wow}</Text>
                 <Wow stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
             {emojis.sad!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis[5]}</Text>
+                <Text style={{ color: 'white', }}>{emojis.sad}</Text>
                 <Sad stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
             {emojis.angry!== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis[6]}</Text>
+                <Text style={{ color: 'white', }}>{emojis.angry}</Text>
                 <Angry stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
@@ -266,8 +274,8 @@ const mapStateToProps = ({ emojis, user }, props) => {
 
 const mapDispatchToProps = dispatch => ({
   createEmojis: (type, post_id) => dispatch(actions.createEmojis(type, post_id)),
-  updateEmojis: (type, post_id) => dispatch(actions.updateEmojis(type, post_id)),
-  deleteEmojis: (post_id) => dispatch(actions.deleteEmojis(post_id)),
+  updateEmojis: (type, post_id,prevType) => dispatch(actions.updateEmojis(type, post_id,prevType)),
+  deleteEmojis: (post_id,type) => dispatch(actions.deleteEmojis(post_id,type)),
   postCommentsCountChange: (post_id, commentsCount) => dispatch(actions.postCommentsCountChange(post_id, commentsCount)),
   postEmojisCountChange: (post_id, post) => dispatch(actions.postEmojisCountChange(post_id, post)),
 

@@ -7,6 +7,9 @@ export function fetchPostsByUserId(offset,user_id) {
   console.log("d5lna user posts",user_id,offset)
   return {type: types.FETCH_POSTS_USER_ID,offset,user_id};
 }
+export function fetchPostsCountByUserId(user_id) {
+  return {type: types.FETCH_POSTS_COUNT_USER_ID,user_id};
+}
 export function fetchComments(offset,post_id) {
   return {type: types.FETCH_COMMENTS,offset,post_id};
 }
@@ -35,12 +38,12 @@ export function createEmojis(index,post_id) {
   // console.log("gwa el action")
   return {type: types.CREATE_EMOJI,index,post_id};
 }
-export function updateEmojis(index,post_id) {
-  return {type: types.UPDATE_EMOJI,index,post_id};
+export function updateEmojis(index,post_id,prevType) {
+  return {type: types.UPDATE_EMOJI,index,post_id,prevType};
 }
-export function deleteEmojis(post_id) {
+export function deleteEmojis(post_id,emojiType) {
   console.log("gwa el action")
-  return {type: types.DELETE_EMOJI,post_id};
+  return {type: types.DELETE_EMOJI,post_id,emojiType};
 }
 export function fetchCategories(page = 1, refresh) {
   return {type: types.FETCH_CATEGORIES, page, refresh};

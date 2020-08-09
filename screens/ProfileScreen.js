@@ -27,9 +27,6 @@ class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      followers: [],
-      followings: [],
       selectPosts: 1,
       user: ''
     };
@@ -37,22 +34,27 @@ class ProfileScreen extends Component {
 
   componentDidMount() {
     this.setState({ user: this.props.user })
+    this.getPostsCount()
     this.getPosts();
     this.getFollowers();
     this.getFollowings();
-    this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
+    // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
   }
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
-    fetchPostsByUserId(offset, this.props.user.id);
+    fetchPostsByUserId(offset, this.props.user._id);
+  }
+  getPostsCount() {
+    const { fetchPostsCountByUserId } = this.props;
+    fetchPostsCountByUserId(this.props.user._id);
   }
   getFollowers(offset = 0) {
     const { getFollowers } = this.props;
-    getFollowers(offset, this.props.user.id);
+    getFollowers(offset, this.props.user._id);
   }
   getFollowings(offset = 0) {
     const { getFollowings } = this.props;
-    getFollowings(offset, this.props.user.id)
+    getFollowings(offset, this.props.user._id)
   }
   renderItem(item) {
     item = item.item
@@ -85,10 +87,6 @@ class ProfileScreen extends Component {
     )
   }
   render() {
-    this.state.data = this.props.posts;
-    this.state.followers = this.props.followers
-    this.state.followings = this.props.followings
-    // console.log(this.props.posts)
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
         <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 5 }}>
@@ -97,15 +95,15 @@ class ProfileScreen extends Component {
           <View style={{ flexDirection: 'column', marginTop: 25 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width - 100 }}>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.postsCount}</Text>
                 <Text style={{ color: 'white' }}>posts</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.followers.length}</Text>
                 <Text style={{ color: 'white' }}>followers</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.followings.length}</Text>
                 <Text style={{ color: 'white' }}>following</Text>
               </View>
             </View>
@@ -131,15 +129,15 @@ class ProfileScreen extends Component {
         </View>
         {this.state.selectPosts === 1 ?
           <FlatList
-          refreshing={false}
-          onRefresh={()=>{
-            
-            const offset =0;
-            this.getPosts(offset);
-          }}
-            data={this.state.data}
+            refreshing={false}
+            onRefresh={() => {
+
+              const offset = 0;
+              this.getPosts(offset);
+            }}
+            data={this.props.posts}
             renderItem={this.renderItem.bind(this)}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item._id.toString()}
             onEndReached={() => {
               const offset = this.props.posts.length;
               this.getPosts(offset);
@@ -148,9 +146,9 @@ class ProfileScreen extends Component {
           : this.state.selectPosts === 2 ?
             <View style={{}}>
               <FlatList
-                data={this.state.followers}
+                data={this.props.followers}
                 renderItem={this.renderFollowersUser.bind(this)}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item._id.toString()}
                 onEndReached={() => {
                   const offset = this.props.followers.length;
                   this.getFollowers(offset);
@@ -160,9 +158,9 @@ class ProfileScreen extends Component {
             :
             <View style={{}}>
               <FlatList
-                data={this.state.followings}
+                data={this.props.followings}
                 renderItem={this.renderFollowingsUser.bind(this)}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item._id.toString()}
                 onEndReached={() => {
                   const offset = this.props.followings.length;
                   this.getFollowings(offset);
@@ -178,12 +176,11 @@ ProfileScreen.navigationOptions = {
   header: null
 };
 const mapStateToProps = ({ posts, user, followers }, props) => {
-  const { activePost, isLoading } = posts;
   // console.log()
-  const userId = user.user.id;
+  const userId = user.user._id;
   return {
     posts: (posts[userId] && posts[userId].list) || [],
-    post: activePost,
+    postsCount: (posts[userId] && posts[userId].postsCount) ,
     user: user.user,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
@@ -192,6 +189,7 @@ const mapStateToProps = ({ posts, user, followers }, props) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchPostsByUserId: (offset, user_id) => dispatch(actions.fetchPostsByUserId(offset, user_id)),
+  fetchPostsCountByUserId: (user_id) => dispatch(actions.fetchPostsCountByUserId(user_id)),
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
@@ -201,6 +199,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(ProfileScreen);
-// CreatePostScreen.navigationOptions = {
-//   header: null,
-// };

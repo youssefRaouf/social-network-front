@@ -37,10 +37,10 @@ function* createEmojis({index,post_id}) {
     });
   }
 }
-function* updateEmojis({index,post_id}) {
+function* updateEmojis({index,post_id,prevType}) {
   try {
     // console.log("sagaemojis")
-    let data = yield call(updateEmoji,index,post_id);
+    let data = yield call(updateEmoji,index,post_id,prevType);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.UPDATE_EMOJI_SUCCESS, 
@@ -54,10 +54,10 @@ function* updateEmojis({index,post_id}) {
     });
   }
 }
-function* deleteEmojis({post_id}) {
+function* deleteEmojis({post_id,emojiType}) {
   try {
     // console.log("sagaemojis")
-    let data = yield call(deleteEmoji,post_id);
+    let data = yield call(deleteEmoji,post_id,emojiType);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.DELETE_EMOJI_SUCCESS, 

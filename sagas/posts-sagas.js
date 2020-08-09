@@ -1,14 +1,14 @@
-import {call, put, takeLatest} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import * as types from '../utils/Consts';
 // import Event from '../models/Event';
-import {getPosts,createPost,getPostsByUserId} from '../services/Api';
+import { getPosts, createPost, getPostsByUserId ,getPostsCountByUserId} from '../services/Api';
 
-function* requestEvents({offset}) {
+function* requestEvents({ offset }) {
   try {
-    let data = yield call(getPosts,offset);
+    let data = yield call(getPosts, offset);
     // data = data.map(event => new Event(event));
     yield put({
-      type: types.FETCH_POSTS_SUCCESS, 
+      type: types.FETCH_POSTS_SUCCESS,
       data,
     });
   } catch (error) {
@@ -19,14 +19,15 @@ function* requestEvents({offset}) {
     });
   }
 }
-function* requestEventsByUserId({offset,user_id}) {
+function* requestEventsByUserId({ offset, user_id }) {
   try {
-    let data = yield call(getPostsByUserId,offset,user_id);
+    let data = yield call(getPostsByUserId, offset, user_id);
     // data = data.map(event => new Event(event));
     yield put({
-      type: types.FETCH_POSTS_USER_ID_SUCCESS, 
+      type: types.FETCH_POSTS_USER_ID_SUCCESS,
       data,
-      user_id
+      user_id,
+      offset
     });
   } catch (error) {
     console.log(error);
@@ -36,12 +37,31 @@ function* requestEventsByUserId({offset,user_id}) {
     });
   }
 }
-function* createPosts({text,url,videoName}) {
+
+function* requestPostsCountByUserId({ user_id }) {
   try {
-    let data = yield call(createPost,text,url,videoName);
+    let data = yield call(getPostsCountByUserId,user_id);
     // data = data.map(event => new Event(event));
     yield put({
-      type: types.CREATE_POST_SUCCESS, 
+      type: types.FETCH_POSTS_COUNT_USER_ID_SUCCESS,
+      data,
+      user_id
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: types.FETCH_POSTS_COUNT_USER_ID_FAIL,
+      error,
+    });
+  }
+}
+
+function* createPosts({ text, url, videoName }) {
+  try {
+    let data = yield call(createPost, text, url, videoName);
+    // data = data.map(event => new Event(event));
+    yield put({
+      type: types.CREATE_POST_SUCCESS,
       data,
     });
   } catch (error) {
@@ -56,5 +76,6 @@ function* createPosts({text,url,videoName}) {
 export default function* eventsSagas() {
   yield takeLatest(types.FETCH_POSTS, requestEvents);
   yield takeLatest(types.FETCH_POSTS_USER_ID, requestEventsByUserId);
+  yield takeLatest(types.FETCH_POSTS_COUNT_USER_ID, requestPostsCountByUserId);
   yield takeLatest(types.CREATE_POST, createPosts);
 }

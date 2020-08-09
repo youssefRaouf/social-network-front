@@ -27,9 +27,6 @@ class UserScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      followers: [],
-      followings: [],
       selectPosts: 1,
       follow: 'Follow',
       user: ''
@@ -43,22 +40,22 @@ class UserScreen extends Component {
     this.getFollowings();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.props.followingsMyUser.map((item) => {
-      if (item.to_user === this.props.navigation.getParam('user').id) {
+      if (item.to_user === this.props.navigation.getParam('user')._id) {
         this.setState({ follow: 'Unfollow' })
       }
     })
   }
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
-    fetchPostsByUserId(offset, this.props.navigation.getParam('user').id);
+    fetchPostsByUserId(offset, this.props.navigation.getParam('user')._id);
   }
   getFollowers(offset = 0) {
     const { getFollowers } = this.props;
-    getFollowers(offset, this.props.navigation.getParam('user').id);
+    getFollowers(offset, this.props.navigation.getParam('user')._id);
   }
   getFollowings(offset = 0) {
     const { getFollowings } = this.props;
-    getFollowings(offset, this.props.navigation.getParam('user').id)
+    getFollowings(offset, this.props.navigation.getParam('user')._id)
   }
   renderItem(item) {
     item = item.item
@@ -67,7 +64,7 @@ class UserScreen extends Component {
   renderFollowersUser(item) {
     item = item.item.from
     // console.log(item)
-    if (this.props.user.id === item.id) {
+    if (this.props.user._id === item._id) {
       return (
         <View style={{ marginTop: 7 }}>
           <TouchableOpacity
@@ -90,7 +87,7 @@ class UserScreen extends Component {
   renderFollowingsUser(item) {
     item = item.item.to
     // console.log(item)
-    if (this.props.user.id === item.id) {
+    if (this.props.user._id === item._id) {
       return (
         <View style={{ marginTop: 7 }}>
           <TouchableOpacity
@@ -114,21 +111,18 @@ class UserScreen extends Component {
     const { createFollow,deleteFollow } = this.props;
     if (this.state.follow === 'Follow') {
       this.setState({ follow: 'Unfollow' })
-      createFollow(this.props.navigation.getParam('user').id);
+      createFollow(this.props.navigation.getParam('user')._id);
     }else{
       this.setState({follow:'Follow'})
-      deleteFollow(this.props.navigation.getParam('user').id);
+      deleteFollow(this.props.navigation.getParam('user')._id);
     }
-    this.props.getFollowings(0,this.props.user.id);
+    this.props.getFollowings(0,this.props.user._id);
   }
   async getOrCreateRoom(){
- let room=await createRoom(this.props.navigation.getParam('user').id,this.props.user.id)
-      this.props.navigation.navigate('UserChat',{id:room.id,user:this.props.navigation.getParam('user')})
+ let room=await createRoom(this.props.navigation.getParam('user')._id,this.props.user._id)
+      this.props.navigation.navigate('UserChat',{id:room._id,user:this.props.navigation.getParam('user')})
   }
   render() {  
-    this.state.data = this.props.posts;
-    this.state.followers = this.props.followers
-    this.state.followings = this.props.followings
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
         <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 5 }}>
@@ -181,9 +175,9 @@ class UserScreen extends Component {
         </View>
         {this.state.selectPosts === 1 ?
           <FlatList
-            data={this.state.data}
+            data={this.props.data}
             renderItem={this.renderItem.bind(this)}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item._id.toString()}
             onEndReached={() => {
               const offset = this.props.posts.length;
               this.getPosts(offset);
@@ -192,9 +186,9 @@ class UserScreen extends Component {
           : this.state.selectPosts === 2 ?
             <View style={{}}>
               <FlatList
-                data={this.state.followers}
+                data={this.props.followers}
                 renderItem={this.renderFollowersUser.bind(this)}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item._id.toString()}
                 onEndReached={() => {
                   const offset = this.props.followers.length;
                   this.getFollowers(offset);
@@ -204,9 +198,9 @@ class UserScreen extends Component {
             :
             <View style={{}}>
               <FlatList
-                data={this.state.followings}
+                data={this.props.followings}
                 renderItem={this.renderFollowingsUser.bind(this)}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => item._id.toString()}
                 onEndReached={() => {
                   const offset = this.props.followings.length;
                   this.getFollowings(offset);
@@ -223,7 +217,7 @@ UserScreen.navigationOptions = {
 };
 const mapStateToProps = ({ posts, user, followers,rooms }, props) => {
   const { activePost, isLoading } = posts;
-  const userId = props.navigation.getParam('user').id
+  const userId = props.navigation.getParam('user')._id
   return {
     posts: (posts[userId] && posts[userId].list) || [],
     post: activePost,
@@ -231,7 +225,7 @@ const mapStateToProps = ({ posts, user, followers,rooms }, props) => {
     roomId:rooms.roomId,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
-    followingsMyUser: (followers[user.user.id] && followers[user.user.id].listFollowings) || [],
+    followingsMyUser: (followers[user.user._id] && followers[user.user._id].listFollowings) || [],
 
   };
 };

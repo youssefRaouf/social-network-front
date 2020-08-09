@@ -75,7 +75,7 @@ class SearchScreen extends Component {
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem.bind(this)}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           onEndReached={() => {
             const offset = this.props.users.length;
             this.search(offset,this.state.text);

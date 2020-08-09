@@ -36,6 +36,14 @@ const getPostsByUserId = (offset, user_id) => {
     .then(response => response.json())
 };
 
+const getPostsCountByUserId = (user_id) => {
+  const eventsRequest = () => {
+    return doRequest('users/' + user_id + '/postsCount', { method: 'GET' }, {});
+  };
+  return eventsRequest()
+    .then(response => response.json())
+};
+
 function createPost(text, url, videoName) {
   return fetch(baseUrl + 'posts', {
     method: 'POST',
@@ -125,7 +133,7 @@ async function createEmoji(type, post_id) {
   }).then(response => response.json())
 }
 
-async function updateEmoji(type, post_id) {
+async function updateEmoji(type, post_id,prevType) {
 
   return fetch(baseUrl + 'emojis', {
     method: 'PUT',
@@ -137,10 +145,11 @@ async function updateEmoji(type, post_id) {
     body: JSON.stringify({
       type: type,
       post_id: post_id,
+      prevType:prevType
     }),
   }).then(response => response.json()).then(response => console.log(response))
 }
-async function deleteEmoji(post_id) {
+async function deleteEmoji(post_id,emojiType) {
 
   return fetch(baseUrl + 'emojis', {
     method: 'DELETE',
@@ -151,6 +160,7 @@ async function deleteEmoji(post_id) {
     },
     body: JSON.stringify({
       post_id: post_id,
+      type:emojiType
     }),
   }).then(response => response.json())
 }
@@ -306,4 +316,4 @@ function search(offset, name) {
   }).then(response => response.json());
 
 }
-export { search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+export { getPostsCountByUserId,search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
