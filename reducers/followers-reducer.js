@@ -28,7 +28,6 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
       const oldFollowers = (state[action.userId]&&state[action.userId].listFollowers) || []
       const prevIds = oldFollowers.map(item => item._id);
      const  newItems = list.filter(item => !prevIds.includes(item._id));
-    //  console.log("hna gowa el success",newItems,state.list)
       return {
         ...state,
         isLoading: false,

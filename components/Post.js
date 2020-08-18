@@ -45,10 +45,9 @@ class Post extends Component {
   componentDidMount() {
     if (this.props.postSocket !== null) {
       this.props.postSocket.on(`comments_count_${this.props.item._id}`, (commentsCount) => {
-        this.props.postCommentsCountChange(this.props.item._id, commentsCount);
+        this.props.postCommentsCountChange(this.props.item, commentsCount);
       })
       this.props.postSocket.on(`emojis_count_${this.props.item._id}`, (post) => {
-        console.log("connection hna")
         this.props.postEmojisCountChange(this.props.item._id, post);
       })
     }
@@ -98,7 +97,6 @@ class Post extends Component {
       emojiText: text,
     });
     if (this.state.emojiColor !== 'white') {
-      console.log(this.state.emojiText)
       this.props.deleteEmojis(this.props.item._id,this.state.emojiText)
       this.setState({
         emojiColor: 'white',
@@ -276,7 +274,7 @@ const mapDispatchToProps = dispatch => ({
   createEmojis: (type, post_id) => dispatch(actions.createEmojis(type, post_id)),
   updateEmojis: (type, post_id,prevType) => dispatch(actions.updateEmojis(type, post_id,prevType)),
   deleteEmojis: (post_id,type) => dispatch(actions.deleteEmojis(post_id,type)),
-  postCommentsCountChange: (post_id, commentsCount) => dispatch(actions.postCommentsCountChange(post_id, commentsCount)),
+  postCommentsCountChange: (post, commentsCount) => dispatch(actions.postCommentsCountChange(post, commentsCount)),
   postEmojisCountChange: (post_id, post) => dispatch(actions.postEmojisCountChange(post_id, post)),
 
 });

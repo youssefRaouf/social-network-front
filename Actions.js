@@ -4,7 +4,6 @@ export function fetchPosts(offset) {
     return {type: types.FETCH_POSTS,offset};
 }
 export function fetchPostsByUserId(offset,user_id) {
-  console.log("d5lna user posts",user_id,offset)
   return {type: types.FETCH_POSTS_USER_ID,offset,user_id};
 }
 export function fetchPostsCountByUserId(user_id) {
@@ -23,8 +22,8 @@ export function commentsReceived(comment) {
   return {type: types.COMMENTS_RECEIVED, comment};
 }
 
-export function postCommentsCountChange(post_id, commentsCount) {
-  return {type: types.COMMENTS_COUNT_CHANGE, post_id, commentsCount};
+export function postCommentsCountChange(post, commentsCount) {
+  return {type: types.COMMENTS_COUNT_CHANGE, post, commentsCount};
 }
 
 export function postEmojisCountChange(post_id, post) {
@@ -42,7 +41,6 @@ export function updateEmojis(index,post_id,prevType) {
   return {type: types.UPDATE_EMOJI,index,post_id,prevType};
 }
 export function deleteEmojis(post_id,emojiType) {
-  console.log("gwa el action")
   return {type: types.DELETE_EMOJI,post_id,emojiType};
 }
 export function fetchCategories(page = 1, refresh) {

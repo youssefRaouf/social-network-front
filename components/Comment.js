@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import { AntDesign, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
-import { timeStamp } from '../services/timeStamp'
+import { timeStamp, timeStamp1 } from '../services/timeStamp'
 export default class Comment extends React.Component {
 
   makeEmoji(text, color, type) {

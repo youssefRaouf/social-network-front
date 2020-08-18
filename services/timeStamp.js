@@ -12,7 +12,6 @@ import moment from 'moment'
   return { years, months, days, hours, mins, seconds };
 }
 export function timeStamp(timestamp) {
-  
   const parts = getDifferencefromNow(timestamp);
   const { years, months, days, hours, mins, seconds } = parts;
   // console.log(parts)
@@ -33,7 +32,6 @@ export function timeStamp(timestamp) {
 }
 
 export function timeStamp1(timestamp) {
-  
   // const parts = getDifferencefromNow(timestamp);
   // moment(timestamp).format()
  const day= moment(timestamp).format('DD');

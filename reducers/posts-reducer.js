@@ -40,19 +40,17 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         isFetching: true,
       };
     case types.FETCH_POSTS_USER_ID_SUCCESS:
-      console.log("lolll", action.data)
-      let list1=[]
-      const postsCount = (state[action.user_id] && state[action.user_id].postsCount) || []
+      let list1 = []
       if (action.offset === 0) {
-        list1=action.data
+        list1 = [...action.data]
         return {
           ...state,
           isLoading: false,
           isFetching: false,
           [action.user_id]: {
+            ...state[action.user_id],
             list: list1,
             hasMore: false,
-            postsCount
           }
         };
       }
@@ -66,9 +64,9 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         isLoading: false,
         isFetching: false,
         [action.user_id]: {
+          ...state[action.user_id],
           list: list1,
           hasMore: listPosts.length > 0 || false,
-          postsCount
         }
       };
     case types.FETCH_POSTS_USER_ID_FAIL:
@@ -78,12 +76,11 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         isFetching: false,
       };
     case types.FETCH_POSTS_COUNT_USER_ID_SUCCESS:
-      console.log("el slamo 3liko", action.data, action.user_id)
       return {
         ...state,
         [action.user_id]: {
+          ...state[action.user_id],
           postsCount: action.data,
-          list: list1
         }
       }
     case types.FETCH_POSTS_COUNT_USER_ID_FAIL:
@@ -126,8 +123,19 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         list: newList
       };
     case types.COMMENTS_COUNT_CHANGE:
+      let oldUserPosts3 = (state[action.post.user_id] && state[action.post.user_id].list) || []
+      const updatedUserPost2 = [...(oldUserPosts3.map(post => {
+        if (post._id === action.post._id) {
+          post = action.post
+          return {
+            ...post,
+            commentsCount: action.commentsCount
+          }
+        }
+        return post;
+      }))]
       const newList1 = [...(state.list.map(post => {
-        if (post._id === action.post_id) {
+        if (post._id === action.post._id) {
           return {
             ...post,
             commentsCount: action.commentsCount
@@ -135,27 +143,41 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         }
         return post;
       }))];
-      // console.log(newList1)
       return {
         ...state,
         list: newList1,
+        [action.post.user_id]: {
+          ...state[action.post.user_id],
+          list: updatedUserPost2
+        }
       }
     case types.EMOJIS_COUNT_CHANGE:
-
+      let oldUserPosts2 = (state[action.post.user_id] && state[action.post.user_id].list) || []
+      const updatedUserPost = [...(oldUserPosts2.map(post => {
+        if (post._id === action.post_id) {
+          post = action.post
+          return {
+            ...post,
+          }
+        }
+        return post;
+      }))]
       const newList2 = [...(state.list.map(post => {
         if (post._id === action.post_id) {
           post = action.post
           return {
             ...post,
-            // emojisCount: action.emojisCount
           }
         }
         return post;
       }))];
-      // console.log(newList1)
       return {
         ...state,
-        list: newList2
+        list: newList2,
+        [action.post.user_id]: {
+          ...state[action.post.user_id],
+          list: updatedUserPost
+        }
       }
     default:
       return state;

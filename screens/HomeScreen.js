@@ -57,7 +57,7 @@ class HomeScreen extends Component {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
           <Text style={{ fontSize: 25, color: 'white', marginLeft: 20 }} >Deal</Text>
 
-          <TouchableOpacity onPress={()=>this.props.navigation.navigate('Search')}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Search')}>
             <FontAwesome style={{ fontSize: 25, color: 'white', marginRight: 20 }} name="search" />
           </TouchableOpacity>
         </View>

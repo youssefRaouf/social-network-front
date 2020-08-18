@@ -36,11 +36,13 @@ class UserScreen extends Component {
   componentDidMount() {
     this.setState({ user: this.props.navigation.getParam('user') })
     this.getPosts();
+    this.getPostsCount()
     this.getFollowers();
     this.getFollowings();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.props.followingsMyUser.map((item) => {
-      if (item.to_user === this.props.navigation.getParam('user')._id) {
+      console.log("awel ma did",item)
+      if (item.to_user_id === this.props.navigation.getParam('user')._id) {
         this.setState({ follow: 'Unfollow' })
       }
     })
@@ -48,6 +50,10 @@ class UserScreen extends Component {
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
     fetchPostsByUserId(offset, this.props.navigation.getParam('user')._id);
+  }
+  getPostsCount() {
+    const { fetchPostsCountByUserId } = this.props;
+    fetchPostsCountByUserId(this.props.navigation.getParam('user')._id);
   }
   getFollowers(offset = 0) {
     const { getFollowers } = this.props;
@@ -108,21 +114,21 @@ class UserScreen extends Component {
     }
   }
   follow() {
-    const { createFollow,deleteFollow } = this.props;
+    const { createFollow, deleteFollow } = this.props;
     if (this.state.follow === 'Follow') {
       this.setState({ follow: 'Unfollow' })
       createFollow(this.props.navigation.getParam('user')._id);
-    }else{
-      this.setState({follow:'Follow'})
+    } else {
+      this.setState({ follow: 'Follow' })
       deleteFollow(this.props.navigation.getParam('user')._id);
     }
-    this.props.getFollowings(0,this.props.user._id);
+    this.props.getFollowings(0, this.props.user._id);
   }
-  async getOrCreateRoom(){
- let room=await createRoom(this.props.navigation.getParam('user')._id,this.props.user._id)
-      this.props.navigation.navigate('UserChat',{id:room._id,user:this.props.navigation.getParam('user')})
+  async getOrCreateRoom() {
+    let room = await createRoom(this.props.navigation.getParam('user')._id, this.props.user._id)
+    this.props.navigation.navigate('UserChat', { id: room._id, user: this.props.navigation.getParam('user') })
   }
-  render() {  
+  render() {
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
         <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 5 }}>
@@ -131,26 +137,26 @@ class UserScreen extends Component {
           <View style={{ flexDirection: 'column', marginTop: 25 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width - 100 }}>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.postsCount}</Text>
                 <Text style={{ color: 'white' }}>posts</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.followers.length}</Text>
                 <Text style={{ color: 'white' }}>followers</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>2,536</Text>
+                <Text style={{ color: 'white' }}>{this.props.followings.length}</Text>
                 <Text style={{ color: 'white' }}>following</Text>
               </View>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width -160}}>
-              <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: width - 160 }}>
+              <TouchableOpacity style={{ flexDirection: 'column', backgroundColor: 'grey', width: 70, alignItems: 'center', height: 20, justifyContent: 'center', borderRadius: 10 }}
                 onPress={() => this.follow()}>
-                <Text style={{ color: 'white',fontSize:15 }}>{this.state.follow}</Text>
+                <Text style={{ color: 'white', fontSize: 15 }}>{this.state.follow}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ flexDirection: 'column',backgroundColor:'grey',width:70,alignItems:'center',height:20,justifyContent:'center',borderRadius:10}}
-              onPress={()=>this.getOrCreateRoom()}>
-                <Text style={{ color: 'white',fontSize:15  }}>message</Text>
+              <TouchableOpacity style={{ flexDirection: 'column', backgroundColor: 'grey', width: 70, alignItems: 'center', height: 20, justifyContent: 'center', borderRadius: 10 }}
+                onPress={() => this.getOrCreateRoom()}>
+                <Text style={{ color: 'white', fontSize: 15 }}>message</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -175,9 +181,14 @@ class UserScreen extends Component {
         </View>
         {this.state.selectPosts === 1 ?
           <FlatList
-            data={this.props.data}
+            data={this.props.posts}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={item => item._id.toString()}
+            refreshing={false}
+            onRefresh={() => {
+              const offset = 0;
+              this.getPosts(offset);
+            }}
             onEndReached={() => {
               const offset = this.props.posts.length;
               this.getPosts(offset);
@@ -215,14 +226,13 @@ class UserScreen extends Component {
 UserScreen.navigationOptions = {
   header: null
 };
-const mapStateToProps = ({ posts, user, followers,rooms }, props) => {
-  const { activePost, isLoading } = posts;
+const mapStateToProps = ({ posts, user, followers, rooms }, props) => {
   const userId = props.navigation.getParam('user')._id
   return {
     posts: (posts[userId] && posts[userId].list) || [],
-    post: activePost,
+    postsCount: (posts[userId] && posts[userId].postsCount),
     user: user.user,
-    roomId:rooms.roomId,
+    roomId: rooms.roomId,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
     followingsMyUser: (followers[user.user._id] && followers[user.user._id].listFollowings) || [],
@@ -235,9 +245,10 @@ const mapDispatchToProps = dispatch => ({
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
   createFollow: (toUser) => dispatch(actions.createFollow(toUser)),
-  createRoom: (user1_id,user2_id) => dispatch(actions.createRoom(user1_id,user2_id)),
+  createRoom: (user1_id, user2_id) => dispatch(actions.createRoom(user1_id, user2_id)),
   deleteFollow: (toUser) => dispatch(actions.deleteFollow(toUser)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
+  fetchPostsCountByUserId: (user_id) => dispatch(actions.fetchPostsCountByUserId(user_id)),
 });
 
 export default connect(

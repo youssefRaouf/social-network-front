@@ -6,7 +6,7 @@ let ROOMS_INITIAL_STATE = {
   offset: 1,
   hasMore: true,
   activeEvent: {},
-  roomId:0
+  roomId: 0
 };
 function rooms(state = ROOMS_INITIAL_STATE, action) {
   switch (action.type) {
@@ -49,8 +49,8 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
         ...state,
         isLoading: false,
         isFetching: false,
-        roomId:action.data.id
-        
+        roomId: action.data.id
+
       };
     case types.CREATE_ROOM_FAIL:
       return {
@@ -60,28 +60,28 @@ function rooms(state = ROOMS_INITIAL_STATE, action) {
       };
 
     case types.UPDATE_ROOM:
-    const newList1 = [...(state.list.map(item => {
-        if(item.id === action.roomId){
+      const newList1 = [...(state.list.map(item => {
+        if (item._id === action.roomId) {
           return {
             ...item,
             text: action.text,
             update_at: new Date().getTime()
           }
-        }else{
-        return item;
+        } else {
+          return item;
         }
       }))];
       // newList1.push(itemNew);
-      for(let i=0;i<newList1.length;i++){
-        if(newList1[i].id===action.roomId){
-          for(let j=i;j>0;j--){
+      for (let i = 0; i < newList1.length; i++) {
+        if (newList1[i]._id === action.roomId) {
+          for (let j = i; j > 0; j--) {
             let temp = newList1[j];
-            newList1[j]=newList1[j-1];
-            newList1[j-1]=temp;
+            newList1[j] = newList1[j - 1];
+            newList1[j - 1] = temp;
           }
         }
       }
-    //  let newList2= [...newList1].sort((a,b)=>b.update_at-a.update_at)
+      //  let newList2= [...newList1].sort((a,b)=>b.update_at-a.update_at)
       return {
         ...state,
         list: newList1,

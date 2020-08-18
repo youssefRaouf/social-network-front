@@ -36,7 +36,6 @@ class UserChatScreen extends Component {
     const messages = io.connect(getEnv().socket.messages)
     messages.on('new_message' + this.props.navigation.getParam('id') , (data) => {
      this.props.messagesReceived(data);
-    //  this.props.updateRoom(data.text,this.props.navigation.getParam('id'))
     })
     this.getMessages();
   }
@@ -47,7 +46,7 @@ class UserChatScreen extends Component {
   }
   renderItem(item) {
     item = item.item;
-    return <Message id={this.props.user.id}item={item} user={this.props.user} user2={this.props.navigation.getParam('user')} />
+    return <Message id={this.props.user._id}item={item} user={this.props.user} user2={this.props.navigation.getParam('user')} />
   }
   createMessages(){
     this.props.createMessage(this.state.text,this.props.user.id,this.props.navigation.getParam('user').id,this.props.navigation.getParam('id'))
@@ -55,7 +54,7 @@ class UserChatScreen extends Component {
       text: ''
     })
     Keyboard.dismiss();
-    this.props.updateRoom(this.state.text,this.props.navigation.getParam('id'))
+    // this.props.updateRoom(this.state.text,this.props.navigation.getParam('id'))
   }
   render() {
     const screenHeight = Math.round(Dimensions.get('window').height);

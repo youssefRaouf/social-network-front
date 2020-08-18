@@ -20,7 +20,6 @@ class CommentScreen extends Component {
     this.comments = io.connect(getEnv().socket.comments)
     const { commentsReceived } = this.props;
     this.comments.on('new_comment' + postId, (data) => {
-      console.log("youssef raouf", data)
       commentsReceived(data);
     })
     
@@ -62,7 +61,6 @@ class CommentScreen extends Component {
           keyExtractor={item => item._id.toString()}
           onEndReached={() => {
             const offset = this.props.comments.length;
-            console.log(offset)
             this.getComments(offset);
           }}
 

@@ -14,7 +14,6 @@ function messages(state = MESSAGES_INITIAL_STATE, action) {
     case types.FETCH_MESSAGES:
     
       if (state.roomId != action.id) {
-        console.log("hn3mlha mra w7da isa")
         state=MESSAGES_INITIAL_STATE;
         state.roomId=action.id
       }
@@ -27,7 +26,6 @@ function messages(state = MESSAGES_INITIAL_STATE, action) {
         hasMore: action.refresh ? true : state.hasMore,
       };
     case types.FETCH_MESSAGES_SUCCESS:
-      // console.log("ng7",action.data)
       const list = action.data;
       const prevIds = state.list.map(item => item._id);
 
@@ -67,7 +65,6 @@ function messages(state = MESSAGES_INITIAL_STATE, action) {
       };
 
     case types.MESSAGES_RECEIVED:
-      console.log("hna")
       const message = action.message;
       if (message.room_id != state.roomId ) {
         return state;

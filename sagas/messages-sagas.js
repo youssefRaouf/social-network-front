@@ -5,7 +5,6 @@ import {getMessages,createMessage} from '../services/Api';
 
 function* requestMessages({offset,id}) {
   try {
-    console.log(id)
     let data = yield call(getMessages,offset,id);
     // data = data.map(event => new Event(event));
     // console.log("el data",data)

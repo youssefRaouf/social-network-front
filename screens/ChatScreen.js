@@ -27,31 +27,20 @@ class ChatScreen extends Component {
   }
 
   componentDidMount() {
-    // const posts = io.connect(getEnv().socket.posts)
-    // const { postsReceived } = this.props;
-    // posts.on('new_post',(data)=>{
-    //   console.log(data)
-    //   postsReceived(data);
-    // })
-    const rooms = io.connect(getEnv().socket.rooms)
-    rooms.on('new_message' + this.props.user.id , (data) => {
-     this.props.updateRoom(data.text,data.room_id)
-    })
-    // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
+    
+    
     this.getRooms();
-    // console.log(this.props.user.id)
-    // this.props.getFollowings(0,this.props.user.id);
   }
 
   getRooms(offset = 0) {
     const { fetchRooms } = this.props;
-    fetchRooms(offset, this.props.user.id);
+    fetchRooms(offset, this.props.user._id);
   }
   renderItem(item) {
     item = item.item;
     return (
-      <TouchableOpacity style={{marginTop:8}} onPress={() => this.props.navigation.navigate('UserChat', { id:item.id,user:this.props.user.id===item.user1.id?item.user2:item.user1 })}>
-        <Chat user={this.props.user.id===item.user1.id?item.user2:item.user1} item={{update_at:item.update_at, lastMessage: item.text }} />
+      <TouchableOpacity style={{marginTop:8}} onPress={() => this.props.navigation.navigate('UserChat', { id:item._id,user:this.props.user._id===item.user1._id?item.user2:item.user1 })}>
+        <Chat user={this.props.user._id===item.user1._id?item.user2:item.user1} item={{_id:item._id,update_at:item.update_at, lastMessage: item.text }} />
       </TouchableOpacity>
     )
   }
@@ -65,7 +54,7 @@ class ChatScreen extends Component {
           data={data}
           style={{marginTop:0}}
           renderItem={this.renderItem.bind(this)}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id.toString()}
           onEndReached={() => {
             const offset = this.props.rooms.length;
             this.getRooms(offset);
