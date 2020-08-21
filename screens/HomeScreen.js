@@ -30,12 +30,10 @@ class HomeScreen extends Component {
     const posts = io.connect(getEnv().socket.posts)
     const { postsReceived } = this.props;
     posts.on('new_post', (data) => {
-      console.log(data)
       postsReceived(data);
     })
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
     this.getPosts();
-    console.log(this.props.user._id)
     this.props.getFollowings(0, this.props.user._id);
   }
 

@@ -37,9 +37,6 @@ class Post extends Component {
         }
       }
     }
-    // let emojis = this.props.item.emojis
-
-
   }
 
   componentDidMount() {
@@ -48,18 +45,45 @@ class Post extends Component {
         this.props.postCommentsCountChange(this.props.item, commentsCount);
       })
       this.props.postSocket.on(`emojis_count_${this.props.item._id}`, (post) => {
-        this.props.postEmojisCountChange(this.props.item._id, post);
+        let post2 = {}
+        post2 = post._doc
+        post2.myEmojis = post.myEmojis
+        this.props.postEmojisCountChange(this.props.item._id, post2);
+        this.checkMyEmojis()
       })
     }
-    // for (let i = 0; i < emojis.length; i++) {
-    //   if (emojis[i] !== null) {
-    //     //  console.log("s")
-    //     this.setState({
-    //       emojiCountShow: true
-    //     })
-    //   }
-    // }
   }
+  checkMyEmojis() {
+    let arr = [null, Love, Laugh, Wow, Sad, Angry]
+    let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
+    if (this.props.item.myEmojis != null) {
+      if (this.props.item.myEmojis[0]) {
+        const type = this.props.item.myEmojis[0].type;
+        this.setState({ emoji: arr[type - 1], emojiText: arrText[type - 1] })
+        if (type === 1) {
+          this.setState({ emojiColor: 'blue' })
+        } else if (type === 2 || type === 6) {
+          this.setState({ emojiColor: 'red' })
+        }
+        else {
+          this.setState({ emojiColor: '#FCDD68' })
+        }
+      }
+      else {
+        this.setState({
+          emojiColor: 'white',
+          emoji: null,
+          emojiText:"Like"
+        });
+      }
+    } else {
+      this.setState({
+        emojiColor: 'white',
+        emoji: null
+      });
+    }
+  }
+
   emoji = () => {
     this.setState({
       show: true
@@ -80,8 +104,7 @@ class Post extends Component {
       createEmojis(arrText.indexOf(type) + 2, this.props.item._id);
     }
     else {
-
-      updateEmojis(arrText.indexOf(type) + 2, this.props.item._id,this.state.emojiText.toLowerCase());
+      updateEmojis(arrText.indexOf(type) + 2, this.props.item._id, this.state.emojiText.toLowerCase());
     }
     this.setState({
       show: false,
@@ -92,34 +115,34 @@ class Post extends Component {
   }
 
   makeLike = (text, color) => {
-    this.setState({
-      show: false,
-      emojiText: text,
-    });
+
     if (this.state.emojiColor !== 'white') {
-      this.props.deleteEmojis(this.props.item._id,this.state.emojiText)
+      this.props.deleteEmojis(this.props.item._id, this.state.emojiText)
       this.setState({
         emojiColor: 'white',
-        emoji: null
+        emoji: null,
+        show: false,
+        emojiText: text,
       });
     } else {
       this.props.createEmojis(1, this.props.item._id);
       this.setState({
-        emojiColor: color
+        emojiColor: color,
+        show: false,
+        emojiText: text,
       });
     }
   }
- 
-  onUserPress=()=>{
-    if(this.props.user._id===this.props.item.user._id){
+
+  onUserPress = () => {
+    if (this.props.user._id === this.props.item.user._id) {
       this.props.navigation.navigate('Profile')
       return;
     }
-    this.props.navigation.navigate('User',{user:this.props.item.user})
+    this.props.navigation.navigate('User', { user: this.props.item.user })
   }
 
   render() {
-    let emojis = this.props.item
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
         <TouchableOpacity onPress={this.onUserPress}>
@@ -175,49 +198,49 @@ class Post extends Component {
           /> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', height: 20, marginTop: 5, marginLeft: 10, marginRight: 10 }}>
           <View style={{ flexDirection: 'row' }}>
-            { emojis.like!== 0 ?
+            {this.props.item.like !== 0 ?
               <View style={{ marginRight: 5, flexDirection: 'row' }}>
-                <Text style={{ color: 'white', marginRight: 2 }}>{emojis.like}</Text>
+                <Text style={{ color: 'white', marginRight: 2 }}>{this.props.item.like}</Text>
                 <AntDesign style={{ fontSize: 18, color: 'blue' }} name="like2" />
               </View>
               : null
             }
-            {emojis.love!== 0 ?
+            {this.props.item.love !== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white' }}>{emojis.love}</Text>
+                <Text style={{ color: 'white' }}>{this.props.item.love}</Text>
                 <Love stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} />
               </View>
               : null
             }
-            {emojis.laugh!== 0 ?
+            {this.props.item.laugh !== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis.laugh}</Text>
+                <Text style={{ color: 'white', }}>{this.props.item.laugh}</Text>
                 <Laugh stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={20} />
               </View>
               : null
             }
-            {emojis.wow!== 0 ?
+            {this.props.item.wow !== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis.wow}</Text>
+                <Text style={{ color: 'white', }}>{this.props.item.wow}</Text>
                 <Wow stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis.sad!== 0 ?
+            {this.props.item.sad !== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis.sad}</Text>
+                <Text style={{ color: 'white', }}>{this.props.item.sad}</Text>
                 <Sad stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            {emojis.angry!== 0 ?
+            {this.props.item.angry !== 0 ?
               <View style={{ justifyContent: 'center', marginRight: 5 }}>
-                <Text style={{ color: 'white', }}>{emojis.angry}</Text>
+                <Text style={{ color: 'white', }}>{this.props.item.angry}</Text>
                 <Angry stop={true} style={{ marginLeft: 15, marginTop: -17, width: 10 }} height={18} />
               </View>
               : null
             }
-            { emojis.like=== 0&&emojis.love=== 0&&emojis.laugh=== 0&&emojis.wow=== 0&&emojis.sad=== 0&&emojis.angry=== 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
+            {this.props.item.like === 0 && this.props.item.love === 0 && this.props.item.laugh === 0 && this.props.item.wow === 0 && this.props.item.sad === 0 && this.props.item.angry === 0 ? <Text style={{ color: 'white' }}>{0 + " likes"}</Text> : null}
 
           </View>
 
@@ -272,8 +295,8 @@ const mapStateToProps = ({ emojis, user }, props) => {
 
 const mapDispatchToProps = dispatch => ({
   createEmojis: (type, post_id) => dispatch(actions.createEmojis(type, post_id)),
-  updateEmojis: (type, post_id,prevType) => dispatch(actions.updateEmojis(type, post_id,prevType)),
-  deleteEmojis: (post_id,type) => dispatch(actions.deleteEmojis(post_id,type)),
+  updateEmojis: (type, post_id, prevType) => dispatch(actions.updateEmojis(type, post_id, prevType)),
+  deleteEmojis: (post_id, type) => dispatch(actions.deleteEmojis(post_id, type)),
   postCommentsCountChange: (post, commentsCount) => dispatch(actions.postCommentsCountChange(post, commentsCount)),
   postEmojisCountChange: (post_id, post) => dispatch(actions.postEmojisCountChange(post_id, post)),
 

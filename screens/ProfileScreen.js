@@ -38,32 +38,36 @@ class ProfileScreen extends Component {
     this.getPosts();
     this.getFollowers();
     this.getFollowings();
-    // this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
+    this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
   }
+
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
     fetchPostsByUserId(offset, this.props.user._id);
   }
+
   getPostsCount() {
     const { fetchPostsCountByUserId } = this.props;
     fetchPostsCountByUserId(this.props.user._id);
   }
+
   getFollowers(offset = 0) {
     const { getFollowers } = this.props;
     getFollowers(offset, this.props.user._id);
   }
+
   getFollowings(offset = 0) {
     const { getFollowings } = this.props;
     getFollowings(offset, this.props.user._id)
   }
+
   renderItem(item) {
     item = item.item
-    return <Post item={item} postSocket={null} navigation={this.props.navigation}></Post>
+    return <Post item={item} postSocket={this.postsRectionsSocket} navigation={this.props.navigation}></Post>
   }
+
   renderFollowersUser(item) {
     item = item.item.from
-    // console.log(item)
-
     return (
       <View style={{ marginTop: 7 }}>
         <TouchableOpacity
@@ -180,7 +184,7 @@ const mapStateToProps = ({ posts, user, followers }, props) => {
   const userId = user.user._id;
   return {
     posts: (posts[userId] && posts[userId].list) || [],
-    postsCount: (posts[userId] && posts[userId].postsCount) ,
+    postsCount: (posts[userId] && posts[userId].postsCount),
     user: user.user,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
