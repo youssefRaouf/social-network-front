@@ -35,8 +35,12 @@ export function timeStamp1(timestamp) {
   // const parts = getDifferencefromNow(timestamp);
   // moment(timestamp).format()
  const day= moment(timestamp).format('DD');
+ const month = moment(timestamp).format('MM');
+ const year= moment(timestamp).year();
+ const currentMonth=new Date().getMonth()+1;
  const currentDay= new Date().getDate();
-  if(currentDay-day>0){
+ const currentYear= new Date().getFullYear();
+  if(day!=currentDay||month!=currentMonth||year!=currentYear){
     return moment(timestamp).format('DD/MM/YY')
   }
  const hour= moment(timestamp).format('HH');

@@ -19,7 +19,7 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import io from "socket.io-client";
 import getEnv from '../configs';
 import User from '../components/User';
-import { createRoom } from '../services/Api';
+import { checkIfFollow, createRoom } from '../services/Api';
 
 const { width } = Dimensions.get('window');
 
@@ -35,38 +35,57 @@ class UserScreen extends Component {
 
   componentDidMount() {
     this.setState({ user: this.props.navigation.getParam('user') })
+    this.checkFollow();
     this.getPosts();
-    this.getPostsCount()
+    this.getPostsCount();
     this.getFollowers();
+    this.getFollowersCount();
+    this.getFollowingsCount();
     this.getFollowings();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
-    this.props.followingsMyUser.map((item) => {
-      console.log("awel ma did",item)
-      if (item.to_user_id === this.props.navigation.getParam('user')._id) {
-        this.setState({ follow: 'Unfollow' })
-      }
-    })
   }
+  async checkFollow() {
+    const ifFollow = await checkIfFollow(this.props.navigation.getParam('user')._id);
+    if (ifFollow) {
+      this.setState({ follow: 'Unfollow' })
+    }
+  }
+
   getPosts(offset = 0) {
     const { fetchPostsByUserId } = this.props;
     fetchPostsByUserId(offset, this.props.navigation.getParam('user')._id);
   }
+
   getPostsCount() {
     const { fetchPostsCountByUserId } = this.props;
     fetchPostsCountByUserId(this.props.navigation.getParam('user')._id);
   }
+
+  getFollowersCount() {
+    const { fetchFollowersCountByUserId } = this.props;
+    fetchFollowersCountByUserId(this.props.navigation.getParam('user')._id);
+  }
+
+  getFollowingsCount() {
+    const { fetchFollowingsCountByUserId } = this.props;
+    fetchFollowingsCountByUserId(this.props.navigation.getParam('user')._id);
+  }
+
   getFollowers(offset = 0) {
     const { getFollowers } = this.props;
     getFollowers(offset, this.props.navigation.getParam('user')._id);
   }
+
   getFollowings(offset = 0) {
     const { getFollowings } = this.props;
     getFollowings(offset, this.props.navigation.getParam('user')._id)
   }
+
   renderItem(item) {
     item = item.item
     return <Post item={item} postSocket={null} navigation={this.props.navigation}></Post>
   }
+
   renderFollowersUser(item) {
     item = item.item.from
     // console.log(item)
@@ -90,6 +109,7 @@ class UserScreen extends Component {
       )
     }
   }
+
   renderFollowingsUser(item) {
     item = item.item.to
     // console.log(item)
@@ -113,6 +133,7 @@ class UserScreen extends Component {
       )
     }
   }
+
   follow() {
     const { createFollow, deleteFollow } = this.props;
     if (this.state.follow === 'Follow') {
@@ -124,10 +145,12 @@ class UserScreen extends Component {
     }
     this.props.getFollowings(0, this.props.user._id);
   }
+
   async getOrCreateRoom() {
     let room = await createRoom(this.props.navigation.getParam('user')._id, this.props.user._id)
     this.props.navigation.navigate('UserChat', { id: room._id, user: this.props.navigation.getParam('user') })
   }
+
   render() {
     return (
       <View style={{ backgroundColor: '#1F1F1F', flex: 1, paddingTop: 40 }}>
@@ -141,11 +164,11 @@ class UserScreen extends Component {
                 <Text style={{ color: 'white' }}>posts</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>{this.props.followers.length}</Text>
+                <Text style={{ color: 'white' }}>{this.props.followersCount || 0}</Text>
                 <Text style={{ color: 'white' }}>followers</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>{this.props.followings.length}</Text>
+                <Text style={{ color: 'white' }}>{this.props.followingsCount || 0}</Text>
                 <Text style={{ color: 'white' }}>following</Text>
               </View>
             </View>
@@ -188,6 +211,7 @@ class UserScreen extends Component {
             onRefresh={() => {
               const offset = 0;
               this.getPosts(offset);
+              this.getPostsCount();
             }}
             onEndReached={() => {
               const offset = this.props.posts.length;
@@ -195,29 +219,37 @@ class UserScreen extends Component {
             }}
           />
           : this.state.selectPosts === 2 ?
-            <View style={{}}>
-              <FlatList
-                data={this.props.followers}
-                renderItem={this.renderFollowersUser.bind(this)}
-                keyExtractor={item => item._id.toString()}
-                onEndReached={() => {
-                  const offset = this.props.followers.length;
-                  this.getFollowers(offset);
-                }}
-              />
-            </View>
+            <FlatList
+              data={this.props.followers}
+              renderItem={this.renderFollowersUser.bind(this)}
+              keyExtractor={item => item._id.toString()}
+              refreshing={false}
+              onRefresh={() => {
+                const offset = 0;
+                this.getFollowers(offset);
+                this.getFollowersCount();
+              }}
+              onEndReached={() => {
+                const offset = this.props.followers.length;
+                this.getFollowers(offset);
+              }}
+            />
             :
-            <View style={{}}>
-              <FlatList
-                data={this.props.followings}
-                renderItem={this.renderFollowingsUser.bind(this)}
-                keyExtractor={item => item._id.toString()}
-                onEndReached={() => {
-                  const offset = this.props.followings.length;
-                  this.getFollowings(offset);
-                }}
-              />
-            </View>
+            <FlatList
+              data={this.props.followings}
+              renderItem={this.renderFollowingsUser.bind(this)}
+              keyExtractor={item => item._id.toString()}
+              refreshing={false}
+              onRefresh={() => {
+                const offset = 0;
+                this.getFollowings(offset);
+                this.getFollowingsCount();
+              }}
+              onEndReached={() => {
+                const offset = this.props.followings.length;
+                this.getFollowings(offset);
+              }}
+            />
         }
       </View>
     );
@@ -236,7 +268,8 @@ const mapStateToProps = ({ posts, user, followers, rooms }, props) => {
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
     followingsMyUser: (followers[user.user._id] && followers[user.user._id].listFollowings) || [],
-
+    followersCount: (followers[userId] && followers[userId].followersCount),
+    followingsCount: (followers[userId] && followers[userId].followingsCount),
   };
 };
 
@@ -245,6 +278,8 @@ const mapDispatchToProps = dispatch => ({
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
   createFollow: (toUser) => dispatch(actions.createFollow(toUser)),
+  fetchFollowersCountByUserId: (user_id) => dispatch(actions.fetchFollowersCountByUserId(user_id)),
+  fetchFollowingsCountByUserId: (user_id) => dispatch(actions.fetchFollowingsCountByUserId(user_id)),
   createRoom: (user1_id, user2_id) => dispatch(actions.createRoom(user1_id, user2_id)),
   deleteFollow: (toUser) => dispatch(actions.deleteFollow(toUser)),
   postsReceived: post => dispatch(actions.postsReceived(post)),

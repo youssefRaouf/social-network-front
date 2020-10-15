@@ -37,7 +37,9 @@ class ProfileScreen extends Component {
     this.getPostsCount()
     this.getPosts();
     this.getFollowers();
+    this.getFollowersCount();
     this.getFollowings();
+    this.getFollowingsCount();
     this.postsRectionsSocket = io.connect(getEnv().socket.reactions)
   }
 
@@ -49,6 +51,16 @@ class ProfileScreen extends Component {
   getPostsCount() {
     const { fetchPostsCountByUserId } = this.props;
     fetchPostsCountByUserId(this.props.user._id);
+  }
+
+  getFollowersCount() {
+    const { fetchFollowersCountByUserId } = this.props;
+    fetchFollowersCountByUserId(this.props.user._id);
+  }
+
+  getFollowingsCount() {
+    const { fetchFollowingsCountByUserId } = this.props;
+    fetchFollowingsCountByUserId(this.props.user._id);
   }
 
   getFollowers(offset = 0) {
@@ -103,11 +115,11 @@ class ProfileScreen extends Component {
                 <Text style={{ color: 'white' }}>posts</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>{this.props.followers.length}</Text>
+                <Text style={{ color: 'white' }}>{this.props.followersCount || 0}</Text>
                 <Text style={{ color: 'white' }}>followers</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: 'white' }}>{this.props.followings.length}</Text>
+                <Text style={{ color: 'white' }}>{this.props.followingsCount || 0}</Text>
                 <Text style={{ color: 'white' }}>following</Text>
               </View>
             </View>
@@ -135,7 +147,7 @@ class ProfileScreen extends Component {
           <FlatList
             refreshing={false}
             onRefresh={() => {
-
+              this.getPostsCount();
               const offset = 0;
               this.getPosts(offset);
             }}
@@ -148,29 +160,37 @@ class ProfileScreen extends Component {
             }}
           />
           : this.state.selectPosts === 2 ?
-            <View style={{}}>
-              <FlatList
-                data={this.props.followers}
-                renderItem={this.renderFollowersUser.bind(this)}
-                keyExtractor={item => item._id.toString()}
-                onEndReached={() => {
-                  const offset = this.props.followers.length;
-                  this.getFollowers(offset);
-                }}
-              />
-            </View>
+            <FlatList
+              data={this.props.followers}
+              renderItem={this.renderFollowersUser.bind(this)}
+              keyExtractor={item => item._id.toString()}
+              refreshing={false}
+              onRefresh={() => {
+                const offset = 0;
+                this.getFollowers(offset);
+                this.getFollowersCount();
+              }}
+              onEndReached={() => {
+                const offset = this.props.followers.length;
+                this.getFollowers(offset);
+              }}
+            />
             :
-            <View style={{}}>
-              <FlatList
-                data={this.props.followings}
-                renderItem={this.renderFollowingsUser.bind(this)}
-                keyExtractor={item => item._id.toString()}
-                onEndReached={() => {
-                  const offset = this.props.followings.length;
-                  this.getFollowings(offset);
-                }}
-              />
-            </View>
+            <FlatList
+              data={this.props.followings}
+              renderItem={this.renderFollowingsUser.bind(this)}
+              keyExtractor={item => item._id.toString()}
+              refreshing={false}
+              onRefresh={() => {
+                const offset = 0;
+                this.getFollowings(offset);
+                this.getFollowingsCount();
+              }}
+              onEndReached={() => {
+                const offset = this.props.followings.length;
+                this.getFollowings(offset);
+              }}
+            />
         }
       </View>
     );
@@ -188,12 +208,16 @@ const mapStateToProps = ({ posts, user, followers }, props) => {
     user: user.user,
     followers: (followers[userId] && followers[userId].listFollowers) || [],
     followings: (followers[userId] && followers[userId].listFollowings) || [],
+    followersCount: (followers[userId] && followers[userId].followersCount),
+    followingsCount: (followers[userId] && followers[userId].followingsCount),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   fetchPostsByUserId: (offset, user_id) => dispatch(actions.fetchPostsByUserId(offset, user_id)),
   fetchPostsCountByUserId: (user_id) => dispatch(actions.fetchPostsCountByUserId(user_id)),
+  fetchFollowersCountByUserId: (user_id) => dispatch(actions.fetchFollowersCountByUserId(user_id)),
+  fetchFollowingsCountByUserId: (user_id) => dispatch(actions.fetchFollowingsCountByUserId(user_id)),
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
   postsReceived: post => dispatch(actions.postsReceived(post)),

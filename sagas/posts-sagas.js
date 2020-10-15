@@ -10,6 +10,7 @@ function* requestEvents({ offset }) {
     yield put({
       type: types.FETCH_POSTS_SUCCESS,
       data,
+      offset
     });
   } catch (error) {
     console.log(error);

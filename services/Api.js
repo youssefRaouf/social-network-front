@@ -44,6 +44,22 @@ const getPostsCountByUserId = (user_id) => {
     .then(response => response.json())
 };
 
+const getFollowersCountByUserId = (user_id) => {
+  const eventsRequest = () => {
+    return doRequest('users/' + user_id + '/followersCount', { method: 'GET' }, {});
+  };
+  return eventsRequest()
+    .then(response => response.json())
+};
+
+const getFollowingsCountByUserId = (user_id) => {
+  const eventsRequest = () => {
+    return doRequest('users/' + user_id + '/followingsCount', { method: 'GET' }, {});
+  };
+  return eventsRequest()
+    .then(response => response.json())
+};
+
 function createPost(text, url, videoName) {
   return fetch(baseUrl + 'posts', {
     method: 'POST',
@@ -314,6 +330,19 @@ function search(offset, name) {
       name: name
     }),
   }).then(response => response.json());
-
 }
-export { getPostsCountByUserId,search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+
+async function checkIfFollow(id) {
+  return fetch(baseUrl + 'users/checkIfFollow', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token: Token
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  }).then(response => response.json())
+}
+export {checkIfFollow, getFollowersCountByUserId,getFollowingsCountByUserId,getPostsCountByUserId,search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };

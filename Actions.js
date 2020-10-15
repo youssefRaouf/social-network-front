@@ -9,6 +9,12 @@ export function fetchPostsByUserId(offset,user_id) {
 export function fetchPostsCountByUserId(user_id) {
   return {type: types.FETCH_POSTS_COUNT_USER_ID,user_id};
 }
+export function fetchFollowersCountByUserId(user_id) {
+  return {type: types.FETCH_FOLLOWERS_COUNT_USER_ID,user_id};
+}
+export function fetchFollowingsCountByUserId(user_id) {
+  return {type: types.FETCH_FOLLOWINGS_COUNT_USER_ID,user_id};
+}
 export function fetchComments(offset,post_id) {
   return {type: types.FETCH_COMMENTS,offset,post_id};
 }

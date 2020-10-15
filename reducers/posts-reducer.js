@@ -20,9 +20,16 @@ function posts(state = POSTS_INITIAL_STATE, action) {
         hasMore: action.refresh ? true : state.hasMore,
       };
     case types.FETCH_POSTS_SUCCESS:
+      if (action.offset === 0) {
+        return {
+          ...state,
+          isLoading: false,
+          isFetching: false,
+          list: [...action.data],
+        };
+      }
       const list = action.data || [];
       const prevIds = state.list.map(item => item._id);
-
       // if(list){
       const newItems = list.filter(item => !prevIds.includes(item._id));
       // }

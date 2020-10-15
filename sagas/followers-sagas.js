@@ -1,7 +1,6 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
 import * as types from '../utils/Consts';
-// import Event from '../models/Event';
-import {getPosts,createPost,getCommentsByPostId, createComment, getFollowers, getFollowings, createFollow, deleteFollow} from '../services/Api';
+import {getFollowersCountByUserId,getFollowingsCountByUserId, getFollowers, getFollowings, createFollow, deleteFollow} from '../services/Api';
 
 function* requestFollowers({offset,userId}) {
   try {
@@ -73,10 +72,47 @@ function* deleteFollows({to_user}) {
   }
 }
 
+function* requestFollowersCountByUserId({ user_id }) {
+  try {
+    let data = yield call(getFollowersCountByUserId,user_id);
+    // data = data.map(event => new Event(event));
+    yield put({
+      type: types.FETCH_FOLLOWERS_COUNT_USER_ID_SUCCESS,
+      data,
+      user_id
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: types.FETCH_FOLLOWERS_COUNT_USER_ID_FAIL,
+      error,
+    });
+  }
+}
+
+function* requestFollowingsCountByUserId({ user_id }) {
+  try {
+    let data = yield call(getFollowingsCountByUserId,user_id);
+    // data = data.map(event => new Event(event));
+    yield put({
+      type: types.FETCH_FOLLOWINGS_COUNT_USER_ID_SUCCESS,
+      data,
+      user_id
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: types.FETCH_FOLLOWINGS_COUNT_USER_ID_FAIL,
+      error,
+    });
+  }
+}
+
 export default function* followersSagas() {
   yield takeLatest(types.FETCH_FOLLOWERS, requestFollowers);
   yield takeLatest(types.FETCH_FOLLOWINGS, requestFollowings);
   yield takeLatest(types.CREATE_FOLLOW, createFollows);
   yield takeLatest(types.DELETE_FOLLOW, deleteFollows);
-
+  yield takeLatest(types.FETCH_FOLLOWERS_COUNT_USER_ID, requestFollowersCountByUserId);
+  yield takeLatest(types.FETCH_FOLLOWINGS_COUNT_USER_ID, requestFollowingsCountByUserId);
 }
