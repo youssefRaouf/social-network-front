@@ -18,7 +18,6 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
       //   state=FOLLOWERS_INITIAL_STATE;
       //   state.userId=action.userId
       // }
-      // console.log(action.userId)
       return {
         ...state,
         isLoading: true,
@@ -51,7 +50,6 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
       //   state=FOLLOWERS_INITIAL_STATE;
       //   state.userId=action.userId
       // }
-      console.log("followings", action.userId)
       return {
         ...state,
         isLoading: true,
@@ -86,10 +84,26 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
         isFetching: true,
       };
     case types.CREATE_FOLLOW_SUCCESS:
+      const oldFollowers1 = (state[action.toUser] && state[action.toUser].listFollowers) || []
+      let newItems2 = [...oldFollowers1];
+      newItems2.push(action.data)
+      const oldFollowings1 = (state[action.fromUser] && state[action.fromUser].listFollowings) || []
+      let newItems5=[...oldFollowings1];
+      newItems5.push(action.data);
       return {
         ...state,
         isLoading: false,
         isFetching: false,
+        [action.toUser]: {
+          ...state[action.toUser],
+          listFollowers: newItems2,
+          followersCount: state[action.toUser].followersCount+1,
+        },
+        [action.fromUser]: {
+          ...state[action.fromUser],
+          listFollowings: newItems5,
+          followingsCount: (state[action.fromUser]&&state[action.fromUser].followingsCount)+1,
+        },
       };
     case types.CREATE_FOLLOW_FAIL:
       return {
@@ -104,10 +118,24 @@ function followers(state = FOLLOWERS_INITIAL_STATE, action) {
         isFetching: true,
       };
     case types.DELETE_FOLLOW_SUCCESS:
+      const oldFollowers2 = (state[action.toUser] && state[action.toUser].listFollowers) || []
+      const newItems3 = oldFollowers2.filter(item => item.from_user_id!=action.fromUser);
+      const oldFollowings2 = (state[action.fromUser] && state[action.fromUser].listFollowings) || []
+      const newItems4 = oldFollowings2.filter(item => item.to_user_id!=action.toUser);
       return {
         ...state,
         isLoading: false,
         isFetching: false,
+        [action.toUser]: {
+          ...state[action.toUser],
+          listFollowers: newItems3,
+          followersCount: state[action.toUser].followersCount-1,
+        },
+        [action.fromUser]: {
+          ...state[action.fromUser],
+          listFollowings: newItems4,
+          followingsCount: (state[action.fromUser]&&state[action.fromUser].followingsCount)-1,
+        },
       };
     case types.DELETE_FOLLOW_FAIL:
       return {

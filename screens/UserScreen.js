@@ -138,12 +138,12 @@ class UserScreen extends Component {
     const { createFollow, deleteFollow } = this.props;
     if (this.state.follow === 'Follow') {
       this.setState({ follow: 'Unfollow' })
-      createFollow(this.props.navigation.getParam('user')._id);
+      createFollow(this.props.navigation.getParam('user')._id,this.props.user._id);
     } else {
       this.setState({ follow: 'Follow' })
-      deleteFollow(this.props.navigation.getParam('user')._id);
+      deleteFollow(this.props.navigation.getParam('user')._id,this.props.user._id);
     }
-    this.props.getFollowings(0, this.props.user._id);
+    // this.props.getFollowings(0, this.props.user._id);
   }
 
   async getOrCreateRoom() {
@@ -277,11 +277,11 @@ const mapDispatchToProps = dispatch => ({
   fetchPostsByUserId: (offset, user_id) => dispatch(actions.fetchPostsByUserId(offset, user_id)),
   getFollowers: (offset, userId) => dispatch(actions.getFollowers(offset, userId)),
   getFollowings: (offset, userId) => dispatch(actions.getFollowings(offset, userId)),
-  createFollow: (toUser) => dispatch(actions.createFollow(toUser)),
+  createFollow: (toUser,fromUser) => dispatch(actions.createFollow(toUser,fromUser)),
   fetchFollowersCountByUserId: (user_id) => dispatch(actions.fetchFollowersCountByUserId(user_id)),
   fetchFollowingsCountByUserId: (user_id) => dispatch(actions.fetchFollowingsCountByUserId(user_id)),
   createRoom: (user1_id, user2_id) => dispatch(actions.createRoom(user1_id, user2_id)),
-  deleteFollow: (toUser) => dispatch(actions.deleteFollow(toUser)),
+  deleteFollow: (toUser,fromUser) => dispatch(actions.deleteFollow(toUser,fromUser)),
   postsReceived: post => dispatch(actions.postsReceived(post)),
   fetchPostsCountByUserId: (user_id) => dispatch(actions.fetchPostsCountByUserId(user_id)),
 });

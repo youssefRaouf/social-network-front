@@ -67,11 +67,11 @@ export function getFollowers(offset,userId) {
 export function getFollowings(offset,userId) {
   return {type: types.FETCH_FOLLOWINGS,offset,userId};
 }
-export function createFollow(to_user) {
-  return {type: types.CREATE_FOLLOW,to_user};
+export function createFollow(toUser,fromUser) {
+  return {type: types.CREATE_FOLLOW,toUser,fromUser};
 }
-export function deleteFollow(to_user) {
-  return {type: types.DELETE_FOLLOW,to_user};
+export function deleteFollow(toUser,fromUser) {
+  return {type: types.DELETE_FOLLOW,toUser,fromUser};
 }
 export function messagesReceived(message) {
   return {type: types.MESSAGES_RECEIVED,message};

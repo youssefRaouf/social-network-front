@@ -39,13 +39,15 @@ function* requestFollowings({offset,userId}) {
     });
   }
 }
-function* createFollows({to_user}) {
+function* createFollows({toUser,fromUser}) {
   try {
-    let data = yield call(createFollow,to_user);
+    let data = yield call(createFollow,toUser);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.CREATE_FOLLOW_SUCCESS, 
       data,
+      toUser,
+      fromUser
     });
   } catch (error) {
     console.log(error);
@@ -55,13 +57,15 @@ function* createFollows({to_user}) {
     });
   }
 }
-function* deleteFollows({to_user}) {
+function* deleteFollows({toUser,fromUser}) {
   try {
-    let data = yield call(deleteFollow,to_user);
+    let data = yield call(deleteFollow,toUser);
     // data = data.map(event => new Event(event));
     yield put({
       type: types.DELETE_FOLLOW_SUCCESS, 
       data,
+      toUser,
+      fromUser
     });
   } catch (error) {
     console.log(error);
