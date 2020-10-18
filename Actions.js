@@ -95,5 +95,8 @@ export function updateRoom(text,roomId) {
 export function findUsers(offset,name) {
   return {type: types.FIND_USERS,offset,name};
 }
+export function deletePost(postId) {
+  return {type: types.DELETE_POST,postId};
+}
 
 

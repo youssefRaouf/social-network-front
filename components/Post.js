@@ -21,7 +21,7 @@ class Post extends Component {
     super(props);
     let arr = [null, Love, Laugh, Wow, Sad, Angry]
     let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
-    this.state = { show: false, emojiText: "Like", emojiColor: 'white', emoji: null, emojiCountShow: false, videoHeight: 400, height: 400, width, fullScreen: false };
+    this.state = { showView: false, show: false, emojiText: "Like", emojiColor: 'white', emoji: null, emojiCountShow: false, videoHeight: 400, height: 400, width, fullScreen: false };
     if (this.props.item.myEmojis != null) {
       if (this.props.item.myEmojis[0]) {
         const type = this.props.item.myEmojis[0].type;
@@ -53,6 +53,20 @@ class Post extends Component {
       })
     }
   }
+
+  sharePost() {
+    const { createPosts } = this.props;
+    createPosts(this.props.item.text, this.props.item.url, this.props.item.video_name);
+  }
+
+  showView() {
+    if (this.state.showView) {
+      this.setState({ showView: false })
+    } else {
+      this.setState({ showView: true })
+    }
+  }
+
   checkMyEmojis() {
     let arr = [null, Love, Laugh, Wow, Sad, Angry]
     let arrText = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
@@ -73,7 +87,7 @@ class Post extends Component {
         this.setState({
           emojiColor: 'white',
           emoji: null,
-          emojiText:"Like"
+          emojiText: "Like"
         });
       }
     } else {
@@ -89,14 +103,15 @@ class Post extends Component {
       show: true
     });
   }
+
   emojiOut = () => {
     setTimeout(() => {
       this.setState({
         show: false
       });
     }, 4000)
-
   }
+
   makeEmoji = (text, color, type) => {
     const { createEmojis, updateEmojis } = this.props;
     let arrText = [Love, Laugh, Wow, Sad, Angry]
@@ -142,12 +157,37 @@ class Post extends Component {
     this.props.navigation.navigate('User', { user: this.props.item.user })
   }
 
+  deletePost(){
+  this.props.deletePost(this.props.item._id)
+  this.showView()
+  }
+
   render() {
     return (
       <View style={{ backgroundColor: '#1F1F1F', paddingTop: 7 }}>
         <TouchableOpacity onPress={this.onUserPress}>
           <User user={this.props.item.user} item={this.props.item} />
         </TouchableOpacity>
+        <View style={{ flexDirection: 'row-reverse', flex: 1, position: 'absolute', right: 0 }}>
+          <TouchableOpacity onPress={() => this.showView()} style={{ alignItems: 'flex-end', marginRight: 10, marginTop: 0 }}>
+            <Entypo style={{ fontSize: 20, color: '#555555' }} name="dots-three-vertical" />
+          </TouchableOpacity>
+        </View>
+        {this.state.showView ?
+          <View on style={{ justifyContent:'center',alignItems:'center',width:100,backgroundColor: '#555555', position: 'absolute', right: 20, top: 22,elevation:100,borderColor:'grey' }}>
+            {this.props.user._id === this.props.item.user._id ?
+              <TouchableOpacity onPress={()=>this.deletePost()} style={{height:30}}>
+                <Text style={{ color: 'white' }}>Delete Post</Text>
+              </TouchableOpacity>
+              :
+              null
+            }
+            <TouchableOpacity style={{height:30}}>
+              <Text style={{ color: 'white' }}>Report Post</Text>
+            </TouchableOpacity>
+          </View>
+          : null
+        }
         <Text style={{ marginLeft: 10, marginRight: 10, fontSize: 15, color: 'white', marginBottom: 1 }}>{this.props.item.text}</Text>
         {this.props.item.url ? <Image source={{ uri: this.props.item.url }}
           style={{ height: this.state.height, resizeMode: 'contain', }}
@@ -271,7 +311,7 @@ class Post extends Component {
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => this.sharePost()} style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Ionicons style={{ fontSize: 18, color: 'white' }} name="md-share-alt" />
               <Text style={{ fontSize: 15, color: 'white', marginLeft: 3 }}>Share</Text>
             </TouchableOpacity>
@@ -299,7 +339,8 @@ const mapDispatchToProps = dispatch => ({
   deleteEmojis: (post_id, type) => dispatch(actions.deleteEmojis(post_id, type)),
   postCommentsCountChange: (post, commentsCount) => dispatch(actions.postCommentsCountChange(post, commentsCount)),
   postEmojisCountChange: (post_id, post) => dispatch(actions.postEmojisCountChange(post_id, post)),
-
+  createPosts: (text, url, videoName) => dispatch(actions.createPosts(text, url, videoName)),
+  deletePost: (id) => dispatch(actions.deletePost(id)),
 });
 
 export default connect(

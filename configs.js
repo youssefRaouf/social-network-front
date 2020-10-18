@@ -2,13 +2,13 @@
 const envName = 'dev';
 const env = {
     dev:{
-        baseUrl: 'http://192.168.1.4:4000/',
+        baseUrl: 'http://192.168.1.2:4000/',
         socket: {
-            comments: 'http://192.168.1.4:4000/posts/comments',
-            posts: 'http://192.168.1.4:4000/posts',
-            reactions: 'http://192.168.1.4:4000/posts/reactions' ,
-            messages: 'http://192.168.1.4:4000/chat'  ,
-            rooms: 'http://192.168.1.4:4000/room'    
+            comments: 'http://192.168.1.2:4000/posts/comments',
+            posts: 'http://192.168.1.2:4000/posts',
+            reactions: 'http://192.168.1.2:4000/posts/reactions' ,
+            messages: 'http://192.168.1.2:4000/chat'  ,
+            rooms: 'http://192.168.1.2:4000/room'    
 
         }
     },

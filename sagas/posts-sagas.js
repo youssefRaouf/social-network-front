@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as types from '../utils/Consts';
 // import Event from '../models/Event';
-import { getPosts, createPost, getPostsByUserId ,getPostsCountByUserId} from '../services/Api';
+import { deletePost,getPosts, createPost, getPostsByUserId ,getPostsCountByUserId} from '../services/Api';
 
 function* requestEvents({ offset }) {
   try {
@@ -74,9 +74,26 @@ function* createPosts({ text, url, videoName }) {
   }
 }
 
+function* deletePosts({ postId }) {
+  try {
+    let data = yield call(deletePost, postId);
+    // data = data.map(event => new Event(event));
+    yield put({
+      type: types.DELETE_POST_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    yield put({
+      type: types.DELETE_POST_FAIL,
+      error,
+    });
+  }
+}
+
 export default function* eventsSagas() {
   yield takeLatest(types.FETCH_POSTS, requestEvents);
   yield takeLatest(types.FETCH_POSTS_USER_ID, requestEventsByUserId);
   yield takeLatest(types.FETCH_POSTS_COUNT_USER_ID, requestPostsCountByUserId);
   yield takeLatest(types.CREATE_POST, createPosts);
+  yield takeLatest(types.DELETE_POST, deletePosts);
 }

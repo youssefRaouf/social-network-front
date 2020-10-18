@@ -75,6 +75,18 @@ function createPost(text, url, videoName) {
     }),
   }).then(response => response.json());
 }
+
+function deletePost(postId) {
+  return fetch(baseUrl + 'posts/'+postId, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      token: Token
+    },
+  }).then(response => response.json());
+}
+
 const getCommentsByPostId = (offset, post_id) => {
   const limit = 15;
   const eventsRequest = () => {
@@ -345,4 +357,4 @@ async function checkIfFollow(id) {
     }),
   }).then(response => response.json())
 }
-export {checkIfFollow, getFollowersCountByUserId,getFollowingsCountByUserId,getPostsCountByUserId,search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
+export {deletePost,checkIfFollow, getFollowersCountByUserId,getFollowingsCountByUserId,getPostsCountByUserId,search, createRoom, getRooms, getMessages, createMessage, deleteFollow, createFollow, getFollowings, getFollowers, createPost, getPosts, getCommentsByPostId, createComment, createEmoji, updateEmoji, deleteEmoji, checkUser, createUser, getUserbyEmail, getMyProfile, getPostsByUserId, fetchUser };
